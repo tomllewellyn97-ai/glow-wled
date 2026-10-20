@@ -574,7 +574,17 @@ input#colourWheel {
 
   <div id="controlBody"></div>
 </section>
-<section id="effects" class="hidden"><h2>Effects & palettes</h2><label>Selected device<select id="edev" onchange="selected=this.value;loadEffects()"></select></label><div class="card"><h3>Effects</h3><input id="effectSearch" placeholder="Search effects" oninput="renderEffects()"><div id="effectGrid" class="grid"></div><hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
+<section id="effects" class="hidden">
+  <h2>Effects & palettes</h2>
+
+  <label>
+    Dashboard section
+    <select onchange="page(this.value)">
+      <option value="controls">Colours</option>
+      <option value="effects" selected>Effects &amp; Palettes</option>
+      <option value="presets">Saved Presets</option>
+    </select>
+  </label><label>Selected device<select id="edev" onchange="selected=this.value;loadEffects()"></select></label><div class="card"><h3>Effects</h3><input id="effectSearch" placeholder="Search effects" oninput="renderEffects()"><div id="effectGrid" class="grid"></div><hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
 <section id="patterns" class="hidden"><h2>Custom patterns</h2><label>Selected device<select id="pdev" onchange="selected=this.value"></select></label><div class="card"><div class="grid"><label>Starting LED<input id="pstart" type="number" min="0" value="0"></label><label>LED count<input id="plen" type="number" min="1" value="30"></label></div>
 <h3>Choose colours</h3>
 
@@ -597,7 +607,17 @@ input#colourWheel {
 </div>
 <div id="colours"></div>
 <button onclick="addColour()">＋ Add colour</button> <button class="primary" onclick="applyPattern()">Apply pattern</button><label>Pattern name<input id="pname" placeholder="e.g. Sunset"></label><button onclick="savePattern()">Save pattern</button></div><div class="card"><h3>Saved patterns</h3><div id="patternList"></div></div></section>
-<section id="presets" class="hidden"><h2>Presets</h2><label>Selected device<select id="prdev" onchange="selected=this.value"></select></label><div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
+<section id="presets" class="hidden">
+  <h2>Presets</h2>
+
+  <label>
+    Dashboard section
+    <select onchange="page(this.value)">
+      <option value="controls">Colours</option>
+      <option value="effects">Effects &amp; Palettes</option>
+      <option value="presets" selected>Saved Presets</option>
+    </select>
+  </label>label>Selected device<select id="prdev" onchange="selected=this.value"></select></label><div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
 
 <section id="devices" class="hidden">
   <div class="row">
