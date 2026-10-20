@@ -670,7 +670,14 @@ if(p==="addDevice"){
 }
 
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
-
+function clearForm(){
+  editing="";
+  if($("formTitle"))$("formTitle").textContent="Add a device";
+  if($("dname"))$("dname").value="";
+  if($("dip"))$("dip").value="";
+  if($("droom"))$("droom").value="Unassigned";
+  if($("formStatus"))$("formStatus").textContent="";
+}
 function showAddDevice(){
   clearForm();
   page("addDevice");
@@ -688,7 +695,19 @@ function openDevice(id){
 }
 
 function render(){renderRooms();renderDevices();renderSelects();renderManage();renderPatterns();renderPresets();$("count").textContent=devices.length+" device"+(devices.length===1?"":"s")}
-function renderRooms(){let rooms=["All",...new Set(devices.map(d=>d.room||"Unassigned"))];if(!rooms.includes(filter))filter="All";$("rooms").innerHTML=rooms.map(r=>`<button class="${r===filter?"active":""}" onclick="filter=${JSON.stringify(r)};renderRooms();renderDevices()">${esc(r)}</button>`).join("")}
+function renderRooms(){
+  const roomContainer=$("rooms");
+  if(!roomContainer)return;
+
+  let rooms=["All",...new Set(devices.map(d=>d.room||"Unassigned"))];
+
+  if(!rooms.includes(filter))filter="All";
+
+  roomContainer.innerHTML=rooms.map(r=>
+    `<button class="${r===filter?"active":""}"
+      onclick="filter=${JSON.stringify(r)};renderRooms();renderDevices()">${esc(r)}</button>`
+  ).join("");
+}
 function renderDevices(){let ds=devices.filter(d=>filter==="All"||(d.room||"Unassigned")===filter);$("deviceList").innerHTML=ds.length?ds.map(d=>`<div class="card device"><div class="row"><div class="bulb">💡</div><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.room||"Unassigned")}</div><div id="st-${d.id}" class="sub">${d.on?"On":"Ready"}</div></div><button class="switch ${d.on?"on":""}" onclick="toggle('${d.id}')"><span></span></button></div><div class="row section"><button onclick="selected='${d.id}';page('controls')">☼ Controls</button><button onclick="check('${d.id}')">↻ Test</button></div></div>`).join(""):'<div class="empty">No devices here yet. Add a device to get started.</div>'}
 function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
 async function check(id){let d=dev(id);if(!d)return;try{let x=await api(d,"/json/info");$("topStatus").textContent="● Connected";let el=$("st-"+id);if(el){el.textContent="Online"+(x.name?" · "+x.name:"");el.className="online"}}catch(e){$("topStatus").textContent="● Offline";let el=$("st-"+id);if(el){el.textContent="Connection failed";el.className="offline"}}}
