@@ -640,6 +640,7 @@ let devices=db.get("devices",[]),selected=devices[0]?.id||"",filter="All",editin
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function dev(id=selected){return devices.find(d=>d.id===id)}function base(d){return d.url.replace(/\/+$/,"")}function norm(s){s=s.trim();return /^https?:\/\//i.test(s)?s:"http://"+s}
 async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
 function save(){db.set("devices",devices)}
+
 function page(p){
   const target=$(p);
   if(!target){
@@ -661,15 +662,12 @@ function page(p){
   if(p==="effects")loadEffects();
   if(p==="patterns")renderPatterns();
   if(p==="presets")renderPresets();
- if(p==="devices")renderManage();
-if(p==="addDevice"){
-  if(!$("dname")||!$("dip")||!$("droom")){
-    console.error("Add Device form is missing");
-    return;
-  }
+  if(p==="devices")renderManage();
 }
 
-document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
+document.querySelectorAll("#nav button")
+  .forEach(b=>b.onclick=()=>page(b.dataset.page));
+
 function clearForm(){
   editing="";
   if($("formTitle"))$("formTitle").textContent="Add a device";
