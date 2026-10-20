@@ -661,7 +661,12 @@ function page(p){
   if(p==="effects")loadEffects();
   if(p==="patterns")renderPatterns();
   if(p==="presets")renderPresets();
-  if(p==="devices")renderManage();
+ if(p==="devices")renderManage();
+if(p==="addDevice"){
+  if(!$("dname")||!$("dip")||!$("droom")){
+    console.error("Add Device form is missing");
+    return;
+  }
 }
 
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
