@@ -802,25 +802,38 @@ function updatePowerButton(){
 
 async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");try{let s=await api(d,"/json/state");for(let x of devices){if(x.id===d.id)continue;try{let seg=s.seg?.[0],b={on:s.on,bri:s.bri};if(seg)b.seg={col:seg.col,fx:seg.fx,pal:seg.pal,sx:seg.sx,ix:seg.ix};await api(x,"/json/state","POST",b);x.on=s.on}catch(e){}}save();renderDevices();alert("Sync attempted. Check your other lights.")}catch(e){alert("Could not read the selected light.")}}
 
+
 function renderManage(){
-  $("manage").innerHTML=devices.length
+  const manage=$("manage");
+  if(!manage)return;
+
+  manage.innerHTML=devices.length
     ? devices.map(d=>`
-      <div class="card">
+      <div class="card"
+        style="cursor:pointer"
+        onclick="openDevice('${d.id}')">
+
         <div class="row">
-          <div
-            style="flex:1;min-width:0;cursor:pointer"
-            onclick="openDevice('${d.id}')">
+          <div style="flex:1;min-width:0">
             <b>${esc(d.name)}</b>
             <div class="sub">${esc(d.url)}</div>
             <div class="sub">${esc(d.room||"Unassigned")}</div>
-            <div class="sub">Tap to open dashboard →</div>
+            <div class="sub">Tap anywhere to open dashboard →</div>
           </div>
-          <button onclick="edit('${d.id}')">Edit</button>
+
+          <button onclick="event.stopPropagation();edit('${d.id}')">
+            Edit
+          </button>
         </div>
+
         <div class="row section">
-          <button onclick="check('${d.id}')">Test</button>
+          <button onclick="event.stopPropagation();check('${d.id}')">
+            Test
+          </button>
           <button class="danger"
-            onclick="removeDevice('${d.id}')">Remove</button>
+            onclick="event.stopPropagation();removeDevice('${d.id}')">
+            Remove
+          </button>
         </div>
       </div>
     `).join("")
