@@ -570,13 +570,7 @@ input#colourWheel {
       <input id="wheelHex" type="text" value="#ff4b70"
         maxlength="7" oninput="setHexColour(this.value)">
     </label>
-    <label>Colour to edit
-      <select id="wheelTarget" onchange="syncWheelColour()">
-        <option value="0">Colour 1</option>
-        <option value="1">Colour 2</option>
-        <option value="2">Colour 3</option>
-      </select>
-    </label>
+    <input type="hidden" id="wheelTarget" value="0">
   </div>
 </div>
 <div id="colours"></div>
