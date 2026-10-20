@@ -212,6 +212,51 @@ input[type=color] {
   button { min-height: 44px; }
 }
 
+
+/* GLOW POWER BUTTON OVERRIDES */
+.switch {
+  width: 82px !important;
+  min-width: 82px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 5px !important;
+  border-radius: 30px !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  background: #30394b !important;
+  border: 1px solid #536078 !important;
+}
+
+.switch span {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  display: block !important;
+}
+
+.switch.on {
+  background: linear-gradient(90deg, #a855f7, #35e7ff) !important;
+  box-shadow: 0 0 22px #35e7ff80 !important;
+}
+
+.switch.on span {
+  margin-left: 33px !important;
+}
+
+button.danger {
+  min-width: 170px !important;
+  min-height: 64px !important;
+  padding: 17px 25px !important;
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  border-radius: 18px !important;
+  border: 2px solid #ff4d8d !important;
+  background: linear-gradient(135deg, #451329, #25101e) !important;
+  color: #ff9fbd !important;
+  box-shadow: 0 0 24px #ff397a45 !important;
+}
+
 </style></head>
 <body><div class="app">
 <header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR VIBE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
