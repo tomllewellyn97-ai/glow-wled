@@ -623,11 +623,17 @@ input#colourWheel {
       </select>
     </label>
 
-    <div class="row wrap">
-      <button onclick="testForm()">Test connection</button>
-      <button class="primary" onclick="saveDevice()">Save device</button>
-      <button onclick="clearForm()">Clear</button>
-    </div>
+  <div class="row wrap">
+  <button onclick="testForm()">Test connection</button>
+  <button class="primary" onclick="saveDevice()">Save changes</button>
+  <button onclick="clearForm()">Clear</button>
+  <button id="removeEditBtn"
+    class="danger"
+    style="display:none"
+    onclick="removeDevice(editing)">
+    Remove Device
+  </button>
+</div>
 
     <div id="formStatus" class="status"></div>
   </div>
@@ -676,6 +682,9 @@ function clearForm(){
   if($("dip"))$("dip").value="";
   if($("droom"))$("droom").value="Unassigned";
   if($("formStatus"))$("formStatus").textContent="";
+
+  const removeBtn=$("removeEditBtn");
+  if(removeBtn)removeBtn.style.display="none";
 }
 function showAddDevice(){
   clearForm();
@@ -803,12 +812,13 @@ function updatePowerButton(){
 async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");try{let s=await api(d,"/json/state");for(let x of devices){if(x.id===d.id)continue;try{let seg=s.seg?.[0],b={on:s.on,bri:s.bri};if(seg)b.seg={col:seg.col,fx:seg.fx,pal:seg.pal,sx:seg.sx,ix:seg.ix};await api(x,"/json/state","POST",b);x.on=s.on}catch(e){}}save();renderDevices();alert("Sync attempted. Check your other lights.")}catch(e){alert("Could not read the selected light.")}}
 
 
+
 function renderManage(){
   const manage=$("manage");
   if(!manage)return;
 
   manage.innerHTML=devices.length
-    ? devices.map(d=>`
+    ?devices.map(d=>`
       <div class="card"
         style="cursor:pointer"
         onclick="openDevice('${d.id}')">
@@ -816,12 +826,14 @@ function renderManage(){
         <div class="row">
           <div style="flex:1;min-width:0">
             <div style="display:flex;align-items:center;gap:8px">
-  <b>${esc(d.name)}</b>
-  <span title="Device settings" style="font-size:16px">⚙️</span>
-</div>
-<div class="sub">${esc(d.url)}</div>
+              <b>${esc(d.name)}</b>
+            </div>
+            <div class="sub">${esc(d.url)}</div>
             <div class="sub">${esc(d.room||"Unassigned")}</div>
           </div>
+
+          <span style="font-size:24px;opacity:0.65"
+            aria-hidden="true">›</span>
 
           <button onclick="event.stopPropagation();edit('${d.id}')">
             Edit
@@ -832,16 +844,11 @@ function renderManage(){
           <button onclick="event.stopPropagation();check('${d.id}')">
             Test
           </button>
-          <button class="danger"
-            onclick="event.stopPropagation();removeDevice('${d.id}')">
-            Remove
-          </button>
         </div>
       </div>
     `).join("")
     : '<div class="empty">No saved devices.</div>';
 }
-
 
 function edit(id){
   let d=dev(id);
@@ -853,10 +860,33 @@ function edit(id){
   $("dip").value=d.url;
   $("droom").value=d.room||"Unassigned";
 
+  let removeBtn=$("removeEditBtn");
+  if(removeBtn)removeBtn.style.display="";
+
   page("addDevice");
 }
 
-function removeDevice(id){if(!confirm("Remove this device from Glow?"))return;devices=devices.filter(d=>d.id!==id);if(selected===id)selected=devices[0]?.id||"";save();render()}
+function removeDevice(id){
+  const d=dev(id);
+  if(!d)return;
+
+  if(!confirm(
+    'Remove "'+d.name+'" from Glow?\n\n'+
+    'This will delete the saved device from the app. '+
+    'Your physical WLED device will not be reset.'
+  ))return;
+
+  devices=devices.filter(device=>device.id!==id);
+
+  if(selected===id){
+    selected=devices[0]?.id||"";
+  }
+
+  editing="";
+  save();
+  render();
+  page("devices");
+}
 async function testForm(){try{$("formStatus").textContent="Testing…";let x=await api({url:norm($("dip").value)},"/json/info");$("formStatus").textContent="Connected successfully"+(x.name?" to "+x.name:"")+"."}catch(e){$("formStatus").textContent="Could not connect. Check IP, Wi-Fi and browser permissions."}}
 async function saveDevice(){let name=$("dname").value.trim(),ip=$("dip").value.trim();if(!name||!ip){$("formStatus").textContent="Enter a name and IP address.";return}let url;try{url=norm(ip);new URL(url)}catch(e){$("formStatus").textContent="Enter a valid IP address.";return}let id=editing||"d"+Date.now(),old=dev(id),d={id,name,url,room:$("droom").value,on:old?.on||false};devices=editing?devices.map(x=>x.id===id?d:x):[...devices,d];selected=id;save();clearForm();render();page("home");check(id)}
 function renderControls(){renderSelects();let d=dev($("cdev").value||selected);if(!d){$("controlBody").innerHTML='<div class="empty">Add a device first.</div>';return}selected=d.id;$("controlBody").innerHTML=`<div class="card"><div class="row"><div class="grow"><h3>${esc(d.name)}</h3><div class="sub">${esc(d.url)}</div></div><button onclick="toggle('${d.id}')">Power</button></div><label>Brightness <b id="bn">128</b><input id="bright" type="range" min="1" max="255" value="128" oninput="bn.textContent=this.value" onchange="command({bri:+this.value})"></label><div class="row wrap"><button onclick="command({bri:64})">Low</button><button onclick="command({bri:128})">Medium</button><button onclick="command({bri:255})">Full</button></div><hr><h3>Colour</h3><div class="row"><input type="color" id="colour" value="#ffffff" onchange="applyColour(this.value)"><input id="hex" value="#ffffff" maxlength="7"><button onclick="applyColour(hex.value)">Apply</button></div><div class="swatches">${["#ff3158","#ff8b30","#ffe84a","#45ed8c","#36dbea","#4e79ff","#a16aff","#ff5eea","#ffffff"].map(c=>`<button class="swatch" style="background:${c}" onclick="applyColour('${c}')"></button>`).join("")}</div><div class="status" id="controlStatus"></div></div>`;api(d,"/json/state").then(s=>{if($("bright")){$("bright").value=s.bri||128;$("bn").textContent=s.bri||128}let c=s.seg?.[0]?.col?.[0];if(c){let h="#"+c.slice(0,3).map(v=>Number(v).toString(16).padStart(2,"0")).join("");$("colour").value=h;$("hex").value=h}}).catch(()=>{})}
