@@ -692,7 +692,22 @@ function openDevice(id){
   page("controls");
 }
 
-function render(){renderRooms();renderDevices();renderSelects();renderManage();renderPatterns();renderPresets();$("count").textContent=devices.length+" device"+(devices.length===1?"":"s")}
+
+function render(){
+  renderRooms();
+  renderDevices();
+  renderSelects();
+  renderManage();
+  renderPatterns();
+  renderPresets();
+
+  const count=$("count");
+  if(count){
+    count.textContent=devices.length+" device"+
+      (devices.length===1?"":"s");
+  }
+}
+
 function renderRooms(){
   const roomContainer=$("rooms");
   if(!roomContainer)return;
@@ -706,6 +721,7 @@ function renderRooms(){
       onclick="filter=${JSON.stringify(r)};renderRooms();renderDevices()">${esc(r)}</button>`
   ).join("");
 }
+
 
 function renderDevices(){
   const list=$("deviceList");
