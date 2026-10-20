@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090914"><title>Glow | WLED Controller</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#070b14">
+<style>
+:root{color-scheme:dark;--bg:#090914;--panel:#17172b;--purple:#a16aff;--cyan:#37dfeb;--text:#f7f5ff;--muted:#a2a0bf;--border:#33324f}
+*{box-sizing:border-box}body{margin:0;color:var(--text);font:15px system-ui;background:radial-gradient(ellipse at 0 0,#291443,transparent 38%),radial-gradient(ellipse at 100% 15%,#10303d,transparent 32%),var(--bg);min-height:100vh}.app{max-width:780px;margin:auto;padding:16px 14px 44px}header,.row{display:flex;align-items:center;gap:10px;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--cyan));font-size:26px}h1{font-size:24px;letter-spacing:2px;margin:0}.sub,.muted,small{color:var(--muted);font-size:12px}nav{display:flex;gap:7px;overflow:auto;padding:20px 0 12px}button,input,select{font:inherit}button{cursor:pointer;color:var(--text);border:1px solid var(--border);background:#202039;padding:10px 12px;border-radius:12px;font-size:13px}button.primary{border:0;background:linear-gradient(110deg,#8c4fe8,#418fce)}button.active{border-color:var(--purple);background:#362052}button.danger{color:#ff91a5}h2{margin:5px 0;font-size:23px}h3{font-size:15px;margin:0 0 12px}.card{border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,#19192d,#111120);padding:15px;margin:12px 0}.section{margin:20px 0}.grow{flex:1;min-width:0}.row.wrap{flex-wrap:wrap}label{display:block;font-size:12px;color:#c1bed9;margin:12px 0}input:not([type=range]):not([type=color]),select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid #393854;border-radius:11px;background:#0d0d1b;color:white}input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:48px;height:40px;padding:0;border:0;background:none}.hidden{display:none!important}.roomtabs{display:flex;gap:7px;overflow:auto;margin:15px 0}.device{position:relative}.device:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--purple),var(--cyan))}.bulb{font-size:24px;background:#29203f;border-radius:12px;padding:8px}
+.switch {
+  border-radius: 30px;
+  width: 76px;
+  height: 46px;
+  padding: 5px;
+  background: #30394b;
+  border: 1px solid #536078;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.switch span {
+  display: block;
+  background: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: 0 1px 8px #0008;
+}
+
+.switch.on {
+  background: linear-gradient(90deg, var(--purple), var(--cyan));
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px #35e7ff45;
+}
+
+.switch.on span {
+  margin-left: 29px;
+}
+.online{color:#65e9b2}.offline{color:#ff8297}.notice{background:#17272a;border:1px solid #28535b;border-radius:12px;padding:12px;font-size:12px;color:#a7ecee;line-height:1.5}.status{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.swatches{display:flex;gap:9px;flex-wrap:wrap}.swatch{width:35px;height:35px;border-radius:50%;border:2px solid #ffffff66;padding:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.effect{background:#0d0d1b;text-align:left}.empty{padding:25px;text-align:center;color:var(--muted)}hr{border:0;border-top:1px solid var(--border);margin:17px 0}@media(min-width:600px){.devices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }
+
+/* GLOW NEON MOBILE REDESIGN */
+:root {
+  --bg: #05070d;
+  --panel: #101522;
+  --purple: #a855f7;
+  --cyan: #35e7ff;
+  --text: #f4f7ff;
+  --muted: #939eb6;
+  --border: #252e42;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 0% 0%, #261044 0%, transparent 42%),
+    radial-gradient(ellipse at 100% 15%, #082b3a 0%, transparent 38%),
+    #05070d;
+  background-attachment: fixed;
+}
+
+.app {
+  max-width: 780px;
+  padding: 18px 15px 100px;
+}
+
+header { padding: 8px 0 14px; }
+
+.logo {
+  background: linear-gradient(135deg, #a855f7, #35e7ff);
+  box-shadow: 0 0 24px #35e7ff30;
+}
+
+h1 { letter-spacing: 3px; font-weight: 850; }
+h2 { font-size: 25px; letter-spacing: -.5px; }
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 8px -15px 18px;
+  padding: 12px 15px;
+  background: #080b13ed;
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid #252e42;
+  scrollbar-width: none;
+}
+
+nav button {
+  flex: 0 0 auto;
+  border-radius: 13px;
+  background: #111725;
+  border-color: #252e42;
+  padding: 11px 14px;
+}
+
+nav button.active {
+  color: #071018;
+  background: linear-gradient(110deg, #35e7ff, #a855f7);
+  border-color: transparent;
+  font-weight: 750;
+  box-shadow: 0 0 18px #35e7ff22;
+}
+
+.card {
+  background: linear-gradient(145deg, #121a29, #0b101a);
+  border: 1px solid #273248;
+  border-radius: 21px;
+  padding: 17px;
+  box-shadow: 0 8px 28px #00000025;
+}
+
+.device { overflow: hidden; }
+
+.device:before {
+  width: 3px;
+  box-shadow: 0 0 12px #35e7ff70;
+}
+
+.bulb {
+  background: #17172b;
+  box-shadow: inset 0 0 16px #a855f722;
+}
+
+button {
+  min-height: 42px;
+  border-radius: 13px;
+  background: #151c2b;
+  border-color: #2b354a;
+  transition: border-color .15s, filter .15s;
+}
+
+button.primary {
+  color: #071018;
+  background: linear-gradient(110deg, #35e7ff, #a855f7);
+  font-weight: 750;
+}
+
+
+button.danger {
+  min-width: 150px;
+  min-height: 58px;
+  padding: 15px 22px;
+  border: 1px solid #a8325c;
+  border-radius: 17px;
+  background: linear-gradient(135deg, #351323, #21101d);
+  color: #ff91b0;
+  font-size: 17px;
+  font-weight: 750;
+  box-shadow: 0 0 18px #ff397a20;
+
+}
+
+input:not([type=range]):not([type=color]),
+select {
+  background: #080d17;
+  border-color: #2b354a;
+  border-radius: 13px;
+  min-height: 45px;
+}
+
+input[type=range] {
+  accent-color: #35e7ff;
+  min-height: 30px;
+}
+
+input[type=color] {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.swatch {
+  width: 39px;
+  height: 39px;
+  border: 2px solid #ffffff45;
+  box-shadow: 0 2px 10px #00000040;
+}
+
+.switch.on { box-shadow: 0 0 15px #35e7ff45; }
+
+.notice {
+  background: #0c2028;
+  border-color: #1d5864;
+  border-radius: 15px;
+}
+
+.status, .sub { letter-spacing: .1px; }
+
+.empty {
+  border: 1px dashed #303b52;
+  border-radius: 17px;
+  margin: 12px 0;
+}
+
+@media (max-width: 599px) {
+  .app { padding-left: 13px; padding-right: 13px; }
+  header { align-items: center; }
+  h1 { font-size: 23px; }
+  nav {
+    margin-left: -13px;
+    margin-right: -13px;
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+  #home > .row:first-child { align-items: flex-start; }
+  #home > .row:first-child h2 { font-size: 23px; }
+  .card { padding: 15px; margin: 11px 0; }
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+  button { min-height: 44px; }
+}
+
+
+/* GLOW POWER BUTTON OVERRIDES */
+.switch {
+  width: 82px !important;
+  min-width: 82px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 5px !important;
+  border-radius: 30px !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+  background: #30394b !important;
+  border: 1px solid #536078 !important;
+}
+
+.switch span {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  display: block !important;
+}
+
+.switch.on {
+  background: linear-gradient(90deg, #a855f7, #35e7ff) !important;
+  box-shadow: 0 0 22px #35e7ff80 !important;
+}
+
+.switch.on span {
+  margin-left: 33px !important;
+}
+
+button.danger {
+  min-width: 170px !important;
+  min-height: 64px !important;
+  padding: 17px 25px !important;
+  font-size: 19px !important;
+  font-weight: 800 !important;
+  border-radius: 18px !important;
+  border: 2px solid #ff4d8d !important;
+  background: linear-gradient(135deg, #451329, #25101e) !important;
+  color: #ff9fbd !important;
+  box-shadow: 0 0 24px #ff397a45 !important;
+}
+
+
+/* GLOW DEVICE CARD POLISH */
+.device {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  padding: 16px !important;
+  margin: 10px 0 !important;
+  border: 1px solid #28354b !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, #121a29, #090e18) !important;
+  box-shadow: 0 8px 24px #00000030 !important;
+  overflow: hidden !important;
+}
+
+.device:before {
+  width: 4px !important;
+  background: linear-gradient(180deg, #a855f7, #35e7ff) !important;
+  box-shadow: 0 0 14px #35e7ff55 !important;
+}
+
+.device .row {
+  align-items: center;
+  gap: 12px;
+}
+
+.device .bulb {
+  flex-shrink: 0;
+  border: 1px solid #a855f733;
+  box-shadow: inset 0 0 18px #a855f722;
+}
+
+.device button {
+  min-height: 46px !important;
+  border-radius: 14px !important;
+}
+
+.device .switch {
+  margin-left: auto;
+}
+
+.device h3 {
+  color: #f4f7ff;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.25;
+  margin: 0 0 3px;
+  overflow-wrap: anywhere;
+}
+
+.device .sub,
+.device .status {
+  color: #a1abc1;
+  line-height: 1.4;
+}
+
+@media (max-width: 599px) {
+  .device {
+    padding: 14px !important;
+    gap: 10px !important;
+  }
+
+  .device button {
+    min-height: 44px !important;
+  }
+}
+</style></head>
+<body><div class="app">
+<header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
+<nav id="nav"><button class="active" data-page="home">⌂ Home</button><button data-page="controls">☼ Controls</button><button data-page="effects">✧ Effects</button><button data-page="patterns">◈ Patterns</button><button data-page="presets">★ Presets</button><button data-page="devices">⚙ Devices</button></nav>
+<section id="home"><div class="row"><div><h2>Your lights</h2><span class="sub" id="count">0 devices</span></div><button class="primary" onclick="page('devices')">＋ Add device</button></div><div class="row section wrap"><button id="powerButton" class="danger" onclick="powerToggle()">■ All Off</button><button onclick="syncAll()">⇄ Sync All</button></div><div id="rooms" class="roomtabs"></div><div id="deviceList" class="devices"></div><p class="notice">Your phone and WLED lights need to be on the same Wi-Fi network. Enter each light's local IP address.</p></section>
+<section id="controls" class="hidden"><h2>Light controls</h2><label>Selected device<select id="cdev" onchange="selected=this.value;renderControls()"></select></label><div id="controlBody"></div></section>
+<section id="effects" class="hidden"><h2>Effects & palettes</h2><label>Selected device<select id="edev" onchange="selected=this.value;loadEffects()"></select></label><div class="card"><h3>Effects</h3><input id="effectSearch" placeholder="Search effects" oninput="renderEffects()"><div id="effectGrid" class="grid"></div><hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
+<section id="patterns" class="hidden"><h2>Custom patterns</h2><label>Selected device<select id="pdev" onchange="selected=this.value"></select></label><div class="card"><div class="grid"><label>Starting LED<input id="pstart" type="number" min="0" value="0"></label><label>LED count<input id="plen" type="number" min="1" value="30"></label></div><h3>Colours</h3><div id="colours"></div><button onclick="addColour()">＋ Add colour</button> <button class="primary" onclick="applyPattern()">Apply pattern</button><label>Pattern name<input id="pname" placeholder="e.g. Sunset"></label><button onclick="savePattern()">Save pattern</button></div><div class="card"><h3>Saved patterns</h3><div id="patternList"></div></div></section>
+<section id="presets" class="hidden"><h2>Presets</h2><label>Selected device<select id="prdev" onchange="selected=this.value"></select></label><div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this phone</h3><div id="presetList"></div></div></section>
+<section id="devices" class="hidden"><h2>Devices</h2><div class="card"><h3 id="formTitle">Add a device</h3><label>Device name<input id="dname" placeholder="Bedroom Lights"></label><label>IP address or URL<input id="dip" placeholder="192.168.1.175"></label><label>Room<select id="droom"><option>Unassigned</option><option>Bedroom</option><option>Living Room</option><option>Kitchen</option><option>Office</option><option>Garden</option></select></label><div class="row wrap"><button onclick="testForm()">Test connection</button><button class="primary" onclick="saveDevice()">Save device</button><button onclick="clearForm()">Clear</button></div><div id="formStatus" class="status"></div></div><div class="card"><h3>Saved devices</h3><div id="manage"></div></div></section>
+</div>
+<script>
+
+const $=id=>document.getElementById(id),db={get(k,d){try{return JSON.parse(localStorage.getItem("glow_"+k))??d}catch(e){return d}},set(k,v){localStorage.setItem("glow_"+k,JSON.stringify(v))}};
+
+let devices=db.get("devices",[]),selected=devices[0]?.id||"",filter="All",editing="",effects=[],palettes=[],colours=["#ff4b70","#a16aff","#37dfeb"],patterns=db.get("patterns",[]),presets=db.get("presets",[]);
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function dev(id=selected){return devices.find(d=>d.id===id)}function base(d){return d.url.replace(/\/+$/,"")}function norm(s){s=s.trim();return /^https?:\/\//i.test(s)?s:"http://"+s}
+async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
+function save(){db.set("devices",devices)}function page(p){document.querySelectorAll("body > .app > section").forEach(x=>x.classList.add("hidden"));$(p).classList.remove("hidden");document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));if(p==="controls")renderControls();if(p==="effects")loadEffects();if(p==="patterns")renderPatterns();if(p==="presets")renderPresets();if(p==="devices")renderManage()}
+document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
+function render(){renderRooms();renderDevices();renderSelects();renderManage();renderPatterns();renderPresets();$("count").textContent=devices.length+" device"+(devices.length===1?"":"s")}
+function renderRooms(){let rooms=["All",...new Set(devices.map(d=>d.room||"Unassigned"))];if(!rooms.includes(filter))filter="All";$("rooms").innerHTML=rooms.map(r=>`<button class="${r===filter?"active":""}" onclick="filter=${JSON.stringify(r)};renderRooms();renderDevices()">${esc(r)}</button>`).join("")}
+function renderDevices(){let ds=devices.filter(d=>filter==="All"||(d.room||"Unassigned")===filter);$("deviceList").innerHTML=ds.length?ds.map(d=>`<div class="card device"><div class="row"><div class="bulb">💡</div><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.room||"Unassigned")}</div><div id="st-${d.id}" class="sub">${d.on?"On":"Ready"}</div></div><button class="switch ${d.on?"on":""}" onclick="toggle('${d.id}')"><span></span></button></div><div class="row section"><button onclick="selected='${d.id}';page('controls')">☼ Controls</button><button onclick="check('${d.id}')">↻ Test</button></div></div>`).join(""):'<div class="empty">No devices here yet. Add a device to get started.</div>'}
+function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
+async function check(id){let d=dev(id);if(!d)return;try{let x=await api(d,"/json/info");$("topStatus").textContent="● Connected";let el=$("st-"+id);if(el){el.textContent="Online"+(x.name?" · "+x.name:"");el.className="online"}}catch(e){$("topStatus").textContent="● Offline";let el=$("st-"+id);if(el){el.textContent="Connection failed";el.className="offline"}}}
+async function toggle(id){let d=dev(id);try{let on=!d.on;await api(d,"/json/state","POST",{on});d.on=on;save();renderDevices()}catch(e){alert("Could not control this light. Check its IP and Wi-Fi connection.")}}
+
+async function powerToggle(){
+  if(devices.some(d=>d.on)){
+    await allOff();
+  }else{
+    await allOn();
+  }
+}
+
+async function allOff(){
+  for(let d of devices){
+    try{
+      await api(d,"/json/state","POST",{on:false});
+      d.on=false;
+    }catch(e){}
+  }
+  save();
+  renderDevices();
+  updatePowerButton();
+}
+
+async function allOn(){
+  for(let d of devices){
+    try{
+      await api(d,"/json/state","POST",{on:true});
+      d.on=true;
+    }catch(e){}
+  }
+  save();
+  renderDevices();
+  updatePowerButton();
+}
+
+function updatePowerButton(){
+  const b=document.getElementById("powerButton");
+  if(!b)return;
+  const on=devices.some(d=>d.on);
+  b.textContent=on?"■ All Off":"● All On";
+  b.className=on?"danger":"primary";
+}
+
+async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");try{let s=await api(d,"/json/state");for(let x of devices){if(x.id===d.id)continue;try{let seg=s.seg?.[0],b={on:s.on,bri:s.bri};if(seg)b.seg={col:seg.col,fx:seg.fx,pal:seg.pal,sx:seg.sx,ix:seg.ix};await api(x,"/json/state","POST",b);x.on=s.on}catch(e){}}save();renderDevices();alert("Sync attempted. Check your other lights.")}catch(e){alert("Could not read the selected light.")}}
+function renderManage(){$("manage").innerHTML=devices.length?devices.map(d=>`<div class="card"><div class="row"><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.url)}</div><div class="sub">${esc(d.room||"Unassigned")}</div></div><button onclick="edit('${d.id}')">Edit</button></div><div class="row section"><button onclick="check('${d.id}')">Test</button><button class="danger" onclick="removeDevice('${d.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No saved devices.</div>'}
+function edit(id){let d=dev(id);editing=id;$("formTitle").textContent="Edit device";$("dname").value=d.name;$("dip").value=d.url;$("droom").value=d.room||"Unassigned";page("devices")}function clearForm(){editing="";$("formTitle").textContent="Add a device";$("dname").value="";$("dip").value="";$("droom").value="Unassigned";$("formStatus").textContent=""}
+function removeDevice(id){if(!confirm("Remove this device from Glow?"))return;devices=devices.filter(d=>d.id!==id);if(selected===id)selected=devices[0]?.id||"";save();render()}
+async function testForm(){try{$("formStatus").textContent="Testing…";let x=await api({url:norm($("dip").value)},"/json/info");$("formStatus").textContent="Connected successfully"+(x.name?" to "+x.name:"")+"."}catch(e){$("formStatus").textContent="Could not connect. Check IP, Wi-Fi and browser permissions."}}
+async function saveDevice(){let name=$("dname").value.trim(),ip=$("dip").value.trim();if(!name||!ip){$("formStatus").textContent="Enter a name and IP address.";return}let url;try{url=norm(ip);new URL(url)}catch(e){$("formStatus").textContent="Enter a valid IP address.";return}let id=editing||"d"+Date.now(),old=dev(id),d={id,name,url,room:$("droom").value,on:old?.on||false};devices=editing?devices.map(x=>x.id===id?d:x):[...devices,d];selected=id;save();clearForm();render();page("home");check(id)}
+function renderControls(){renderSelects();let d=dev($("cdev").value||selected);if(!d){$("controlBody").innerHTML='<div class="empty">Add a device first.</div>';return}selected=d.id;$("controlBody").innerHTML=`<div class="card"><div class="row"><div class="grow"><h3>${esc(d.name)}</h3><div class="sub">${esc(d.url)}</div></div><button onclick="toggle('${d.id}')">Power</button></div><label>Brightness <b id="bn">128</b><input id="bright" type="range" min="1" max="255" value="128" oninput="bn.textContent=this.value" onchange="command({bri:+this.value})"></label><div class="row wrap"><button onclick="command({bri:64})">Low</button><button onclick="command({bri:128})">Medium</button><button onclick="command({bri:255})">Full</button></div><hr><h3>Colour</h3><div class="row"><input type="color" id="colour" value="#ffffff" onchange="applyColour(this.value)"><input id="hex" value="#ffffff" maxlength="7"><button onclick="applyColour(hex.value)">Apply</button></div><div class="swatches">${["#ff3158","#ff8b30","#ffe84a","#45ed8c","#36dbea","#4e79ff","#a16aff","#ff5eea","#ffffff"].map(c=>`<button class="swatch" style="background:${c}" onclick="applyColour('${c}')"></button>`).join("")}</div><div class="status" id="controlStatus"></div></div>`;api(d,"/json/state").then(s=>{if($("bright")){$("bright").value=s.bri||128;$("bn").textContent=s.bri||128}let c=s.seg?.[0]?.col?.[0];if(c){let h="#"+c.slice(0,3).map(v=>Number(v).toString(16).padStart(2,"0")).join("");$("colour").value=h;$("hex").value=h}}).catch(()=>{})}
+async function command(body){let d=dev();if(!d)return;try{await api(d,"/json/state","POST",body);if($("controlStatus"))$("controlStatus").textContent="Updated"}catch(e){if($("controlStatus"))$("controlStatus").textContent="Could not send command. Check connection."}}
+function applyColour(h){if(!/^#[0-9a-f]{6}$/i.test(h))return alert("Enter a colour like #ff55aa");let rgb=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));if($("colour"))$("colour").value=h;if($("hex"))$("hex").value=h;command({seg:{col:[rgb]}})}
+async function loadEffects(){renderSelects();let d=dev($("edev").value||selected);if(!d)return;selected=d.id;$("effectGrid").textContent="Loading…";try{effects=await api(d,"/json/effects");palettes=await api(d,"/json/palettes");$("palette").innerHTML=palettes.map((p,i)=>`<option value="${i}">${esc(p)}</option>`).join("");renderEffects();$("effectStatus").textContent=effects.length+" effects and "+palettes.length+" palettes loaded."}catch(e){$("effectGrid").textContent="Could not load effects. Check connection.";$("effectStatus").textContent="WLED API unavailable."}}
+function renderEffects(){let q=$("effectSearch").value.toLowerCase();$("effectGrid").innerHTML=effects.map((n,i)=>({n,i})).filter(x=>String(x.n).toLowerCase().includes(q)).map(x=>`<button class="effect" onclick="setSeg({fx:${x.i}})">${esc(x.n)}</button>`).join("")||"No matching effects."}
+function setSeg(obj){command({seg:obj})}
+function addColour(){if(colours.length>=8)return alert("Use up to 8 colours.");colours.push("#ffffff");renderColours()}
+function renderColours(){$("colours").innerHTML=colours.map((c,i)=>`<div class="row"><input type="color" value="${c}" onchange="colours[${i}]=this.value"><span class="grow">Colour ${i+1}</span>${colours.length>1?`<button onclick="colours.splice(${i},1);renderColours()">Remove</button>`:""}</div>`).join("")}
+async function applyPattern(){let d=dev($("pdev").value||selected);if(!d)return alert("Add a device first.");let start=Math.max(0,+$("pstart").value||0),len=Math.max(1,+$("plen").value||1),col=colours.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));try{await api(d,"/json/state","POST",{seg:{id:0,start,len,col}});alert("Pattern sent to WLED.")}catch(e){alert("Could not apply pattern. Check the device connection.")}}
+function savePattern(){let name=$("pname").value.trim();if(!name)return alert("Enter a pattern name.");patterns.push({name,colours:[...colours],start:+$("pstart").value||0,len:+$("plen").value||30});db.set("patterns",patterns);renderPatterns()}
+function renderPatterns(){if(!$("colours"))return;renderColours();$("patternList").innerHTML=patterns.length?patterns.map((p,i)=>`<div class="row section"><span class="grow">${esc(p.name)}</span><button onclick="usePattern(${i})">Apply</button><button class="danger" onclick="patterns.splice(${i},1);db.set('patterns',patterns);renderPatterns()">×</button></div>`).join(""):'<div class="empty">No saved patterns yet.</div>'}
+function usePattern(i){let p=patterns[i];colours=[...p.colours];$("pstart").value=p.start;$("plen").value=p.len;$("pname").value=p.name;renderColours();applyPattern()}
+async function savePreset(){let d=dev($("prdev").value||selected);if(!d)return alert("Add a device first.");let slot=Math.max(1,Math.min(250,+$("prslot").value||1)),name=$("prname").value.trim()||"Glow preset";try{await api(d,"/json/state","POST",{psave:slot});presets.push({name,slot,device:d.name,url:d.url});db.set("presets",presets);renderPresets();alert("Preset command sent to WLED.")}catch(e){alert("Could not save preset. Check connection and WLED support.")}}
+function renderPresets(){if(!$("presetList"))return;$("presetList").innerHTML=presets.length?presets.map((p,i)=>`<div class="row section"><span class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.device)} · slot ${p.slot}</div></span><button onclick="loadPreset(${i})">Load</button><button class="danger" onclick="presets.splice(${i},1);db.set('presets',presets);renderPresets()">×</button></div>`).join(""):'<div class="empty">No presets saved on this phone.</div>'}
+async function loadPreset(i){let p=presets[i],d=devices.find(x=>x.url===p.url)||dev();if(!d)return alert("Add the original device first.");try{await api(d,"/json/state","POST",{ps:p.slot});alert("Preset load command sent.")}catch(e){alert("Could not load preset.")}}
+renderColours();render();
+</script></body></html>
