@@ -531,8 +531,31 @@ input#colourWheel {
 
 <body><div class="app">
 <header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
-<nav id="nav"><button class="active" data-page="home">⌂ Home</button><button data-page="controls">☼ Controls</button><button data-page="effects">✧ Effects</button><button data-page="patterns">◈ Patterns</button><button data-page="presets">★ Presets</button><button data-page="devices">⚙ Devices</button></nav>
-<section id="home"><div class="row"><div><h2>Your lights</h2><span class="sub" id="count">0 devices</span></div><button class="primary" onclick="page('devices')">＋ Add device</button></div><div class="row section wrap"><button id="powerButton" class="danger" onclick="powerToggle()">■ All Off</button><button onclick="syncAll()">⇄ Sync All</button></div><div id="rooms" class="roomtabs"></div><div id="deviceList" class="devices"></div><p class="notice">Your phone and WLED lights need to be on the same Wi-Fi network. Enter each light's local IP address.</p></section>
+<
+<nav id="nav">
+  <button class="active" data-page="home">⌂ Home</button>
+  <button data-page="devices">☷ View Devices</button>
+</nav>
+
+<
+<section id="home">
+  <div class="card" style="text-align:center;padding:30px 20px">
+    <div style="font-size:48px;margin-bottom:12px">✦</div>
+    <h2>Welcome to Glow</h2>
+    <p class="sub">Your lights. Your control. Your style.</p>
+
+    <button class="primary" style="width:100%;margin:12px 0"
+      onclick="page('devices');clearForm()">
+      ☷ View Devices
+    </button>
+
+    <button style="width:100%;margin:6px 0"
+      onclick="page('devices');clearForm();$('dname').focus()">
+      ＋ Add Device
+    </button>
+  </div>
+</section>
+
 <section id="controls" class="hidden"><h2>Light controls</h2><label>Selected device<select id="cdev" onchange="selected=this.value;renderControls()"></select></label><div id="controlBody"></div></section>
 <section id="effects" class="hidden"><h2>Effects & palettes</h2><label>Selected device<select id="edev" onchange="selected=this.value;loadEffects()"></select></label><div class="card"><h3>Effects</h3><input id="effectSearch" placeholder="Search effects" oninput="renderEffects()"><div id="effectGrid" class="grid"></div><hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
 <section id="patterns" class="hidden"><h2>Custom patterns</h2><label>Selected device<select id="pdev" onchange="selected=this.value"></select></label><div class="card"><div class="grid"><label>Starting LED<input id="pstart" type="number" min="0" value="0"></label><label>LED count<input id="plen" type="number" min="1" value="30"></label></div>
@@ -572,6 +595,18 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
 function save(){db.set("devices",devices)}function page(p){document.querySelectorAll("body > .app > section").forEach(x=>x.classList.add("hidden"));$(p).classList.remove("hidden");document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));if(p==="controls")renderControls();if(p==="effects")loadEffects();if(p==="patterns")renderPatterns();if(p==="presets")renderPresets();if(p==="devices")renderManage()}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
+  
+function openDevice(id){
+  selected=id;
+
+  if($("cdev"))$("cdev").value=id;
+  if($("edev"))$("edev").value=id;
+  if($("pdev"))$("pdev").value=id;
+  if($("prdev"))$("prdev").value=id;
+
+  page("controls");
+}
+
 function render(){renderRooms();renderDevices();renderSelects();renderManage();renderPatterns();renderPresets();$("count").textContent=devices.length+" device"+(devices.length===1?"":"s")}
 function renderRooms(){let rooms=["All",...new Set(devices.map(d=>d.room||"Unassigned"))];if(!rooms.includes(filter))filter="All";$("rooms").innerHTML=rooms.map(r=>`<button class="${r===filter?"active":""}" onclick="filter=${JSON.stringify(r)};renderRooms();renderDevices()">${esc(r)}</button>`).join("")}
 function renderDevices(){let ds=devices.filter(d=>filter==="All"||(d.room||"Unassigned")===filter);$("deviceList").innerHTML=ds.length?ds.map(d=>`<div class="card device"><div class="row"><div class="bulb">💡</div><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.room||"Unassigned")}</div><div id="st-${d.id}" class="sub">${d.on?"On":"Ready"}</div></div><button class="switch ${d.on?"on":""}" onclick="toggle('${d.id}')"><span></span></button></div><div class="row section"><button onclick="selected='${d.id}';page('controls')">☼ Controls</button><button onclick="check('${d.id}')">↻ Test</button></div></div>`).join(""):'<div class="empty">No devices here yet. Add a device to get started.</div>'}
@@ -620,7 +655,32 @@ function updatePowerButton(){
 }
 
 async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");try{let s=await api(d,"/json/state");for(let x of devices){if(x.id===d.id)continue;try{let seg=s.seg?.[0],b={on:s.on,bri:s.bri};if(seg)b.seg={col:seg.col,fx:seg.fx,pal:seg.pal,sx:seg.sx,ix:seg.ix};await api(x,"/json/state","POST",b);x.on=s.on}catch(e){}}save();renderDevices();alert("Sync attempted. Check your other lights.")}catch(e){alert("Could not read the selected light.")}}
-function renderManage(){$("manage").innerHTML=devices.length?devices.map(d=>`<div class="card"><div class="row"><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.url)}</div><div class="sub">${esc(d.room||"Unassigned")}</div></div><button onclick="edit('${d.id}')">Edit</button></div><div class="row section"><button onclick="check('${d.id}')">Test</button><button class="danger" onclick="removeDevice('${d.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No saved devices.</div>'}
+
+function renderManage(){
+  $("manage").innerHTML=devices.length
+    ? devices.map(d=>`
+      <div class="card">
+        <div class="row">
+          <div
+            style="flex:1;min-width:0;cursor:pointer"
+            onclick="openDevice('${d.id}')">
+            <b>${esc(d.name)}</b>
+            <div class="sub">${esc(d.url)}</div>
+            <div class="sub">${esc(d.room||"Unassigned")}</div>
+            <div class="sub">Tap to open dashboard →</div>
+          </div>
+          <button onclick="edit('${d.id}')">Edit</button>
+        </div>
+        <div class="row section">
+          <button onclick="check('${d.id}')">Test</button>
+          <button class="danger"
+            onclick="removeDevice('${d.id}')">Remove</button>
+        </div>
+      </div>
+    `).join("")
+    : '<div class="empty">No saved devices.</div>';
+}
+
 function edit(id){let d=dev(id);editing=id;$("formTitle").textContent="Edit device";$("dname").value=d.name;$("dip").value=d.url;$("droom").value=d.room||"Unassigned";page("devices")}function clearForm(){editing="";$("formTitle").textContent="Add a device";$("dname").value="";$("dip").value="";$("droom").value="Unassigned";$("formStatus").textContent=""}
 function removeDevice(id){if(!confirm("Remove this device from Glow?"))return;devices=devices.filter(d=>d.id!==id);if(selected===id)selected=devices[0]?.id||"";save();render()}
 async function testForm(){try{$("formStatus").textContent="Testing…";let x=await api({url:norm($("dip").value)},"/json/info");$("formStatus").textContent="Connected successfully"+(x.name?" to "+x.name:"")+"."}catch(e){$("formStatus").textContent="Could not connect. Check IP, Wi-Fi and browser permissions."}}
