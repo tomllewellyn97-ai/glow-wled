@@ -683,6 +683,7 @@ function syncWheelColour(){
 }
 
 
+
 function setWheelColour(value){
   const target=$("wheelTarget");
   const i=target?Number(target.value):0;
@@ -691,13 +692,18 @@ function setWheelColour(value){
 
   colours[i]=value;
 
-  if($("wheelHex"))$("wheelHex").value=value;
+  if($("wheelHex")){
+    $("wheelHex").value=value;
+  }
 
-  const swatches=$("colours").querySelectorAll(".colour-swatch");
+  const container=$("colours");
+  if(container){
+    const swatches=container.querySelectorAll(".colour-swatch");
 
-  if(swatches[i]){
-    swatches[i].style.background=value;
-    swatches[i].style.boxShadow=`0 0 10px ${value}66`;
+    if(swatches[i]){
+      swatches[i].style.backgroundColor=value;
+      swatches[i].style.boxShadow="0 0 10px "+value+"66";
+    }
   }
 
   drawColourWheel();
