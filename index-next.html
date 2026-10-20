@@ -807,7 +807,6 @@ function initColourWheel(){
   });
 }
 
-}
 async function applyPattern(){let d=dev($("pdev").value||selected);if(!d)return alert("Add a device first.");let start=Math.max(0,+$("pstart").value||0),len=Math.max(1,+$("plen").value||1),col=colours.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));try{await api(d,"/json/state","POST",{seg:{id:0,start,len,col}});alert("Pattern sent to WLED.")}catch(e){alert("Could not apply pattern. Check the device connection.")}}
 function savePattern(){let name=$("pname").value.trim();if(!name)return alert("Enter a pattern name.");patterns.push({name,colours:[...colours],start:+$("pstart").value||0,len:+$("plen").value||30});db.set("patterns",patterns);renderPatterns()}
 function renderPatterns(){if(!$("colours"))return;renderColours();$("patternList").innerHTML=patterns.length?patterns.map((p,i)=>`<div class="row section"><span class="grow">${esc(p.name)}</span><button onclick="usePattern(${i})">Apply</button><button class="danger" onclick="patterns.splice(${i},1);db.set('patterns',patterns);renderPatterns()">×</button></div>`).join(""):'<div class="empty">No saved patterns yet.</div>'}
