@@ -633,16 +633,22 @@ function renderEffects(){let q=$("effectSearch").value.toLowerCase();$("effectGr
 function setSeg(obj){command({seg:obj})}
 function addColour(){if(colours.length>=8)return alert("Use up to 8 colours.");colours.push("#ffffff");renderColours()}
 
+
 function renderColours(){
-  $("colours").innerHTML=colours.map((c,i)=>`<div class="row"><input type="color" value="${c}" onchange="colours[${i}]=this.value;syncWheelColour()"><span class="grow">Colour ${i+1}</span>${colours.length>1?`<button onclick="colours.splice(${i},1);renderColours();syncWheelColour()">Remove</button>`:""}</div>`).join("");
   const target=$("wheelTarget");
+  const previous=target?target.value:"0";
+
+  $("colours").innerHTML=colours.map((c,i)=>`<div class="row"><input type="color" value="${c}" onchange="colours[${i}]=this.value;syncWheelColour()"><span class="grow">Colour ${i+1}</span>${colours.length>1?`<button onclick="colours.splice(${i},1);renderColours()">Remove</button>`:""}</div>`).join("");
+
   if(target){
     target.innerHTML=colours.map((c,i)=>`<option value="${i}">Colour ${i+1}</option>`).join("");
-        if(+target.value>=colours.length)target.value=String(colours.length-1);
+    target.value=String(Math.min(Math.max(0,Number(previous)||0),colours.length-1));
     syncWheelColour();
   }
+
   initColourWheel();
 }
+
 
 
 function syncWheelColour(){
