@@ -257,6 +257,73 @@ button.danger {
   box-shadow: 0 0 24px #ff397a45 !important;
 }
 
+/* GLOW DEVICE CARD POLISH */
+.device {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  padding: 16px !important;
+  margin: 10px 0 !important;
+  border: 1px solid #28354b !important;
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, #121a29, #090e18) !important;
+  box-shadow: 0 8px 24px #00000030 !important;
+  overflow: hidden !important;
+}
+
+.device:before {
+  width: 4px !important;
+  background: linear-gradient(180deg, #a855f7, #35e7ff) !important;
+  box-shadow: 0 0 14px #35e7ff55 !important;
+}
+
+.device .row {
+  align-items: center;
+  gap: 12px;
+}
+
+.device .bulb {
+  flex-shrink: 0;
+  border: 1px solid #a855f733;
+  box-shadow: inset 0 0 18px #a855f722;
+}
+
+.device button {
+  min-height: 46px !important;
+  border-radius: 14px !important;
+}
+
+.device .switch {
+  margin-left: auto;
+}
+
+.device h3 {
+  color: #f4f7ff;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.25;
+  margin: 0 0 3px;
+  overflow-wrap: anywhere;
+}
+
+.device .sub,
+.device .status {
+  color: #a1abc1;
+  line-height: 1.4;
+}
+
+@media (max-width: 599px) {
+  .device {
+    padding: 14px !important;
+    gap: 10px !important;
+  }
+
+  .device button {
+    min-height: 44px !important;
+  }
+}
+
 </style></head>
 <body><div class="app">
 <header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR VIBE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
