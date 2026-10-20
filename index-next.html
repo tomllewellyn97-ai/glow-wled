@@ -634,11 +634,16 @@ function setSeg(obj){command({seg:obj})}
 function addColour(){if(colours.length>=8)return alert("Use up to 8 colours.");colours.push("#ffffff");renderColours()}
 
 
+
 function renderColours(){
   const target=$("wheelTarget");
   const previous=target?target.value:"0";
 
-  $("colours").innerHTML=colours.map((c,i)=>`<div class="row"><input type="color" value="${c}" onchange="colours[${i}]=this.value;syncWheelColour()"><span class="grow">Colour ${i+1}</span>${colours.length>1?`<button onclick="colours.splice(${i},1);renderColours()">Remove</button>`:""}</div>`).join("");
+  $("colours").innerHTML=colours.map((c,i)=>`<div class="row">
+    <span style="display:inline-block;width:34px;height:34px;border-radius:8px;background:${c};border:1px solid #ffffff66;box-shadow:0 0 10px ${c}66"></span>
+    <span class="grow">Colour ${i+1}</span>
+    ${colours.length>1?`<button onclick="colours.splice(${i},1);renderColours()">Remove</button>`:""}
+  </div>`).join("");
 
   if(target){
     target.innerHTML=colours.map((c,i)=>`<option value="${i}">Colour ${i+1}</option>`).join("");
@@ -648,7 +653,6 @@ function renderColours(){
 
   initColourWheel();
 }
-
 
 
 function syncWheelColour(){
