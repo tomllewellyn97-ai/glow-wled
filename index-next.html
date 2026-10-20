@@ -326,7 +326,7 @@ button.danger {
 }
 </style></head>
 <body><div class="app">
-<header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR VIBE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
+<header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav"><button class="active" data-page="home">⌂ Home</button><button data-page="controls">☼ Controls</button><button data-page="effects">✧ Effects</button><button data-page="patterns">◈ Patterns</button><button data-page="presets">★ Presets</button><button data-page="devices">⚙ Devices</button></nav>
 <section id="home"><div class="row"><div><h2>Your lights</h2><span class="sub" id="count">0 devices</span></div><button class="primary" onclick="page('devices')">＋ Add device</button></div><div class="row section wrap"><button id="powerButton" class="danger" onclick="powerToggle()">■ All Off</button><button onclick="syncAll()">⇄ Sync All</button></div><div id="rooms" class="roomtabs"></div><div id="deviceList" class="devices"></div><p class="notice">Your phone and WLED lights need to be on the same Wi-Fi network. Enter each light's local IP address.</p></section>
 <section id="controls" class="hidden"><h2>Light controls</h2><label>Selected device<select id="cdev" onchange="selected=this.value;renderControls()"></select></label><div id="controlBody"></div></section>
