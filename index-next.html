@@ -659,12 +659,19 @@ function syncWheelColour(){
   if($("colourCanvas"))drawColourWheel();
 }
 
+
 function setWheelColour(value){
-  const i=+$("wheelTarget").value;
+  const target=$("wheelTarget");
+  const i=target?Number(target.value):0;
+  if(!Number.isInteger(i)||i<0||i>=colours.length)return;
+
   colours[i]=value;
   $("wheelHex").value=value;
-  renderColours();
-  if($("colourCanvas"))drawColourWheel();
+
+  const inputs=$("colours").querySelectorAll('input[type="color"]');
+  if(inputs[i])inputs[i].value=value;
+
+  drawColourWheel();
 }
 
 function setHexColour(value){
