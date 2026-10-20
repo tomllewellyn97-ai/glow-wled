@@ -815,10 +815,12 @@ function renderManage(){
 
         <div class="row">
           <div style="flex:1;min-width:0">
-            <b>${esc(d.name)}</b>
-            <div class="sub">${esc(d.url)}</div>
+            <div style="display:flex;align-items:center;gap:8px">
+  <b>${esc(d.name)}</b>
+  <span title="Device settings" style="font-size:16px">⚙️</span>
+</div>
+<div class="sub">${esc(d.url)}</div>
             <div class="sub">${esc(d.room||"Unassigned")}</div>
-            <div class="sub">Tap anywhere to open dashboard →</div>
           </div>
 
           <button onclick="event.stopPropagation();edit('${d.id}')">
