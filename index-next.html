@@ -597,7 +597,7 @@ input#colourWheel {
 </div>
 <div id="colours"></div>
 <button onclick="addColour()">＋ Add colour</button> <button class="primary" onclick="applyPattern()">Apply pattern</button><label>Pattern name<input id="pname" placeholder="e.g. Sunset"></label><button onclick="savePattern()">Save pattern</button></div><div class="card"><h3>Saved patterns</h3><div id="patternList"></div></div></section>
-<section id="presets" class="hidden"><h2>Presets</h2><label>Selected device<select id="prdev" onchange="selected=this.value"></select></label><div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this phone</h3><div id="presetList"></div></div></section>
+<section id="presets" class="hidden"><h2>Presets</h2><label>Selected device<select id="prdev" onchange="selected=this.value"></select></label><div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
 
 <section id="devices" class="hidden">
   <div class="row">
