@@ -407,6 +407,59 @@ button.danger {
   border: 1px solid #8b5cf6aa !important;
   box-shadow: 0 0 16px #a855f722, inset 0 0 18px #a855f722 !important;
 }
+
+/* GLOW CONTROL POLISH */
+input[type="range"] {
+  width: 100% !important;
+  min-height: 34px !important;
+  accent-color: #35e7ff !important;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  cursor: grab;
+}
+input[type="text"],
+input[type="number"] {
+  min-height: 44px !important;
+  padding: 10px 12px !important;
+  border: 1px solid #35415b !important;
+  border-radius: 12px !important;
+  background: #0c1422 !important;
+  color: #f4f7ff !important;
+  box-sizing: border-box !important;
+  max-width: 100%;
+}
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: 2px solid #35e7ff80 !important;
+  border-color: #35e7ff !important;
+}
+input[type="color"] {
+  width: 52px !important;
+  height: 48px !important;
+  padding: 4px !important;
+  border: 1px solid #51417b !important;
+  border-radius: 12px !important;
+  background: #121a29 !important;
+  cursor: pointer;
+}
+button {
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+button:active {
+  filter: brightness(1.2);
+  transform: scale(0.98);
+}
+@media (max-width: 599px) {
+  input[type="text"],
+  input[type="number"] {
+    font-size: 16px !important;
+  }
+  input[type="color"] {
+    width: 48px !important;
+    height: 46px !important;
+  }
+}
 </style>
 </head>
 
