@@ -635,25 +635,44 @@ function addColour(){if(colours.length>=8)return alert("Use up to 8 colours.");c
 
 
 
+
 function renderColours(){
   const target=$("wheelTarget");
   const previous=target?target.value:"0";
 
-  $("colours").innerHTML=colours.map((c,i)=>`<div class="row">
-    <span style="display:inline-block;width:34px;height:34px;border-radius:8px;background:${c};border:1px solid #ffffff66;box-shadow:0 0 10px ${c}66"></span>
-    <span class="grow">Colour ${i+1}</span>
-    ${colours.length>1?`<button onclick="colours.splice(${i},1);renderColours()">Remove</button>`:""}
-  </div>`).join("");
+  $("colours").innerHTML=colours.map((c,i)=>`
+    <div class="row">
+      <span class="colour-swatch"
+        style="display:inline-block;width:34px;height:34px;
+        border-radius:8px;background:${c};
+        border:1px solid #ffffff66;
+        box-shadow:0 0 10px ${c}66;
+        pointer-events:none">
+      </span>
+      <span class="grow">Colour ${i+1}</span>
+      ${colours.length>1
+        ? `<button onclick="colours.splice(${i},1);renderColours()">Remove</button>`
+        : ""}
+    </div>
+  `).join("");
 
   if(target){
-    target.innerHTML=colours.map((c,i)=>`<option value="${i}">Colour ${i+1}</option>`).join("");
-    target.value=String(Math.min(Math.max(0,Number(previous)||0),colours.length-1));
+    target.innerHTML=colours.map((c,i)=>
+      `<option value="${i}">Colour ${i+1}</option>`
+    ).join("");
+
+    target.value=String(
+      Math.min(
+        Math.max(0,Number(previous)||0),
+        colours.length-1
+      )
+    );
+
     syncWheelColour();
   }
 
   initColourWheel();
 }
-
 
 function syncWheelColour(){
   const i=+$("wheelTarget").value;
@@ -667,13 +686,19 @@ function syncWheelColour(){
 function setWheelColour(value){
   const target=$("wheelTarget");
   const i=target?Number(target.value):0;
+
   if(!Number.isInteger(i)||i<0||i>=colours.length)return;
 
   colours[i]=value;
-  $("wheelHex").value=value;
 
-  const inputs=$("colours").querySelectorAll('input[type="color"]');
-  if(inputs[i])inputs[i].value=value;
+  if($("wheelHex"))$("wheelHex").value=value;
+
+  const swatches=$("colours").querySelectorAll(".colour-swatch");
+
+  if(swatches[i]){
+    swatches[i].style.background=value;
+    swatches[i].style.boxShadow=`0 0 10px ${value}66`;
+  }
 
   drawColourWheel();
 }
