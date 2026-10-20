@@ -889,7 +889,111 @@ function removeDevice(id){
 }
 async function testForm(){try{$("formStatus").textContent="Testing…";let x=await api({url:norm($("dip").value)},"/json/info");$("formStatus").textContent="Connected successfully"+(x.name?" to "+x.name:"")+"."}catch(e){$("formStatus").textContent="Could not connect. Check IP, Wi-Fi and browser permissions."}}
 async function saveDevice(){let name=$("dname").value.trim(),ip=$("dip").value.trim();if(!name||!ip){$("formStatus").textContent="Enter a name and IP address.";return}let url;try{url=norm(ip);new URL(url)}catch(e){$("formStatus").textContent="Enter a valid IP address.";return}let id=editing||"d"+Date.now(),old=dev(id),d={id,name,url,room:$("droom").value,on:old?.on||false};devices=editing?devices.map(x=>x.id===id?d:x):[...devices,d];selected=id;save();clearForm();render();page("home");check(id)}
-function renderControls(){renderSelects();let d=dev($("cdev").value||selected);if(!d){$("controlBody").innerHTML='<div class="empty">Add a device first.</div>';return}selected=d.id;$("controlBody").innerHTML=`<div class="card"><div class="row"><div class="grow"><h3>${esc(d.name)}</h3><div class="sub">${esc(d.url)}</div></div><button onclick="toggle('${d.id}')">Power</button></div><label>Brightness <b id="bn">128</b><input id="bright" type="range" min="1" max="255" value="128" oninput="bn.textContent=this.value" onchange="command({bri:+this.value})"></label><div class="row wrap"><button onclick="command({bri:64})">Low</button><button onclick="command({bri:128})">Medium</button><button onclick="command({bri:255})">Full</button></div><hr><h3>Colour</h3><div class="row"><input type="color" id="colour" value="#ffffff" onchange="applyColour(this.value)"><input id="hex" value="#ffffff" maxlength="7"><button onclick="applyColour(hex.value)">Apply</button></div><div class="swatches">${["#ff3158","#ff8b30","#ffe84a","#45ed8c","#36dbea","#4e79ff","#a16aff","#ff5eea","#ffffff"].map(c=>`<button class="swatch" style="background:${c}" onclick="applyColour('${c}')"></button>`).join("")}</div><div class="status" id="controlStatus"></div></div>`;api(d,"/json/state").then(s=>{if($("bright")){$("bright").value=s.bri||128;$("bn").textContent=s.bri||128}let c=s.seg?.[0]?.col?.[0];if(c){let h="#"+c.slice(0,3).map(v=>Number(v).toString(16).padStart(2,"0")).join("");$("colour").value=h;$("hex").value=h}}).catch(()=>{})}
+
+function renderControls(){
+  renderSelects();
+
+  let d=dev($("cdev").value||selected);
+
+  if(!d){
+    $("controlBody").innerHTML='<div class="empty">Add a device first.</div>';
+    return;
+  }
+
+  selected=d.id;
+
+  $("controlBody").innerHTML=`
+    <div class="card">
+      <div class="row">
+        <div class="grow">
+          <h3>${esc(d.name)}</h3>
+          <div class="sub">${esc(d.url)}</div>
+        </div>
+        <button onclick="toggle('${d.id}')">Power</button>
+      </div>
+
+      <label>
+        Brightness <b id="bn">128</b>
+        <input id="bright" type="range" min="1" max="255"
+          value="128"
+          oninput="$('bn').textContent=this.value"
+          onchange="command({bri:+this.value})">
+      </label>
+
+      <div class="row wrap">
+        <button onclick="command({bri:64})">Low</button>
+        <button onclick="command({bri:128})">Medium</button>
+        <button onclick="command({bri:255})">Full</button>
+      </div>
+
+      <hr>
+      <h3>Colour</h3>
+
+      <div class="row">
+        <input type="color" id="colour" value="#ffffff"
+          onchange="applyColour(this.value)">
+        <input id="hex" value="#ffffff" maxlength="7">
+        <button onclick="applyColour($('hex').value)">Apply</button>
+      </div>
+
+      <div class="card">
+        <h3>Choose colours</h3>
+        <div class="wheel-layout">
+          <div class="wheel-wrap">
+            <canvas id="colourCanvas" width="240" height="240"
+              role="slider" tabindex="0"
+              aria-label="Rainbow colour wheel"
+              style="display:block;max-width:100%;height:auto">
+            </canvas>
+          </div>
+          <div class="wheel-details">
+            <label>Selected colour
+              <input id="wheelHex" type="text" value="#ff4b70"
+                maxlength="7" oninput="setHexColour(this.value)">
+            </label>
+            <label>Colour to edit
+              <select id="wheelTarget" onchange="syncWheelColour()">
+                <option value="0">Colour 1</option>
+                <option value="1">Colour 2</option>
+                <option value="2">Colour 3</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="swatches">
+        ${["#ff3158","#ff8b30","#ffe84a","#45ed8c","#36dbea","#4e79ff","#a16aff","#ff5eea","#ffffff"]
+          .map(c=>`<button class="swatch" style="background:${c}"
+            onclick="applyColour('${c}')"></button>`).join("")}
+      </div>
+
+      <div class="status" id="controlStatus"></div>
+    </div>`;
+
+  initColourWheel();
+
+  api(d,"/json/state").then(s=>{
+    if($("bright")){
+      $("bright").value=s.bri||128;
+      $("bn").textContent=s.bri||128;
+    }
+
+    let c=s.seg?.[0]?.col?.[0];
+
+    if(c){
+      let h="#"+c.slice(0,3)
+        .map(v=>Number(v).toString(16).padStart(2,"0"))
+        .join("");
+
+      $("colour").value=h;
+      $("hex").value=h;
+      colours[0]=h;
+      syncWheelColour();
+    }
+  }).catch(()=>{});
+}
+
 async function command(body){let d=dev();if(!d)return;try{await api(d,"/json/state","POST",body);if($("controlStatus"))$("controlStatus").textContent="Updated"}catch(e){if($("controlStatus"))$("controlStatus").textContent="Could not send command. Check connection."}}
 function applyColour(h){if(!/^#[0-9a-f]{6}$/i.test(h))return alert("Enter a colour like #ff55aa");let rgb=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));if($("colour"))$("colour").value=h;if($("hex"))$("hex").value=h;command({seg:{col:[rgb]}})}
 async function loadEffects(){renderSelects();let d=dev($("edev").value||selected);if(!d)return;selected=d.id;$("effectGrid").textContent="Loading…";try{effects=await api(d,"/json/effects");palettes=await api(d,"/json/palettes");$("palette").innerHTML=palettes.map((p,i)=>`<option value="${i}">${esc(p)}</option>`).join("");renderEffects();$("effectStatus").textContent=effects.length+" effects and "+palettes.length+" palettes loaded."}catch(e){$("effectGrid").textContent="Could not load effects. Check connection.";$("effectStatus").textContent="WLED API unavailable."}}
