@@ -9,7 +9,7 @@
 </style></head><body><div class="app">
 <header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR VIBE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav"><button class="active" data-page="home">⌂ Home</button><button data-page="controls">☼ Controls</button><button data-page="effects">✧ Effects</button><button data-page="patterns">◈ Patterns</button><button data-page="presets">★ Presets</button><button data-page="devices">⚙ Devices</button></nav>
-<section id="home"><div class="row"><div><h2>Your lights</h2><span class="sub" id="count">0 devices</span></div><button class="primary" onclick="page('devices')">＋ Add device</button></div><div class="row section wrap"><button class="danger" onclick="allOff()">■ All Off</button><button onclick="syncAll()">⇄ Sync All</button></div><div id="rooms" class="roomtabs"></div><div id="deviceList" class="devices"></div><p class="notice">Your phone and WLED lights need to be on the same Wi-Fi network. Enter each light's local IP address.</p></section>
+<section id="home"><div class="row"><div><h2>Your lights</h2><span class="sub" id="count">0 devices</span></div><button class="primary" onclick="page('devices')">＋ Add device</button></div><div class="row section wrap"><button id="powerButton" class="danger" onclick="powerToggle()">■ All Off</button><button onclick="syncAll()">⇄ Sync All</button></div><div id="rooms" class="roomtabs"></div><div id="deviceList" class="devices"></div><p class="notice">Your phone and WLED lights need to be on the same Wi-Fi network. Enter each light's local IP address.</p></section>
 <section id="controls" class="hidden"><h2>Light controls</h2><label>Selected device<select id="cdev" onchange="selected=this.value;renderControls()"></select></label><div id="controlBody"></div></section>
 <section id="effects" class="hidden"><h2>Effects & palettes</h2><label>Selected device<select id="edev" onchange="selected=this.value;loadEffects()"></select></label><div class="card"><h3>Effects</h3><input id="effectSearch" placeholder="Search effects" oninput="renderEffects()"><div id="effectGrid" class="grid"></div><hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
 <section id="patterns" class="hidden"><h2>Custom patterns</h2><label>Selected device<select id="pdev" onchange="selected=this.value"></select></label><div class="card"><div class="grid"><label>Starting LED<input id="pstart" type="number" min="0" value="0"></label><label>LED count<input id="plen" type="number" min="1" value="30"></label></div><h3>Colours</h3><div id="colours"></div><button onclick="addColour()">＋ Add colour</button> <button class="primary" onclick="applyPattern()">Apply pattern</button><label>Pattern name<input id="pname" placeholder="e.g. Sunset"></label><button onclick="savePattern()">Save pattern</button></div><div class="card"><h3>Saved patterns</h3><div id="patternList"></div></div></section>
@@ -29,7 +29,47 @@ function renderDevices(){let ds=devices.filter(d=>filter==="All"||(d.room||"Unas
 function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
 async function check(id){let d=dev(id);if(!d)return;try{let x=await api(d,"/json/info");$("topStatus").textContent="● Connected";let el=$("st-"+id);if(el){el.textContent="Online"+(x.name?" · "+x.name:"");el.className="online"}}catch(e){$("topStatus").textContent="● Offline";let el=$("st-"+id);if(el){el.textContent="Connection failed";el.className="offline"}}}
 async function toggle(id){let d=dev(id);try{let on=!d.on;await api(d,"/json/state","POST",{on});d.on=on;save();renderDevices()}catch(e){alert("Could not control this light. Check its IP and Wi-Fi connection.")}}
-async function allOff(){for(let d of devices){try{await api(d,"/json/state","POST",{on:false});d.on=false}catch(e){}}save();renderDevices()}
+
+async function powerToggle(){
+  if(devices.some(d=>d.on)){
+    await allOff();
+  }else{
+    await allOn();
+  }
+}
+
+async function allOff(){
+  for(let d of devices){
+    try{
+      await api(d,"/json/state","POST",{on:false});
+      d.on=false;
+    }catch(e){}
+  }
+  save();
+  renderDevices();
+  updatePowerButton();
+}
+
+async function allOn(){
+  for(let d of devices){
+    try{
+      await api(d,"/json/state","POST",{on:true});
+      d.on=true;
+    }catch(e){}
+  }
+  save();
+  renderDevices();
+  updatePowerButton();
+}
+
+function updatePowerButton(){
+  const b=document.getElementById("powerButton");
+  if(!b)return;
+  const on=devices.some(d=>d.on);
+  b.textContent=on?"■ All Off":"● All On";
+  b.className=on?"danger":"primary";
+}
+
 async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");try{let s=await api(d,"/json/state");for(let x of devices){if(x.id===d.id)continue;try{let seg=s.seg?.[0],b={on:s.on,bri:s.bri};if(seg)b.seg={col:seg.col,fx:seg.fx,pal:seg.pal,sx:seg.sx,ix:seg.ix};await api(x,"/json/state","POST",b);x.on=s.on}catch(e){}}save();renderDevices();alert("Sync attempted. Check your other lights.")}catch(e){alert("Could not read the selected light.")}}
 function renderManage(){$("manage").innerHTML=devices.length?devices.map(d=>`<div class="card"><div class="row"><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.url)}</div><div class="sub">${esc(d.room||"Unassigned")}</div></div><button onclick="edit('${d.id}')">Edit</button></div><div class="row section"><button onclick="check('${d.id}')">Test</button><button class="danger" onclick="removeDevice('${d.id}')">Remove</button></div></div>`).join(""):'<div class="empty">No saved devices.</div>'}
 function edit(id){let d=dev(id);editing=id;$("formTitle").textContent="Edit device";$("dname").value=d.name;$("dip").value=d.url;$("droom").value=d.room||"Unassigned";page("devices")}function clearForm(){editing="";$("formTitle").textContent="Add a device";$("dname").value="";$("dip").value="";$("droom").value="Unassigned";$("formStatus").textContent=""}
