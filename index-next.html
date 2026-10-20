@@ -530,7 +530,10 @@ input#colourWheel {
 </head>
 
 <body><div class="app">
-<header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
+<header><div class="brand"><div class="logo" role="button" tabindex="0"
+  title="Back to Glow home"
+  onclick="page('home')"
+  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();page('home')}">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav" class="hidden"></nav>
 <section id="home">
   <div class="card" style="text-align:center;padding:30px 20px">
@@ -636,7 +639,31 @@ const $=id=>document.getElementById(id),db={get(k,d){try{return JSON.parse(local
 let devices=db.get("devices",[]),selected=devices[0]?.id||"",filter="All",editing="",effects=[],palettes=[],colours=["#ff4b70","#a16aff","#37dfeb"],patterns=db.get("patterns",[]),presets=db.get("presets",[]);
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function dev(id=selected){return devices.find(d=>d.id===id)}function base(d){return d.url.replace(/\/+$/,"")}function norm(s){s=s.trim();return /^https?:\/\//i.test(s)?s:"http://"+s}
 async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
-function save(){db.set("devices",devices)}function page(p){document.querySelectorAll("body > .app > section").forEach(x=>x.classList.add("hidden"));$(p).classList.remove("hidden");document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));if(p==="controls")renderControls();if(p==="effects")loadEffects();if(p==="patterns")renderPatterns();if(p==="presets")renderPresets();if(p==="devices")renderManage();if(p==="addDevice"){}
+function save(){db.set("devices",devices)}
+function page(p){
+  const target=$(p);
+  if(!target){
+    console.error("Glow screen not found:",p);
+    return;
+  }
+
+  document.querySelectorAll("body > .app > section")
+    .forEach(section=>section.classList.add("hidden"));
+
+  target.classList.remove("hidden");
+
+  document.querySelectorAll("#nav button")
+    .forEach(button=>{
+      button.classList.toggle("active",button.dataset.page===p);
+    });
+
+  if(p==="controls")renderControls();
+  if(p==="effects")loadEffects();
+  if(p==="patterns")renderPatterns();
+  if(p==="presets")renderPresets();
+  if(p==="devices")renderManage();
+}
+
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
 
 function showAddDevice(){
