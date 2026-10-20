@@ -578,7 +578,56 @@ input#colourWheel {
 <div id="colours"></div>
 <button onclick="addColour()">＋ Add colour</button> <button class="primary" onclick="applyPattern()">Apply pattern</button><label>Pattern name<input id="pname" placeholder="e.g. Sunset"></label><button onclick="savePattern()">Save pattern</button></div><div class="card"><h3>Saved patterns</h3><div id="patternList"></div></div></section>
 <section id="presets" class="hidden"><h2>Presets</h2><label>Selected device<select id="prdev" onchange="selected=this.value"></select></label><div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this phone</h3><div id="presetList"></div></div></section>
-<section id="devices" class="hidden"><h2>Devices</h2><div class="card"><h3 id="formTitle">Add a device</h3><label>Device name<input id="dname" placeholder="Bedroom Lights"></label><label>IP address or URL<input id="dip" placeholder="192.168.1.175"></label><label>Room<select id="droom"><option>Unassigned</option><option>Bedroom</option><option>Living Room</option><option>Kitchen</option><option>Office</option><option>Garden</option></select></label><div class="row wrap"><button onclick="testForm()">Test connection</button><button class="primary" onclick="saveDevice()">Save device</button><button onclick="clearForm()">Clear</button></div><div id="formStatus" class="status"></div></div><div class="card"><h3>Saved devices</h3><div id="manage"></div></div></section>
+
+<section id="devices" class="hidden">
+  <div class="row">
+    <h2>My Devices</h2>
+    <button onclick="page('home')">⌂ Home</button>
+  </div>
+
+  <button class="primary" style="width:100%;margin-bottom:16px"
+    onclick="showAddDevice()">
+    ＋ Add New Device
+  </button>
+
+  <div id="manage"></div>
+</section>
+
+<section id="addDevice" class="hidden">
+  <div class="row">
+    <h2 id="formTitle">Add a device</h2>
+    <button onclick="page('devices')">← Back</button>
+  </div>
+
+  <div class="card">
+    <label>Device name
+      <input id="dname" placeholder="Bedroom Lights">
+    </label>
+
+    <label>IP address or URL
+      <input id="dip" placeholder="192.168.1.175">
+    </label>
+
+    <label>Room
+      <select id="droom">
+        <option>Unassigned</option>
+        <option>Bedroom</option>
+        <option>Living Room</option>
+        <option>Kitchen</option>
+        <option>Office</option>
+        <option>Garden</option>
+      </select>
+    </label>
+
+    <div class="row wrap">
+      <button onclick="testForm()">Test connection</button>
+      <button class="primary" onclick="saveDevice()">Save device</button>
+      <button onclick="clearForm()">Clear</button>
+    </div>
+
+    <div id="formStatus" class="status"></div>
+  </div>
+</section>
 </div>
 <script>
 
@@ -587,8 +636,13 @@ const $=id=>document.getElementById(id),db={get(k,d){try{return JSON.parse(local
 let devices=db.get("devices",[]),selected=devices[0]?.id||"",filter="All",editing="",effects=[],palettes=[],colours=["#ff4b70","#a16aff","#37dfeb"],patterns=db.get("patterns",[]),presets=db.get("presets",[]);
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function dev(id=selected){return devices.find(d=>d.id===id)}function base(d){return d.url.replace(/\/+$/,"")}function norm(s){s=s.trim();return /^https?:\/\//i.test(s)?s:"http://"+s}
 async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
-function save(){db.set("devices",devices)}function page(p){document.querySelectorAll("body > .app > section").forEach(x=>x.classList.add("hidden"));$(p).classList.remove("hidden");document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));if(p==="controls")renderControls();if(p==="effects")loadEffects();if(p==="patterns")renderPatterns();if(p==="presets")renderPresets();if(p==="devices")renderManage()}
+function save(){db.set("devices",devices)}function page(p){document.querySelectorAll("body > .app > section").forEach(x=>x.classList.add("hidden"));$(p).classList.remove("hidden");document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===p));if(p==="controls")renderControls();if(p==="effects")loadEffects();if(p==="patterns")renderPatterns();if(p==="presets")renderPresets();if(p==="devices")renderManage();if(p==="addDevice"){}
 document.querySelectorAll("#nav button").forEach(b=>b.onclick=()=>page(b.dataset.page));
+
+function showAddDevice(){
+  clearForm();
+  page("addDevice");
+}
   
 function openDevice(id){
   selected=id;
@@ -675,7 +729,20 @@ function renderManage(){
     : '<div class="empty">No saved devices.</div>';
 }
 
-function edit(id){let d=dev(id);editing=id;$("formTitle").textContent="Edit device";$("dname").value=d.name;$("dip").value=d.url;$("droom").value=d.room||"Unassigned";page("devices")}function clearForm(){editing="";$("formTitle").textContent="Add a device";$("dname").value="";$("dip").value="";$("droom").value="Unassigned";$("formStatus").textContent=""}
+
+function edit(id){
+  let d=dev(id);
+  if(!d)return;
+
+  editing=id;
+  $("formTitle").textContent="Edit device";
+  $("dname").value=d.name;
+  $("dip").value=d.url;
+  $("droom").value=d.room||"Unassigned";
+
+  page("addDevice");
+}
+
 function removeDevice(id){if(!confirm("Remove this device from Glow?"))return;devices=devices.filter(d=>d.id!==id);if(selected===id)selected=devices[0]?.id||"";save();render()}
 async function testForm(){try{$("formStatus").textContent="Testing…";let x=await api({url:norm($("dip").value)},"/json/info");$("formStatus").textContent="Connected successfully"+(x.name?" to "+x.name:"")+"."}catch(e){$("formStatus").textContent="Could not connect. Check IP, Wi-Fi and browser permissions."}}
 async function saveDevice(){let name=$("dname").value.trim(),ip=$("dip").value.trim();if(!name||!ip){$("formStatus").textContent="Enter a name and IP address.";return}let url;try{url=norm(ip);new URL(url)}catch(e){$("formStatus").textContent="Enter a valid IP address.";return}let id=editing||"d"+Date.now(),old=dev(id),d={id,name,url,room:$("droom").value,on:old?.on||false};devices=editing?devices.map(x=>x.id===id?d:x):[...devices,d];selected=id;save();clearForm();render();page("home");check(id)}
