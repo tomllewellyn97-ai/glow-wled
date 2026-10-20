@@ -8,6 +8,210 @@
 <style>
 :root{color-scheme:dark;--bg:#090914;--panel:#17172b;--purple:#a16aff;--cyan:#37dfeb;--text:#f7f5ff;--muted:#a2a0bf;--border:#33324f}
 *{box-sizing:border-box}body{margin:0;color:var(--text);font:15px system-ui;background:radial-gradient(ellipse at 0 0,#291443,transparent 38%),radial-gradient(ellipse at 100% 15%,#10303d,transparent 32%),var(--bg);min-height:100vh}.app{max-width:780px;margin:auto;padding:16px 14px 44px}header,.row{display:flex;align-items:center;gap:10px;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--cyan));font-size:26px}h1{font-size:24px;letter-spacing:2px;margin:0}.sub,.muted,small{color:var(--muted);font-size:12px}nav{display:flex;gap:7px;overflow:auto;padding:20px 0 12px}button,input,select{font:inherit}button{cursor:pointer;color:var(--text);border:1px solid var(--border);background:#202039;padding:10px 12px;border-radius:12px;font-size:13px}button.primary{border:0;background:linear-gradient(110deg,#8c4fe8,#418fce)}button.active{border-color:var(--purple);background:#362052}button.danger{color:#ff91a5}h2{margin:5px 0;font-size:23px}h3{font-size:15px;margin:0 0 12px}.card{border:1px solid var(--border);border-radius:18px;background:linear-gradient(145deg,#19192d,#111120);padding:15px;margin:12px 0}.section{margin:20px 0}.grow{flex:1;min-width:0}.row.wrap{flex-wrap:wrap}label{display:block;font-size:12px;color:#c1bed9;margin:12px 0}input:not([type=range]):not([type=color]),select{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid #393854;border-radius:11px;background:#0d0d1b;color:white}input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:48px;height:40px;padding:0;border:0;background:none}.hidden{display:none!important}.roomtabs{display:flex;gap:7px;overflow:auto;margin:15px 0}.device{position:relative}.device:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--purple),var(--cyan))}.bulb{font-size:24px;background:#29203f;border-radius:12px;padding:8px}.switch{border-radius:30px;width:48px;padding:4px;background:#444}.switch span{display:block;background:white;width:20px;height:20px;border-radius:50%}.switch.on{background:linear-gradient(90deg,var(--purple),var(--cyan))}.switch.on span{margin-left:20px}.online{color:#65e9b2}.offline{color:#ff8297}.notice{background:#17272a;border:1px solid #28535b;border-radius:12px;padding:12px;font-size:12px;color:#a7ecee;line-height:1.5}.status{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.swatches{display:flex;gap:9px;flex-wrap:wrap}.swatch{width:35px;height:35px;border-radius:50%;border:2px solid #ffffff66;padding:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.effect{background:#0d0d1b;text-align:left}.empty{padding:25px;text-align:center;color:var(--muted)}hr{border:0;border-top:1px solid var(--border);margin:17px 0}@media(min-width:600px){.devices{display:grid;grid-template-columns:1fr 1fr;gap:10px}}
+
+/* GLOW NEON MOBILE REDESIGN */
+:root {
+  --bg: #05070d;
+  --panel: #101522;
+  --purple: #a855f7;
+  --cyan: #35e7ff;
+  --text: #f4f7ff;
+  --muted: #939eb6;
+  --border: #252e42;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 0% 0%, #261044 0%, transparent 42%),
+    radial-gradient(ellipse at 100% 15%, #082b3a 0%, transparent 38%),
+    #05070d;
+  background-attachment: fixed;
+}
+
+.app {
+  max-width: 780px;
+  padding: 18px 15px 100px;
+}
+
+header {
+  padding: 8px 0 14px;
+}
+
+.logo {
+  background: linear-gradient(135deg, #a855f7, #35e7ff);
+  box-shadow: 0 0 24px #35e7ff30;
+}
+
+h1 {
+  letter-spacing: 3px;
+  font-weight: 850;
+}
+
+h2 {
+  font-size: 25px;
+  letter-spacing: -.5px;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 8px -15px 18px;
+  padding: 12px 15px;
+  background: #080b13ed;
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid #252e42;
+  scrollbar-width: none;
+}
+
+nav button {
+  flex: 0 0 auto;
+  border-radius: 13px;
+  background: #111725;
+  border-color: #252e42;
+  padding: 11px 14px;
+}
+
+nav button.active {
+  color: #071018;
+  background: linear-gradient(110deg, #35e7ff, #a855f7);
+  border-color: transparent;
+  font-weight: 750;
+  box-shadow: 0 0 18px #35e7ff22;
+}
+
+.card {
+  background: linear-gradient(145deg, #121a29, #0b101a);
+  border: 1px solid #273248;
+  border-radius: 21px;
+  padding: 17px;
+  box-shadow: 0 8px 28px #00000025;
+}
+
+.device {
+  overflow: hidden;
+}
+
+.device:before {
+  width: 3px;
+  box-shadow: 0 0 12px #35e7ff70;
+}
+
+.bulb {
+  background: #17172b;
+  box-shadow: inset 0 0 16px #a855f722;
+}
+
+button {
+  min-height: 42px;
+  border-radius: 13px;
+  background: #151c2b;
+  border-color: #2b354a;
+  transition: border-color .15s, filter .15s;
+}
+
+button.primary {
+  color: #071018;
+  background: linear-gradient(110deg, #35e7ff, #a855f7);
+  font-weight: 750;
+}
+
+button.danger {
+  border-color: #6e2944;
+  background: #291321;
+  color: #ff8ba8;
+}
+
+input:not([type=range]):not([type=color]),
+select {
+  background: #080d17;
+  border-color: #2b354a;
+  border-radius: 13px;
+  min-height: 45px;
+}
+
+input[type=range] {
+  accent-color: #35e7ff;
+  min-height: 30px;
+}
+
+input[type=color] {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.swatch {
+  width: 39px;
+  height: 39px;
+  border: 2px solid #ffffff45;
+  box-shadow: 0 2px 10px #00000040;
+}
+
+.switch.on {
+  box-shadow: 0 0 15px #35e7ff45;
+}
+
+.notice {
+  background: #0c2028;
+  border-color: #1d5864;
+  border-radius: 15px;
+}
+
+.status,
+.sub {
+  letter-spacing: .1px;
+}
+
+.empty {
+  border: 1px dashed #303b52;
+  border-radius: 17px;
+  margin: 12px 0;
+}
+
+@media (max-width: 599px) {
+  .app {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  header {
+    align-items: center;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+
+  nav {
+    margin-left: -13px;
+    margin-right: -13px;
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  #home > .row:first-child {
+    align-items: flex-start;
+  }
+
+  #home > .row:first-child h2 {
+    font-size: 23px;
+  }
+
+  .card {
+    padding: 15px;
+    margin: 11px 0;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  button {
+    min-height: 44px;
+  }
+}
+
 </style></head><body><div class="app">
 <header><div class="brand"><div class="logo">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR VIBE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav"><button class="active" data-page="home">⌂ Home</button><button data-page="controls">☼ Controls</button><button data-page="effects">✧ Effects</button><button data-page="patterns">◈ Patterns</button><button data-page="presets">★ Presets</button><button data-page="devices">⚙ Devices</button></nav>
