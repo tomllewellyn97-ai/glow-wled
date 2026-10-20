@@ -706,7 +706,37 @@ function renderRooms(){
       onclick="filter=${JSON.stringify(r)};renderRooms();renderDevices()">${esc(r)}</button>`
   ).join("");
 }
-function renderDevices(){let ds=devices.filter(d=>filter==="All"||(d.room||"Unassigned")===filter);$("deviceList").innerHTML=ds.length?ds.map(d=>`<div class="card device"><div class="row"><div class="bulb">💡</div><div style="flex:1;min-width:0"><b>${esc(d.name)}</b><div class="sub">${esc(d.room||"Unassigned")}</div><div id="st-${d.id}" class="sub">${d.on?"On":"Ready"}</div></div><button class="switch ${d.on?"on":""}" onclick="toggle('${d.id}')"><span></span></button></div><div class="row section"><button onclick="selected='${d.id}';page('controls')">☼ Controls</button><button onclick="check('${d.id}')">↻ Test</button></div></div>`).join(""):'<div class="empty">No devices here yet. Add a device to get started.</div>'}
+
+function renderDevices(){
+  const list=$("deviceList");
+  if(!list)return;
+
+  let ds=devices.filter(d=>
+    filter==="All"||(d.room||"Unassigned")===filter
+  );
+
+  list.innerHTML=ds.length
+    ?ds.map(d=>`
+      <div class="card device">
+        <div class="row">
+          <div class="bulb">💡</div>
+          <div style="flex:1;min-width:0">
+            <b>${esc(d.name)}</b>
+            <div class="sub">${esc(d.room||"Unassigned")}</div>
+            <div id="st-${d.id}" class="sub">${d.on?"On":"Ready"}</div>
+          </div>
+          <button class="switch ${d.on?"on":""}"
+            onclick="toggle('${d.id}')"><span></span></button>
+        </div>
+        <div class="row section">
+          <button onclick="openDevice('${d.id}')">☼ Controls</button>
+          <button onclick="check('${d.id}')">↻ Test</button>
+        </div>
+      </div>
+    `).join("")
+    :'<div class="empty">No devices here yet. Add a device to get started.</div>';
+}
+
 function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
 async function check(id){let d=dev(id);if(!d)return;try{let x=await api(d,"/json/info");$("topStatus").textContent="● Connected";let el=$("st-"+id);if(el){el.textContent="Online"+(x.name?" · "+x.name:"");el.className="online"}}catch(e){$("topStatus").textContent="● Offline";let el=$("st-"+id);if(el){el.textContent="Connection failed";el.className="offline"}}}
 async function toggle(id){let d=dev(id);try{let on=!d.on;await api(d,"/json/state","POST",{on});d.on=on;save();renderDevices()}catch(e){alert("Could not control this light. Check its IP and Wi-Fi connection.")}}
