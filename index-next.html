@@ -999,6 +999,7 @@ async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");t
 
 
 
+
 function renderManage(){
   const manage=$("manage");
   if(!manage)return;
@@ -1009,34 +1010,38 @@ function renderManage(){
         style="cursor:pointer"
         onclick="openDevice('${d.id}')">
 
-        <div class="row">
+        <div class="row" style="align-items:center;gap:10px">
           <div style="flex:1;min-width:0">
-           
-<div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-  <b>${esc(d.name)}</b>
-  <button
-    onclick="event.stopPropagation();toggle('${d.id}')"
-    role="switch"
-    aria-checked="${!!d.on}"
-    aria-label="Toggle ${esc(d.name)} lights"
-    style="width:58px;height:32px;padding:3px;border:0;border-radius:999px;background:${d.on ? '#06b6d4' : '#52525b'};display:flex;align-items:center;justify-content:${d.on ? 'flex-end' : 'flex-start'};cursor:pointer;flex-shrink:0;transition:background 0.2s">
-    <span style="width:26px;height:26px;border-radius:50%;background:#fff;display:block"></span>
- 
-</button>
 
-<button
-  onclick="event.stopPropagation();edit('${d.id}')"
-  title="Device settings"
-  aria-label="Settings for ${esc(d.name)}"
-  style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid #a855f7;border-radius:12px;background:#171326;color:#c084fc;font-size:22px;cursor:pointer">
-  ⚙
-</button>
-</div>
+            <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+              <b style="flex:1;min-width:0">${esc(d.name)}</b>
 
-<div class="sub">${esc(d.url)}</div>
-<div class="sub">${esc(d.room||"Unassigned")}</div>
-</div>
-</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+
+                <button
+                  onclick="event.stopPropagation();edit('${d.id}')"
+                  title="Device settings"
+                  aria-label="Settings for ${esc(d.name)}"
+                  style="width:38px;height:38px;padding:0;display:flex;align-items:center;justify-content:center;border:1px solid #a855f7;border-radius:12px;background:#171326;color:#c084fc;font-size:22px;cursor:pointer">
+                  ⚙
+                </button>
+
+                <button
+                  onclick="event.stopPropagation();toggle('${d.id}')"
+                  role="switch"
+                  aria-checked="${!!d.on}"
+                  aria-label="Toggle ${esc(d.name)} lights"
+                  style="width:58px;height:32px;padding:3px;border:0;border-radius:999px;background:${d.on ? '#06b6d4' : '#52525b'};display:flex;align-items:center;justify-content:${d.on ? 'flex-end' : 'flex-start'};cursor:pointer;flex-shrink:0;transition:background 0.2s">
+                  <span style="width:26px;height:26px;border-radius:50%;background:#fff;display:block"></span>
+                </button>
+
+              </div>
+            </div>
+
+            <div class="sub">${esc(d.url)}</div>
+            <div class="sub">${esc(d.room||"Unassigned")}</div>
+          </div>
+        </div>
 
         <div class="row section">
           <button onclick="event.stopPropagation();check('${d.id}')">
