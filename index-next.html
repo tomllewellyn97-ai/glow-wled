@@ -1849,7 +1849,8 @@ function renderEffects(){
       return `
         <div class="effect-row">
           <button type="button" class="effect"
-            onclick="setSeg({fx:${x.i}})">
+            data-effect-index="${x.i}"
+            onclick="setSeg({fx:${x.i}});setTimeout(renderEffects,600)">
             ${esc(x.n)}
           </button>
           <button type="button"
@@ -1868,8 +1869,42 @@ function renderEffects(){
       toggleEffectFavourite(String(effects[index]));
     });
   });
-}
 
+  // Read the actual effect running on the selected WLED device.
+  const device=dev($("edev")?.value||selected);
+
+  if(!device)return;
+
+  api(device,"/json/state").then(s=>{
+    const activeIndex=Number(s.seg?.[0]?.fx);
+
+    if(!Number.isInteger(activeIndex))return;
+
+    const activeButton=grid.querySelector(
+      `.effect[data-effect-index="${activeIndex}"]`
+    );
+
+    if(!activeButton)return;
+
+    // Highlight the effect reported by WLED.
+    activeButton.style.border="2px solid #00eaff";
+    activeButton.style.background=
+      "linear-gradient(135deg,#12343b,#172238)";
+    activeButton.style.boxShadow=
+      "0 0 0 2px #00eaff22,0 0 14px #00eaff55";
+    activeButton.style.color="#b9fbff";
+    activeButton.style.fontWeight="700";
+
+    activeButton.insertAdjacentHTML(
+      "beforeend",
+      '<span style="display:inline-block;margin-left:8px;' +
+      'padding:3px 7px;border-radius:6px;' +
+      'background:#00eaff;color:#07131a;' +
+      'font-size:10px;font-weight:800;vertical-align:middle">' +
+      '✓ ACTIVE</span>'
+    );
+  }).catch(()=>{});
+}
 function toggleEffectFavourite(name){
   const favourites=getEffectFavourites();
   const index=favourites.indexOf(name);
