@@ -606,25 +606,51 @@ input#colourWheel {
   title="Back to Glow home"
   onclick="page('home')"
   onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();page('home')}">
-<svg viewBox="0 0 48 48" width="38" height="38" aria-hidden="true">
+
+<svg viewBox="0 0 48 48" width="44" height="44"
+     aria-hidden="true" style="overflow:visible">
   <defs>
-    <linearGradient id="glowHouse" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#ffffff"/>
-<stop offset="50%" stop-color="#bffaff"/>
-<stop offset="100%" stop-color="#22d3ee"/>
+    <linearGradient id="houseNeon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff65f5"/>
+      <stop offset="48%" stop-color="#a855ff"/>
+      <stop offset="100%" stop-color="#00eaff"/>
     </linearGradient>
+    <filter id="houseGlow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="3.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="bulbGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="1.4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <path d="M5 22 24 6 43 22 V41 H5 Z"
-        fill="none" stroke="#ffffff"
-        stroke-width="4" stroke-linejoin="round"/>
-  <path d="M24 17 C18 17 15 22 17 27
-           L20 31 V35 H28 V31 L31 27
-           C33 22 30 17 24 17 Z"
-        ffill="#bffaff"/>
-  <path d="M21 38 H27"
-        stroke="#22d3ee" stroke-width="3"
+
+  <path d="M7 21.5 24 7 41 21.5 V39 Q41 42 38 42 H10 Q7 42 7 39 Z"
+        fill="#10152b" stroke="url(#houseNeon)"
+        stroke-width="4.5" stroke-linejoin="round"
+        filter="url(#houseGlow)"/>
+
+  <path d="M24 17
+           C18.8 17 16 21 17.5 25.5
+           C18.2 27.5 20 29 20.5 31
+           H27.5 C28 29 29.8 27.5 30.5 25.5
+           C32 21 29.2 17 24 17 Z"
+        fill="#d8ffff" filter="url(#bulbGlow)"/>
+
+  <path d="M21 33 H27 M21.8 36 H26.2"
+        stroke="#00eaff" stroke-width="2.5"
+        stroke-linecap="round"/>
+  <path d="M22.5 39 H25.5"
+        stroke="#ff65f5" stroke-width="2"
         stroke-linecap="round"/>
 </svg>
+
 </div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav" class="hidden"></nav>
 <section id="home">
