@@ -825,10 +825,10 @@ async function toggle(id){
   try{
     let on=!d.on;
     await api(d,"/json/state","POST",{on});
-    d.on=on;
-    save();
-    renderDevices();
-
+d.on=on;
+save();
+renderDevices();
+renderManage();
     if($("controls")&&!$("controls").classList.contains("hidden")){
       renderControls();
     }
@@ -894,9 +894,19 @@ function renderManage(){
 
         <div class="row">
           <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:center;gap:8px">
-              <b>${esc(d.name)}</b>
-            </div>
+           
+<div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
+  <b>${esc(d.name)}</b>
+  <button
+    onclick="event.stopPropagation();toggle('${d.id}')"
+    role="switch"
+    aria-checked="${!!d.on}"
+    aria-label="Toggle ${esc(d.name)} lights"
+    style="width:58px;height:32px;padding:3px;border:0;border-radius:999px;background:${d.on ? '#06b6d4' : '#52525b'};display:flex;align-items:center;justify-content:${d.on ? 'flex-end' : 'flex-start'};cursor:pointer;flex-shrink:0;transition:background 0.2s">
+    <span style="width:26px;height:26px;border-radius:50%;background:#fff;display:block"></span>
+  </button>
+</div>
+
             <div class="sub">${esc(d.url)}</div>
             <div class="sub">${esc(d.room||"Unassigned")}</div>
           </div>
