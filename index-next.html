@@ -1411,6 +1411,25 @@ function applyColour(h){if(!/^#[0-9a-f]{6}$/i.test(h))return alert("Enter a colo
 async function loadEffects(){renderSelects();let d=dev($("edev").value||selected);if(!d)return;selected=d.id;$("effectGrid").textContent="Loading…";try{effects=await api(d,"/json/effects");palettes=await api(d,"/json/palettes");$("palette").innerHTML=palettes.map((p,i)=>`<option value="${i}">${esc(p)}</option>`).join("");renderEffects();$("effectStatus").textContent=effects.length+" effects and "+palettes.length+" palettes loaded."}catch(e){$("effectGrid").textContent="Could not load effects. Check connection.";$("effectStatus").textContent="WLED API unavailable."}}
 function renderEffects(){let q=$("effectSearch").value.toLowerCase();$("effectGrid").innerHTML=effects.map((n,i)=>({n,i})).filter(x=>String(x.n).toLowerCase().includes(q)).map(x=>`<button class="effect" onclick="setSeg({fx:${x.i}})">${esc(x.n)}</button>`).join("")||"No matching effects."}
 function setSeg(obj){command({seg:obj})}
+
+function toggleEffectDropdown(){
+  const dropdown=$("effectDropdown");
+  const button=$("effectDropdownToggle");
+  if(!dropdown||!button)return;
+
+  const opening=dropdown.classList.contains("hidden");
+
+  dropdown.classList.toggle("hidden",!opening);
+  button.textContent=opening
+    ?"Choose an effect ▴"
+    :"Choose an effect ▾";
+
+  if(opening){
+    renderEffects();
+    $("effectSearch").focus();
+  }
+}
+
 function addColour(){if(colours.length>=8)return alert("Use up to 8 colours.");colours.push("#ffffff");renderColours()}
 
 
