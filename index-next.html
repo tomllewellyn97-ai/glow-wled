@@ -809,10 +809,10 @@ input#colourWheel {
   <button onclick="testForm()">Test connection</button>
   <button class="primary" onclick="saveDevice()">Save changes</button>
   <button onclick="clearForm()">Clear</button>
- <button id="removeEditBtn"
+<button id="removeEditBtn"
     class="danger"
-    style="display:none"
-    onclick="removeDevice(editing)">
+    onclick="removeDevice(editing)"
+    hidden>
     Remove Device
 </button>
 </div>
@@ -866,7 +866,7 @@ function clearForm(){
   if($("formStatus"))$("formStatus").textContent="";
 
   const removeBtn=$("removeEditBtn");
-  if(removeBtn)removeBtn.style.display="none";
+  if(removeBtn)removeBtn.hidden=true;
 }
 function showAddDevice(){
   clearForm();
@@ -1156,8 +1156,8 @@ function edit(id){
   $("dip").value=d.url;
   $("droom").value=d.room||"Unassigned";
 
-  let removeBtn=$("removeEditBtn");
-  if(removeBtn)removeBtn.style.display="";
+ let removeBtn=$("removeEditBtn");
+if(removeBtn)removeBtn.hidden=false;
 
   page("addDevice");
 }
