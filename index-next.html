@@ -1249,25 +1249,37 @@ function renderControls(){
         <button onclick="applyColour($('hex').value)">Apply</button>
       </div>
 
-      <div class="card">
-        <h3>Choose colours</h3>
-        <div class="wheel-layout">
-          <div class="wheel-wrap">
-            <canvas id="colourCanvas" width="240" height="240"
-              role="slider" tabindex="0"
-              aria-label="Rainbow colour wheel"
-              style="display:block;max-width:100%;height:auto">
-            </canvas>
-          </div>
-          <div class="wheel-details">
-            <label>Selected colour
-              <input id="wheelHex" type="text" value="#ff4b70"
-                maxlength="7" oninput="setHexColour(this.value)">
-            </label>
-           <input type="hidden" id="wheelTarget" value="0">
-          </div>
-        </div>
+    
+<div class="card">
+  <h3>Choose colours</h3>
+
+  <div class="wheel-layout" style="display:flex;flex-direction:column;align-items:center;gap:12px">
+    <div class="wheel-wrap" style="width:100%;display:flex;justify-content:center">
+      <canvas id="controlColourCanvas" width="240" height="240"
+        role="slider" tabindex="0"
+        aria-label="Rainbow colour wheel"
+        style="display:block;max-width:100%;height:auto">
+      </canvas>
+    </div>
+
+    <div class="wheel-details" style="width:100%;max-width:320px">
+      <label>Selected colour</label>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+        <span id="controlSelectedColourSwatch"
+          style="display:block;width:42px;height:42px;flex-shrink:0;
+          border-radius:10px;background:#ff4b70;
+          border:1px solid #ffffff66;
+          box-shadow:0 0 10px #ff4b7066">
+        </span>
+        <input id="controlWheelHex" type="text" value="#ff4b70"
+          maxlength="7"
+          oninput="setHexColour(this.value)"
+          style="flex:1;min-width:0">
       </div>
+      <input type="hidden" id="controlWheelTarget" value="0">
+    </div>
+  </div>
+</div>
 
       <div class="swatches">
         ${["#ff3158","#ff8b30","#ffe84a","#45ed8c","#36dbea","#4e79ff","#a16aff","#ff5eea","#ffffff"]
