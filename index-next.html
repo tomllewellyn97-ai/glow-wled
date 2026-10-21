@@ -416,10 +416,13 @@ button.danger {
 }
 
   
+
 /* FIX: Keep inactive Glow screens hidden */
-body > .app > section.hidden {
+body > .app > section.hidden,
+body > .app section.hidden {
   display: none !important;
 }
+
 
 .device:before {
   width: 4px !important;
