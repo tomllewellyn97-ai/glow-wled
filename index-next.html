@@ -950,8 +950,8 @@ function renderControls(){
     return;
   }
 
-  selected=d.id;
 
+  selected=d.id;
   $("controlBody").innerHTML=`
     <div class="card">
       <div class="row">
@@ -959,7 +959,16 @@ function renderControls(){
           <h3>${esc(d.name)}</h3>
           <div class="sub">${esc(d.url)}</div>
         </div>
-        <button onclick="toggle('${d.id}')">Power</button>
+       
+<button
+  onclick="toggle('${d.id}')"
+  role="switch"
+  aria-checked="${!!d.on}"
+  aria-label="Toggle ${esc(d.name)} lights"
+  style="width:58px;height:32px;padding:3px;border:0;border-radius:999px;background:${d.on ? '#16a34a' : '#52525b'};display:flex;align-items:center;justify-content:${d.on ? 'flex-end' : 'flex-start'};cursor:pointer;flex-shrink:0;transition:background 0.2s">
+  <span style="width:26px;height:26px;border-radius:50%;background:#fff;display:block"></span>
+</button>
+
       </div>
 
       <label>
