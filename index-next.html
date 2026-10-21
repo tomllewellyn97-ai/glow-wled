@@ -933,9 +933,72 @@ function renderDevices(){
 }
 
 function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
-async function check(id){let d=dev(id);if(!d)return;try{let x=await api(d,"/json/info");$("topStatus").textContent="● Connected";let el=$("st-"+id);if(el){el.textContent="Online"+(x.name?" · "+x.name:"");el.className="online"}}catch(e){$("topStatus").textContent="● Offline";let el=$("st-"+id);if(el){el.textContent="Connection failed";el.className="offline"}}}
 
-async function toggle(id){
+async function check(id){
+  let d=dev(id);
+  if(!d)return;
+
+  const dot=$("test-dot-"+id);
+  const result=$("test-result-"+id);
+
+  if(dot){
+    dot.style.background="#facc15";
+    dot.style.boxShadow="0 0 7px #facc15";
+    dot.title="Testing connection";
+    dot.setAttribute("aria-label","Testing connection");
+  }
+
+  if(result){
+    result.textContent="Testing...";
+    result.style.color="#facc15";
+  }
+
+  try{
+    let x=await api(d,"/json/info");
+
+    $("topStatus").textContent="● Connected";
+
+    let el=$("st-"+id);
+    if(el){
+      el.textContent="Online"+(x.name?" · "+x.name:"");
+      el.className="online";
+    }
+
+    if(dot){
+      dot.style.background="#22c55e";
+      dot.style.boxShadow="0 0 7px #22c55e";
+      dot.title="Connection successful";
+      dot.setAttribute("aria-label","Connection successful");
+    }
+
+    if(result){
+      result.textContent="Online";
+      result.style.color="#4ade80";
+    }
+
+  }catch(e){
+    $("topStatus").textContent="● Offline";
+
+    let el=$("st-"+id);
+    if(el){
+      el.textContent="Connection failed";
+      el.className="offline";
+    }
+
+    if(dot){
+      dot.style.background="#ef4444";
+      dot.style.boxShadow="0 0 7px #ef4444";
+      dot.title="Connection failed";
+      dot.setAttribute("aria-label","Connection failed");
+    }
+
+    if(result){
+      result.textContent="Offline";
+      result.style.color="#f87171";
+    }
+  }
+}
+
   let d=dev(id);
   if(!d)return;
 
@@ -1014,7 +1077,7 @@ function renderManage(){
           <div style="flex:1;min-width:0">
 
             <div style="display:flex;align-items:center;gap:8px;justify-content:space-between">
-              <b style="flex:1;min-width:0">${esc(d.name)}</b>
+             <b style="flex:1;min-width:0;font-size:18px;font-weight:800;letter-spacing:0.2px;color:#ffffff">${esc(d.name)}</b>
 
               <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
 
@@ -1043,11 +1106,24 @@ function renderManage(){
           </div>
         </div>
 
-        <div class="row section">
-          <button onclick="event.stopPropagation();check('${d.id}')">
-            Test
-          </button>
-        </div>
+
+<div style="display:flex;align-items:center;gap:9px;margin-top:16px;padding-top:12px;border-top:1px solid #29243d">
+  <button
+    onclick="event.stopPropagation();check('${d.id}')"
+    style="padding:7px 14px;border:1px solid #a855f7;border-radius:9px;background:#171326;color:#e9d5ff;font-weight:600;cursor:pointer">
+    Test
+  </button>
+ 
+<span
+  id="test-dot-${d.id}"
+  title="Test result not yet checked"
+  aria-label="Test result not yet checked"
+  style="width:9px;height:9px;border-radius:50%;background:#71717a;box-shadow:0 0 5px #71717a;display:inline-block;flex-shrink:0">
+</span>
+<span id="test-result-${d.id}" style="font-size:12px;color:#a1a1aa">Not tested</span>
+</div>
+
+
       </div>
     `).join("")
     : '<div class="empty">No saved devices.</div>';
