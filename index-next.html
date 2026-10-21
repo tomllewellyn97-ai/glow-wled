@@ -1463,7 +1463,61 @@ drawControlColourWheel();
 async function command(body){let d=dev();if(!d)return;try{await api(d,"/json/state","POST",body);if($("controlStatus"))$("controlStatus").textContent="Updated"}catch(e){if($("controlStatus"))$("controlStatus").textContent="Could not send command. Check connection."}}
 function applyColour(h){if(!/^#[0-9a-f]{6}$/i.test(h))return alert("Enter a colour like #ff55aa");let rgb=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));if($("colour"))$("colour").value=h;if($("hex"))$("hex").value=h;command({seg:{col:[rgb]}})}
 async function loadEffects(){renderSelects();let d=dev($("edev").value||selected);if(!d)return;selected=d.id;$("effectGrid").textContent="Loading…";try{effects=await api(d,"/json/effects");palettes=await api(d,"/json/palettes");$("palette").innerHTML=palettes.map((p,i)=>`<option value="${i}">${esc(p)}</option>`).join("");renderEffects();$("effectStatus").textContent=effects.length+" effects and "+palettes.length+" palettes loaded."}catch(e){$("effectGrid").textContent="Could not load effects. Check connection.";$("effectStatus").textContent="WLED API unavailable."}}
-function renderEffects(){let q=$("effectSearch").value.toLowerCase();$("effectGrid").innerHTML=effects.map((n,i)=>({n,i})).filter(x=>String(x.n).toLowerCase().includes(q)).map(x=>`<button class="effect" onclick="setSeg({fx:${x.i}})">${esc(x.n)}</button>`).join("")||"No matching effects."}
+
+function renderEffects(){
+  const search=$("effectSearch");
+  const grid=$("effectGrid");
+  if(!search||!grid)return;
+
+  const q=search.value.toLowerCase();
+  const favourites=getEffectFavourites();
+
+  const list=effects
+    .map((n,i)=>({n:String(n),i}))
+    .filter(x=>x.n.toLowerCase().includes(q))
+    .sort((a,b)=>{
+      const aFav=favourites.includes(a.n);
+      const bFav=favourites.includes(b.n);
+
+      if(aFav!==bFav)return aFav?-1:1;
+      return a.n.localeCompare(b.n);
+    });
+
+  grid.innerHTML=list.length
+    ?list.map(x=>{
+      const fav=favourites.includes(x.n);
+      return `
+        <div class="effect-row">
+          <button type="button" class="effect"
+            onclick="setSeg({fx:${x.i}})">
+            ${esc(x.n)}
+          </button>
+          <button type="button"
+            class="effect-favourite"
+            title="${fav?"Remove from favourites":"Add to favourites"}"
+            aria-label="${fav?"Remove":"Add"} ${esc(x.n)} ${"favourite"}"
+            onclick="toggleEffectFavourite(${JSON.stringify(x.n).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")})">
+            ${fav?"★":"☆"}
+          </button>
+        </div>`;
+    }).join("")
+    :"No matching effects.";
+}
+
+function toggleEffectFavourite(name){
+  const favourites=getEffectFavourites();
+  const index=favourites.indexOf(name);
+
+  if(index===-1){
+    favourites.push(name);
+  }else{
+    favourites.splice(index,1);
+  }
+
+  saveEffectFavourites(favourites);
+  renderEffects();
+}
+
 function setSeg(obj){command({seg:obj})}
 
 function toggleEffectDropdown(){
