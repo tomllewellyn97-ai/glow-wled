@@ -1334,17 +1334,23 @@ function saveEffectFavourites(favourites){
   );
 }
 
-function page(p){
+
+function page(p,fromHistory=false){
   const target=$(p);
   if(!target){
     console.error("Glow screen not found:",p);
     return;
   }
 
-  document.querySelectorAll("section")
-  .forEach(section=>section.classList.add("hidden"));
+  // Record the screen in browser history.
+  if(!fromHistory){
+    history.pushState({glowPage:p},"",location.href);
+  }
 
- target.classList.remove("hidden");
+  document.querySelectorAll("section")
+    .forEach(section=>section.classList.add("hidden"));
+
+  target.classList.remove("hidden");
 
   document.querySelectorAll("#nav button")
     .forEach(button=>{
@@ -1360,6 +1366,27 @@ function page(p){
 
 document.querySelectorAll("#nav button")
   .forEach(b=>b.onclick=()=>page(b.dataset.page));
+
+// Store the current screen as the starting history entry.
+const initialScreen=document.querySelector("section:not(.hidden)");
+
+history.replaceState(
+  {
+    ...(history.state||{}),
+    glowPage:initialScreen?.id
+  },
+  "",
+  location.href
+);
+
+// Handle the phone and browser Back buttons.
+window.addEventListener("popstate",event=>{
+  const previousPage=event.state?.glowPage;
+
+  if(previousPage){
+    page(previousPage,true);
+  }
+});
 
 function clearForm(){
   editing="";
