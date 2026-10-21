@@ -792,7 +792,25 @@ input#colourWheel {
     <option value="presets">Saved Presets</option>
   </select>
 </label>
-<div class="card"><h3>Effects</h3><input id="effectSearch" placeholder="Search effects" oninput="renderEffects()"><div id="effectGrid" class="grid"></div><hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
+
+<div class="card">
+  <h3>Effects</h3>
+
+  <button type="button" id="effectDropdownToggle"
+    onclick="toggleEffectDropdown()"
+    style="width:100%;text-align:left">
+    Choose an effect ▾
+  </button>
+
+  <div id="effectDropdown" class="hidden">
+    <input id="effectSearch"
+      placeholder="Search effects"
+      oninput="renderEffects()">
+
+    <div id="effectGrid" class="effect-dropdown-list"></div>
+  </div>
+</div>
+<hr><h3>Palette</h3><select id="palette" onchange="setSeg({pal:+this.value})"></select><label>Speed <span id="speedN">128</span><input id="speed" type="range" min="0" max="255" value="128" oninput="speedN.textContent=this.value" onchange="setSeg({sx:+this.value})"></label><label>Intensity <span id="intensityN">128</span><input id="intensity" type="range" min="0" max="255" value="128" oninput="intensityN.textContent=this.value" onchange="setSeg({ix:+this.value})"></label></div><div id="effectStatus" class="status"></div></section>
 <section id="patterns" class="hidden"><h2>Custom patterns</h2><label>Selected device<select id="pdev" onchange="selected=this.value"></select></label><div class="card"><div class="grid"><label>Starting LED<input id="pstart" type="number" min="0" value="0"></label><label>LED count<input id="plen" type="number" min="1" value="30"></label></div>
 <h3>Choose colours</h3>
 
