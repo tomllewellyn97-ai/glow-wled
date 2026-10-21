@@ -1028,8 +1028,7 @@ function renderManage(){
             <div class="sub">${esc(d.room||"Unassigned")}</div>
           </div>
 
-          <span style="font-size:24px;opacity:0.65"
-            aria-hidden="true">›</span>
+          
 
 <button
             onclick="event.stopPropagation();edit('${d.id}')"
@@ -1138,7 +1137,7 @@ function renderControls(){
       <hr>
       <h3>Colour</h3>
 
-      <div class="row">
+      <div class="row" style="align-items:center;gap:10px">
         <input type="color" id="colour" value="#ffffff"
           onchange="applyColour(this.value)">
         <input id="hex" value="#ffffff" maxlength="7">
