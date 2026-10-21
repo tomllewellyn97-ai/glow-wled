@@ -935,7 +935,8 @@ function renderDevices(){
 function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
 
 async function check(id){
-  let d=dev(id);
+ 
+let d=dev(id);
   if(!d)return;
 
   const dot=$("test-dot-"+id);
@@ -992,13 +993,14 @@ async function check(id){
       dot.setAttribute("aria-label","Connection failed");
     }
 
-    if(result){
+      if(result){
       result.textContent="Offline";
       result.style.color="#f87171";
     }
   }
 }
 
+async function toggle(id){
   let d=dev(id);
   if(!d)return;
 
