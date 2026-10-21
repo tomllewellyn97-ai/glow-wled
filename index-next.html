@@ -958,6 +958,25 @@ let devices=db.get("devices",[]),selected=devices[0]?.id||"",filter="All",editin
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function dev(id=selected){return devices.find(d=>d.id===id)}function base(d){return d.url.replace(/\/+$/,"")}function norm(s){s=s.trim();return /^https?:\/\//i.test(s)?s:"http://"+s}
 async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
 function save(){db.set("devices",devices)}
+  // GLOW effect favourites
+const EFFECT_FAVOURITES_KEY = "glowEffectFavourites";
+
+function getEffectFavourites(){
+  try {
+    return JSON.parse(
+      localStorage.getItem(EFFECT_FAVOURITES_KEY) || "[]"
+    );
+  } catch(e) {
+    return [];
+  }
+}
+
+function saveEffectFavourites(favourites){
+  localStorage.setItem(
+    EFFECT_FAVOURITES_KEY,
+    JSON.stringify(favourites)
+  );
+}
 
 function page(p){
   const target=$(p);
