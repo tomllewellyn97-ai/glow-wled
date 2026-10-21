@@ -557,7 +557,7 @@ button:active {
   margin: 14px 0 20px;
 }
 
-.wheel-wrap {
+ {
   width: 240px;
   height: 240px;
   max-width: 100%;
@@ -612,6 +612,13 @@ input#colourWheel {
     height: auto;
     aspect-ratio: 1;
   }
+}
+  /* Fix oval background behind Device Controls colour wheel */
+#controlColourCanvas {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 </style>
 </head>
