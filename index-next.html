@@ -879,16 +879,146 @@ input#colourWheel {
     <h3>2. Connect your phone to the lamp</h3>
     <p>Open your phone's Wi-Fi settings and look for the WLED network. Connect to it. If asked for a password, check your controller's instructions.</p>
 
+    <div style="max-width:280px;margin:18px auto;
+      padding:12px;border:3px solid #454558;border-radius:28px;
+      background:#101019;color:#f4f4ff;
+      box-shadow:0 8px 24px rgba(0,0,0,.3)">
+
+      <div style="display:flex;justify-content:space-between;
+        font-size:11px;padding:2px 8px 12px">
+        <span>9:41</span><span>●●● ▰</span>
+      </div>
+
+      <div style="font-size:20px;font-weight:600;
+        padding:8px 6px">Internet</div>
+      <div style="font-size:12px;color:#aaaac2;
+        padding:0 6px 12px">Wi-Fi networks</div>
+
+      <div style="border:1px solid #00eaff;
+        background:#102b35;border-radius:14px;
+        padding:13px;margin-bottom:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:22px">◉</span>
+          <div style="flex:1">
+            <div style="font-weight:600">WLED-AP</div>
+            <div style="font-size:11px;color:#a5f5ff">
+              Available network
+            </div>
+          </div>
+          <span style="color:#00eaff">●</span>
+        </div>
+      </div>
+
+      <div style="border-radius:14px;background:#222230;
+        padding:12px;font-size:12px;color:#c9c9dc">
+        Select the WLED network to connect to your controller.
+      </div>
+
+      <div style="text-align:center;font-size:10px;
+        color:#88889e;padding:16px 0 4px">
+        SIMULATED ANDROID SCREEN
+      </div>
+    </div>
+
     <h3>3. Open the WLED setup page</h3>
     <p>Open your phone's browser and visit:</p>
     <p><b>http://4.3.2.1</b></p>
     <p>If that address doesn't open, check the instructions for your particular controller.</p>
 
+    <div style="max-width:280px;margin:18px auto;
+      padding:12px;border:3px solid #454558;border-radius:28px;
+      background:#101019;color:#f4f4ff;
+      box-shadow:0 8px 24px rgba(0,0,0,.3)">
+
+      <div style="display:flex;justify-content:space-between;
+        font-size:11px;padding:2px 8px 12px">
+        <span>9:41</span><span>●●● ▰</span>
+      </div>
+
+      <div style="font-size:20px;font-weight:600;
+        padding:8px 6px">WLED</div>
+      <div style="font-size:12px;color:#aaaac2;
+        padding:0 6px 14px">Wi-Fi Setup</div>
+
+      <div style="border-radius:12px;background:#222230;
+        padding:12px;margin-bottom:10px">
+        <div style="font-size:11px;color:#aaaac2">
+          Network name (SSID)
+        </div>
+        <div style="padding-top:5px">Your Home Wi-Fi</div>
+      </div>
+
+      <div style="border-radius:12px;background:#222230;
+        padding:12px;margin-bottom:14px">
+        <div style="font-size:11px;color:#aaaac2">
+          Wi-Fi password
+        </div>
+        <div style="padding-top:5px">••••••••••</div>
+      </div>
+
+      <div style="border-radius:12px;background:#12383b;
+        border:1px solid #00eaff;padding:11px;
+        text-align:center;color:#8fffff;font-weight:600">
+        Save &amp; Connect
+      </div>
+
+      <div style="text-align:center;font-size:10px;
+        color:#88889e;padding:16px 0 4px">
+        SIMULATED WLED SCREEN
+      </div>
+    </div>
+
     <h3>4. Connect it to your home Wi-Fi</h3>
     <p>In WLED, open Config and then Wi-Fi Setup. Enter your home Wi-Fi name and password, then save the settings. The controller should restart and join your home network.</p>
 
     <h3>5. Find the lamp's IP address</h3>
-    <p>Check your router's connected-device list for the WLED controller, or use a network-scanner app on your phone. Its address may look like <b>192.168.1.175</b> — this is only an example, not your lamp's actual address.</p>
+    
+    <p>Once your lamp has connected to your home Wi-Fi, open WLED and go to Config, then Wi-Fi Setup. Look for the IP address displayed on that page. It will look something like the example below.</p>
+
+    <div style="max-width:280px;margin:18px auto;
+      padding:12px;border:3px solid #454558;border-radius:28px;
+      background:#101019;color:#f4f4ff;
+      box-shadow:0 8px 24px rgba(0,0,0,.3)">
+
+      <div style="display:flex;justify-content:space-between;
+        font-size:11px;padding:2px 8px 12px">
+        <span>9:41</span><span>●●● ▰</span>
+      </div>
+
+      <div style="font-size:20px;font-weight:600;
+        padding:8px 6px">WLED</div>
+      <div style="font-size:12px;color:#aaaac2;
+        padding:0 6px 14px">Config / Wi-Fi Setup</div>
+
+      <div style="border-radius:12px;background:#222230;
+        padding:12px;margin-bottom:10px">
+        <div style="font-size:11px;color:#aaaac2">
+          Connected Wi-Fi
+        </div>
+        <div style="padding-top:5px">Your Home Wi-Fi</div>
+      </div>
+
+      <div style="border:2px solid #00eaff;
+        background:#102b35;border-radius:12px;
+        padding:13px;margin-bottom:10px">
+        <div style="font-size:11px;color:#a5f5ff">
+          IP Address
+        </div>
+        <div style="font-size:17px;font-weight:700;
+          padding-top:6px;color:#ffffff">
+          192.168.1.175
+        </div>
+        <div style="font-size:10px;color:#a5f5ff;
+          padding-top:5px">EXAMPLE ADDRESS</div>
+      </div>
+
+      <div style="text-align:center;font-size:10px;
+        color:#88889e;padding:10px 0 4px">
+        SIMULATED WLED SCREEN
+      </div>
+    </div>
+
+    <p>Copy the address shown on your own WLED page. The address above is only an example; your lamp will have its own address.</p>
 
     <h3>6. Add it to Glow</h3>
     <p>Return to Glow, tap <b>My Devices</b>, then <b>Add New Device</b>. Enter a name for the lamp and its IP address, then save it.</p>
