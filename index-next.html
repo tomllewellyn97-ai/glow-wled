@@ -1273,7 +1273,7 @@ function renderControls(){
         </span>
         <input id="controlWheelHex" type="text" value="#ff4b70"
           maxlength="7"
-          oninput="setHexColour(this.value)"
+          oninput="setControlHexColour(this.value)"
           style="flex:1;min-width:0">
       </div>
       <input type="hidden" id="controlWheelTarget" value="0">
@@ -1290,7 +1290,7 @@ function renderControls(){
       <div class="status" id="controlStatus"></div>
     </div>`;
 
-  initColourWheel();
+  initControlColourWheel();
 
   api(d,"/json/state").then(s=>{
     if($("bright")){
