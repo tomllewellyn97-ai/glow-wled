@@ -124,10 +124,16 @@ input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:
   gap: 18px;
 }
 #manage .card.device {
-  #manage {
+ #manage {
   display: flex;
   flex-direction: column;
   gap: 18px;
+}
+
+#manage > .card {
+  margin: 0 !important;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 #manage > .card.device {
