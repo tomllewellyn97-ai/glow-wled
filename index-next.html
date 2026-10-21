@@ -337,6 +337,12 @@ button.danger {
   overflow: hidden !important;
 }
 
+  
+/* FIX: Keep inactive Glow screens hidden */
+body > .app > section.hidden {
+  display: none !important;
+}
+
 .device:before {
   width: 4px !important;
   background: linear-gradient(180deg, #a855f7, #35e7ff) !important;
