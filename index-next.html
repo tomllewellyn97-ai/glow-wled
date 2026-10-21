@@ -1464,6 +1464,7 @@ async function command(body){let d=dev();if(!d)return;try{await api(d,"/json/sta
 function applyColour(h){if(!/^#[0-9a-f]{6}$/i.test(h))return alert("Enter a colour like #ff55aa");let rgb=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));if($("colour"))$("colour").value=h;if($("hex"))$("hex").value=h;command({seg:{col:[rgb]}})}
 async function loadEffects(){renderSelects();let d=dev($("edev").value||selected);if(!d)return;selected=d.id;$("effectGrid").textContent="Loading…";try{effects=await api(d,"/json/effects");palettes=await api(d,"/json/palettes");$("palette").innerHTML=palettes.map((p,i)=>`<option value="${i}">${esc(p)}</option>`).join("");renderEffects();$("effectStatus").textContent=effects.length+" effects and "+palettes.length+" palettes loaded."}catch(e){$("effectGrid").textContent="Could not load effects. Check connection.";$("effectStatus").textContent="WLED API unavailable."}}
 
+
 function renderEffects(){
   const search=$("effectSearch");
   const grid=$("effectGrid");
@@ -1486,6 +1487,7 @@ function renderEffects(){
   grid.innerHTML=list.length
     ?list.map(x=>{
       const fav=favourites.includes(x.n);
+
       return `
         <div class="effect-row">
           <button type="button" class="effect"
@@ -1494,14 +1496,20 @@ function renderEffects(){
           </button>
           <button type="button"
             class="effect-favourite"
-            title="${fav?"Remove from favourites":"Add to favourites"}"
-            aria-label="${fav?"Remove":"Add"} ${esc(x.n)} ${"favourite"}"
-            onclick="toggleEffectFavourite(${JSON.stringify(x.n).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")})">
+            data-effect-index="${x.i}"
+            title="${fav?"Remove from favourites":"Add to favourites"}">
             ${fav?"★":"☆"}
           </button>
         </div>`;
     }).join("")
     :"No matching effects.";
+
+  grid.querySelectorAll(".effect-favourite").forEach(button=>{
+    button.addEventListener("click",()=>{
+      const index=Number(button.dataset.effectIndex);
+      toggleEffectFavourite(String(effects[index]));
+    });
+  });
 }
 
 function toggleEffectFavourite(name){
@@ -1539,7 +1547,6 @@ function toggleEffectDropdown(){
 }
 
 function addColour(){if(colours.length>=8)return alert("Use up to 8 colours.");colours.push("#ffffff");renderColours()}
-
 
 
 
