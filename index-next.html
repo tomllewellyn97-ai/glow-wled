@@ -124,6 +124,15 @@ input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:
   gap: 18px;
 }
 #manage .card.device {
+  #manage {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+#manage > .card.device {
+  margin: 0 !important;
+}
   margin: 0 0 18px 0 !important;
 }
 }.device:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--purple),var(--cyan))}.bulb{font-size:24px;background:#29203f;border-radius:12px;padding:8px}
