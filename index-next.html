@@ -817,7 +817,26 @@ function renderDevices(){
 
 function renderSelects(){["cdev","edev","pdev","prdev"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
 async function check(id){let d=dev(id);if(!d)return;try{let x=await api(d,"/json/info");$("topStatus").textContent="● Connected";let el=$("st-"+id);if(el){el.textContent="Online"+(x.name?" · "+x.name:"");el.className="online"}}catch(e){$("topStatus").textContent="● Offline";let el=$("st-"+id);if(el){el.textContent="Connection failed";el.className="offline"}}}
-async function toggle(id){let d=dev(id);try{let on=!d.on;await api(d,"/json/state","POST",{on});d.on=on;save();renderDevices()}catch(e){alert("Could not control this light. Check its IP and Wi-Fi connection.")}}
+
+async function toggle(id){
+  let d=dev(id);
+  if(!d)return;
+
+  try{
+    let on=!d.on;
+    await api(d,"/json/state","POST",{on});
+    d.on=on;
+    save();
+    renderDevices();
+
+    if($("controls")&&!$("controls").classList.contains("hidden")){
+      renderControls();
+    }
+  }catch(e){
+    alert("Could not control this light. Check its IP and Wi-Fi connection.");
+  }
+}
+
 
 async function powerToggle(){
   if(devices.some(d=>d.on)){
