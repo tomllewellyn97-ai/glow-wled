@@ -737,13 +737,21 @@ input#colourWheel {
     </canvas>
   </div>
 
-  <div class="wheel-details" style="width:100%">
-    <label>Selected colour
-      <input id="wheelHex" type="text" value="#ff4b70"
-        maxlength="7" oninput="setHexColour(this.value)">
-    </label>
-    <input type="hidden" id="wheelTarget" value="0">
+<div class="wheel-details" style="width:100%;max-width:320px">
+  <label>Selected colour</label>
+  <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+    <span id="selectedColourSwatch"
+      style="display:block;width:42px;height:42px;flex-shrink:0;
+      border-radius:10px;background:#ff4b70;
+      border:1px solid #ffffff66;
+      box-shadow:0 0 10px #ff4b7066">
+    </span>
+    <input id="wheelHex" type="text" value="#ff4b70"
+      maxlength="7" oninput="setHexColour(this.value)"
+      style="flex:1;min-width:0">
   </div>
+  <input type="hidden" id="wheelTarget" value="0">
+</div>
 </div>
 <div id="colours"></div>
 <button onclick="addColour()">＋ Add colour</button> <button class="primary" onclick="applyPattern()">Apply pattern</button><label>Pattern name<input id="pname" placeholder="e.g. Sunset"></label><button onclick="savePattern()">Save pattern</button></div><div class="card"><h3>Saved patterns</h3><div id="patternList"></div></div></section>
@@ -1341,13 +1349,23 @@ function renderColours(){
   initColourWheel();
 }
 
+
 function syncWheelColour(){
   const i=+$("wheelTarget").value;
   const c=colours[i];
   if(!c)return;
+
   $("wheelHex").value=c;
+
+  const swatch=$("selectedColourSwatch");
+  if(swatch){
+    swatch.style.backgroundColor=c;
+    swatch.style.boxShadow="0 0 10px "+c+"66";
+  }
+
   if($("colourCanvas"))drawColourWheel();
 }
+
 
 
 
@@ -1362,6 +1380,11 @@ function setWheelColour(value){
   colours[i]=value;
 
   if($("wheelHex"))$("wheelHex").value=value;
+  const swatch=$("selectedColourSwatch");
+if(swatch){
+  swatch.style.backgroundColor=value;
+  swatch.style.boxShadow="0 0 10px "+value+"66";
+}
   if($("colour"))$("colour").value=value;
   if($("hex"))$("hex").value=value;
 
