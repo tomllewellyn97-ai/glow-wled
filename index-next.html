@@ -1880,13 +1880,13 @@ function renderEffects(){
 
     if(!Number.isInteger(activeIndex))return;
 
-    const activeButton=grid.querySelector(
+       const activeButton=grid.querySelector(
       `.effect[data-effect-index="${activeIndex}"]`
     );
 
     if(!activeButton)return;
 
-    // Highlight the effect reported by WLED.
+    // Highlight the active effect with border and glow only.
     activeButton.style.border="2px solid #00eaff";
     activeButton.style.background=
       "linear-gradient(135deg,#12343b,#172238)";
@@ -1894,15 +1894,6 @@ function renderEffects(){
       "0 0 0 2px #00eaff22,0 0 14px #00eaff55";
     activeButton.style.color="#b9fbff";
     activeButton.style.fontWeight="700";
-
-      activeButton.style.border="2px solid #00eaff";
-    activeButton.style.background=
-      "linear-gradient(135deg,#12343b,#172238)";
-    activeButton.style.boxShadow=
-      "0 0 0 2px #00eaff22,0 0 14px #00eaff55";
-    activeButton.style.color="#b9fbff";
-    activeButton.style.fontWeight="700";
-    );
   }).catch(()=>{});
 }
 function toggleEffectFavourite(name){
