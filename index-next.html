@@ -605,7 +605,27 @@ input#colourWheel {
 <header><div class="brand"><div class="logo" role="button" tabindex="0"
   title="Back to Glow home"
   onclick="page('home')"
-  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();page('home')}">✦</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
+  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();page('home')}">
+<svg viewBox="0 0 48 48" width="38" height="38" aria-hidden="true">
+  <defs>
+    <linearGradient id="glowHouse" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d946ef"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+  </defs>
+  <path d="M5 22 24 6 43 22 V41 H5 Z"
+        fill="none" stroke="url(#glowHouse)"
+        stroke-width="4" stroke-linejoin="round"/>
+  <path d="M24 17 C18 17 15 22 17 27
+           L20 31 V35 H28 V31 L31 27
+           C33 22 30 17 24 17 Z"
+        fill="url(#glowHouse)"/>
+  <path d="M21 38 H27"
+        stroke="#22d3ee" stroke-width="3"
+        stroke-linecap="round"/>
+</svg>
+</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav" class="hidden"></nav>
 <section id="home">
   <div class="card" style="text-align:center;padding:30px 20px">
