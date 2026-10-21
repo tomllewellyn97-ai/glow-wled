@@ -8,20 +8,27 @@
 <style>
 :root{color-scheme:dark;--bg:#090914;--panel:#17172b;--purple:#a16aff;--cyan:#37dfeb;--text:#f7f5ff;--muted:#a2a0bf;--border:#33324f}
 *{box-sizing:border-box}body{margin:0;color:var(--text);font:15px system-ui;background:radial-gradient(ellipse at 0 0,#291443,transparent 38%),radial-gradient(ellipse at 100% 15%,#10303d,transparent 32%),var(--bg);min-height:100vh}.app{max-width:780px;margin:auto;padding:16px 14px 44px}header,.row{display:flex;align-items:center;gap:10px;justify-content:space-between}.brand{display:flex;align-items:center;gap:10px}.logo{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--purple),var(--cyan));font-size:26px}h1{font-size:24px;letter-spacing:2px;margin:0}.sub,.muted,small{color:var(--muted);font-size:12px}nav{display:flex;gap:7px;overflow:auto;padding:20px 0 12px}button,input,select{font:inherit}
+
 button {
   cursor: pointer;
   color: var(--text);
-  border: 1px solid var(--border);
-  background: #202039;
+  border: 1px solid #343852;
+  background: linear-gradient(145deg, #20243a, #171b2d);
   padding: 10px 12px;
   border-radius: 12px;
   font-size: 13px;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  font-weight: 500;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 }
 
 button:hover {
   border-color: var(--cyan);
-  background: #292943;
+  background: linear-gradient(145deg, #292943, #1c2438);
+  box-shadow: 0 0 12px #35e7ff16;
 }
 
 button:active {
@@ -29,23 +36,28 @@ button:active {
 }
 
 button.primary {
-  border: 0;
-  background: linear-gradient(110deg, #8c4fe8, #418fce);
+  color: #ffffff;
+  border: 1px solid #a66bff70;
+  background: linear-gradient(110deg, #9848ed, #526bea, #22bcd5);
+  box-shadow: 0 3px 14px #9850ed30;
 }
 
 button.primary:hover {
-  background: linear-gradient(110deg, #a16aff, #37dfeb);
+  border-color: #65efff;
+  background: linear-gradient(110deg, #ad5cff, #657aff, #35dff0);
+  box-shadow: 0 0 20px #8b5cf650;
 }
 
 button.active {
   border-color: var(--purple);
-  background: #362052;
+  background: linear-gradient(110deg, #392253, #252b49);
+  box-shadow: 0 0 12px #a855f720;
 }
 
 button.danger {
   color: #ff91a5;
 }
-  
+
 button#removeEditBtn {
   display: inline-block;
   width: auto !important;
