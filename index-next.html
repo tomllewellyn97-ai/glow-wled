@@ -711,10 +711,33 @@ input#colourWheel {
   padding-right: 4px;
 }
 
-#effectGrid.effect-dropdown-list button {
+
+#effectGrid.effect-dropdown-list .effect-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
   width: 100%;
+}
+
+#effectGrid.effect-dropdown-list .effect-row .effect {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  margin: 0;
   text-align: left;
 }
+
+#effectGrid.effect-dropdown-list .effect-row .effect-favourite {
+  flex: 0 0 42px;
+  width: 42px;
+  min-width: 42px;
+  margin: 0;
+  padding: 8px 0;
+  text-align: center;
+  color: #ffd76a;
+}
+
 
 </style>
 </head>
