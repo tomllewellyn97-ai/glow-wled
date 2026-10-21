@@ -834,13 +834,75 @@ input#colourWheel {
       ☷ View Devices
     </button>
 
-   
-<button style="width:100%;margin:6px 0"
-  onclick="showAddDevice()">
-  ＋ Add Device
-</button>
+    <button style="width:100%;margin:6px 0"
+      onclick="showAddDevice()">
+      ＋ Add Device
+    </button>
+
+    <button type="button"
+      onclick="document.getElementById('setupGuide').classList.remove('hidden');document.getElementById('setupGuide').style.display='flex'"
+      style="display:block;margin:12px auto 0;padding:8px 14px;
+      background:transparent;color:#85859e;border:1px solid #353545;
+      border-radius:22px;font-size:13px;font-weight:400">
+      ⓘ How to add a lamp?
+    </button>
+
   </div>
 </section>
+
+<div id="setupGuide" class="hidden"
+  onclick="if(event.target===this){this.classList.add('hidden');this.style.display='none'}"
+    style="display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(0,0,0,0.78);padding:16px;
+  align-items:center;justify-content:center;box-sizing:border-box">
+
+  <div class="card"
+    onclick="event.stopPropagation()"
+    style="width:100%;max-width:480px;max-height:85vh;
+    overflow-y:auto;margin:auto;padding:22px">
+
+    <div style="display:flex;justify-content:space-between;
+      align-items:center;gap:12px">
+      <h2 style="margin:0">How to add a lamp</h2>
+      <button type="button"
+        onclick="document.getElementById('setupGuide').classList.add('hidden');document.getElementById('setupGuide').style.display='none'"
+        style="width:auto;padding:7px 12px">
+        ✕ Close
+      </button>
+    </div>
+
+    <p class="sub">Follow these steps to connect a new WLED lamp to Glow.</p>
+
+    <h3>1. Power on your WLED controller</h3>
+    <p>Wait about a minute for the controller to start. If it has not been set up before, it may create its own Wi-Fi network, often named <b>WLED-AP</b>.</p>
+
+    <h3>2. Connect your phone to the lamp</h3>
+    <p>Open your phone's Wi-Fi settings and look for the WLED network. Connect to it. If asked for a password, check your controller's instructions.</p>
+
+    <h3>3. Open the WLED setup page</h3>
+    <p>Open your phone's browser and visit:</p>
+    <p><b>http://4.3.2.1</b></p>
+    <p>If that address doesn't open, check the instructions for your particular controller.</p>
+
+    <h3>4. Connect it to your home Wi-Fi</h3>
+    <p>In WLED, open Config and then Wi-Fi Setup. Enter your home Wi-Fi name and password, then save the settings. The controller should restart and join your home network.</p>
+
+    <h3>5. Find the lamp's IP address</h3>
+    <p>Check your router's connected-device list for the WLED controller, or use a network-scanner app on your phone. Its address may look like <b>192.168.1.175</b> — this is only an example, not your lamp's actual address.</p>
+
+    <h3>6. Add it to Glow</h3>
+    <p>Return to Glow, tap <b>My Devices</b>, then <b>Add New Device</b>. Enter a name for the lamp and its IP address, then save it.</p>
+
+    <p class="sub">Tip: Your phone and WLED controller normally need to be on the same home network for Glow to control the lamp.</p>
+
+    <button type="button" class="primary"
+      style="width:100%;margin-top:10px"
+      onclick="document.getElementById('setupGuide').classList.add('hidden');document.getElementById('setupGuide').style.display='none'">
+      Got it
+    </button>
+
+  </div>
+</div>
 
 <section id="controls" class="hidden">
   <h2>Light controls</h2>
