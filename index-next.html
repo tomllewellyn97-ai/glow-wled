@@ -1565,6 +1565,200 @@ function initColourWheel(){
   });
 }
 
+
+function drawControlColourWheel(){
+  const canvas=$("controlColourCanvas");
+  if(!canvas)return;
+
+  const ctx=canvas.getContext("2d");
+  if(!ctx)return;
+
+  const size=canvas.width;
+  const centre=size/2;
+  const radius=size/2-3;
+  const image=ctx.createImageData(size,size);
+
+  for(let y=0;y<size;y++){
+    for(let x=0;x<size;x++){
+      const dx=x-centre;
+      const dy=y-centre;
+      const distance=Math.sqrt(dx*dx+dy*dy);
+      const index=(y*size+x)*4;
+
+      if(distance<=radius){
+        const hue=(Math.atan2(dy,dx)*180/Math.PI+360)%360;
+        const saturation=Math.min(1,distance/(radius*0.78));
+        const chroma=saturation;
+        const h=hue/60;
+        const second=chroma*(1-Math.abs(h%2-1));
+        let r=0,g=0,b=0;
+
+        if(h<1){r=chroma;g=second}
+        else if(h<2){r=second;g=chroma}
+        else if(h<3){g=chroma;b=second}
+        else if(h<4){g=second;b=chroma}
+        else if(h<5){r=second;b=chroma}
+        else{r=chroma;b=second}
+
+        const m=1-chroma;
+        image.data[index]=Math.round((r+m)*255);
+        image.data[index+1]=Math.round((g+m)*255);
+        image.data[index+2]=Math.round((b+m)*255);
+        image.data[index+3]=255;
+      }else{
+        image.data[index+3]=0;
+      }
+    }
+  }
+
+  ctx.clearRect(0,0,size,size);
+  ctx.putImageData(image,0,0);
+
+  const colour=$("controlWheelHex")?.value||"#ff4b70";
+  const rgb=colour.match(/[0-9a-f]{2}/gi);
+  if(!rgb||rgb.length<3)return;
+
+  const r=parseInt(rgb[0],16)/255;
+  const g=parseInt(rgb[1],16)/255;
+  const b=parseInt(rgb[2],16)/255;
+  const max=Math.max(r,g,b);
+  const min=Math.min(r,g,b);
+  const delta=max-min;
+  let hue=0;
+
+  if(delta){
+    if(max===r)hue=60*(((g-b)/delta)%6);
+    else if(max===g)hue=60*((b-r)/delta+2);
+    else hue=60*((r-g)/delta+4);
+  }
+
+  hue=(hue+360)%360;
+  const saturation=max===0?0:delta/max;
+  const angle=hue*Math.PI/180;
+  const distance=saturation*radius*0.78;
+  const px=centre+Math.cos(angle)*distance;
+  const py=centre+Math.sin(angle)*distance;
+
+  ctx.beginPath();
+  ctx.arc(px,py,6,0,Math.PI*2);
+  ctx.strokeStyle="#ffffff";
+  ctx.lineWidth=3;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(px,py,8,0,Math.PI*2);
+  ctx.strokeStyle="#101827";
+  ctx.lineWidth=2;
+  ctx.stroke();
+}
+
+function setControlWheelColour(value){
+  if(!/^#[0-9a-fA-F]{6}$/.test(value))return;
+
+  $("controlWheelHex").value=value;
+
+  const swatch=$("controlSelectedColourSwatch");
+  if(swatch){
+    swatch.style.backgroundColor=value;
+    swatch.style.boxShadow="0 0 10px "+value+"66";
+  }
+
+  drawControlColourWheel();
+  applyColour(value);
+}
+
+function setControlHexColour(value){
+  if(/^#[0-9a-fA-F]{6}$/.test(value)){
+    setControlWheelColour(value);
+  }
+}
+
+function colourFromControlWheel(event){
+  const canvas=$("controlColourCanvas");
+  if(!canvas)return;
+
+  const rect=canvas.getBoundingClientRect();
+  const x=(event.clientX-rect.left)*canvas.width/rect.width;
+  const y=(event.clientY-rect.top)*canvas.height/rect.height;
+  const centre=canvas.width/2;
+  const radius=canvas.width/2-3;
+
+  if(Math.sqrt((x-centre)**2+(y-centre)**2)>radius)return;
+
+  const pixel=canvas.getContext("2d").getImageData(
+    Math.round(x),Math.round(y),1,1
+  ).data;
+
+  const hex="#"+[pixel[0],pixel[1],pixel[2]]
+    .map(v=>v.toString(16).padStart(2,"0")).join("");
+
+  setControlWheelColour(hex);
+}
+
+function initControlColourWheel(){
+  const canvas=$("controlColourCanvas");
+  if(!canvas||canvas.dataset.ready)return;
+
+  canvas.dataset.ready="1";
+  drawControlColourWheel();
+
+  canvas.addEventListener("pointerdown",event=>{
+    event.preventDefault();
+    canvas.setPointerCapture(event.pointerId);
+    colourFromControlWheel(event);
+  });
+
+  canvas.addEventListener("pointermove",event=>{
+    if(event.buttons||event.pointerType==="touch"){
+      event.preventDefault();
+      colourFromControlWheel(event);
+    }
+  });
+
+  canvas.addEventListener("keydown",event=>{
+    if(!["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].includes(event.key))return;
+
+    event.preventDefault();
+
+    const current=$("controlWheelHex").value;
+    const rgb=current.match(/[0-9a-f]{2}/gi);
+    if(!rgb||rgb.length<3)return;
+
+    const r=parseInt(rgb[0],16)/255;
+    const g=parseInt(rgb[1],16)/255;
+    const b=parseInt(rgb[2],16)/255;
+    const max=Math.max(r,g,b);
+    const min=Math.min(r,g,b);
+    const delta=max-min;
+    let hue=0;
+
+    if(delta){
+      if(max===r)hue=60*(((g-b)/delta)%6);
+      else if(max===g)hue=60*((b-r)/delta+2);
+      else hue=60*((r-g)/delta+4);
+    }
+
+    hue=(hue+360)%360;
+    hue=(hue+(["ArrowRight","ArrowDown"].includes(event.key)?5:-5)+360)%360;
+
+    const h=hue/60;
+    const c=1;
+    const x=c*(1-Math.abs(h%2-1));
+    let rgb2;
+
+    if(h<1)rgb2=[c,x,0];
+    else if(h<2)rgb2=[x,c,0];
+    else if(h<3)rgb2=[0,c,x];
+    else if(h<4)rgb2=[0,x,c];
+    else if(h<5)rgb2=[x,0,c];
+    else rgb2=[c,0,x];
+
+    setControlWheelColour("#"+rgb2
+      .map(v=>Math.round(v*255).toString(16).padStart(2,"0")).join(""));
+  });
+}
+
+
 async function applyPattern(){let d=dev($("pdev").value||selected);if(!d)return alert("Add a device first.");let start=Math.max(0,+$("pstart").value||0),len=Math.max(1,+$("plen").value||1),col=colours.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));try{await api(d,"/json/state","POST",{seg:{id:0,start,len,col}});alert("Pattern sent to WLED.")}catch(e){alert("Could not apply pattern. Check the device connection.")}}
 function savePattern(){let name=$("pname").value.trim();if(!name)return alert("Enter a pattern name.");patterns.push({name,colours:[...colours],start:+$("pstart").value||0,len:+$("plen").value||30});db.set("patterns",patterns);renderPatterns()}
 function renderPatterns(){if(!$("colours"))return;renderColours();$("patternList").innerHTML=patterns.length?patterns.map((p,i)=>`<div class="row section"><span class="grow">${esc(p.name)}</span><button onclick="usePattern(${i})">Apply</button><button class="danger" onclick="patterns.splice(${i},1);db.set('patterns',patterns);renderPatterns()">×</button></div>`).join(""):'<div class="empty">No saved patterns yet.</div>'}
