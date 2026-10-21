@@ -1305,10 +1305,17 @@ function renderControls(){
         .map(v=>Number(v).toString(16).padStart(2,"0"))
         .join("");
 
-      $("colour").value=h;
-      $("hex").value=h;
-      colours[0]=h;
-      syncWheelColour();
+     $("colour").value=h;
+$("hex").value=h;
+$("controlWheelHex").value=h;
+
+const swatch=$("controlSelectedColourSwatch");
+if(swatch){
+  swatch.style.backgroundColor=h;
+  swatch.style.boxShadow="0 0 10px "+h+"66";
+}
+
+drawControlColourWheel();
     }
   }).catch(()=>{});
 }
