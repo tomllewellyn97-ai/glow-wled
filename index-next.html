@@ -1597,6 +1597,96 @@ function renderDevices(){
 
 function renderSelects(){["cdev","edev","pdev","prdev","scheduleDevice"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
 
+function getSchedules(){
+  try {
+    return JSON.parse(localStorage.getItem("glow_schedules") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function addSchedule(){
+  const deviceId = $("scheduleDevice").value;
+  const name = $("scheduleName").value.trim();
+  const time = $("scheduleTime").value;
+  const days = $("scheduleDays").value;
+  const action = $("scheduleAction").value;
+
+  if(!deviceId){
+    alert("Please add a WLED device first.");
+    return;
+  }
+
+  if(!name){
+    alert("Please enter a schedule name.");
+    return;
+  }
+
+  if(!time){
+    alert("Please choose a time.");
+    return;
+  }
+
+  const schedules = getSchedules();
+
+  schedules.push({
+    id: Date.now().toString(),
+    deviceId,
+    name,
+    time,
+    days,
+    action,
+    enabled: true
+  });
+
+  localStorage.setItem("glow_schedules", JSON.stringify(schedules));
+
+  $("scheduleName").value = "";
+  renderSchedules();
+}
+
+function renderSchedules(){
+  const list = $("scheduleList");
+  if(!list) return;
+
+  const schedules = getSchedules();
+
+  if(!schedules.length){
+    list.textContent = "No schedules created yet.";
+    return;
+  }
+
+  list.innerHTML = schedules.map(s => {
+    const device = devices.find(d => d.id === s.deviceId);
+    const deviceName = device ? device.name : "Device unavailable";
+    const actionText = s.action === "on" ? "Turn on" : "Turn off";
+    const daysText = {
+      daily: "Every day",
+      weekdays: "Weekdays",
+      weekends: "Weekends"
+    }[s.days] || s.days;
+
+    return `
+      <div class="card">
+        <h3>${esc(s.name)}</h3>
+        <p>Device: ${esc(deviceName)}</p>
+        <p>${actionText} at ${esc(s.time)}</p>
+        <p>${esc(daysText)}</p>
+        <button type="button"
+          onclick="deleteSchedule('${s.id}')">
+          Delete
+        </button>
+      </div>
+    `;
+  }).join("");
+}
+
+function deleteSchedule(id){
+  const schedules = getSchedules().filter(s => s.id !== id);
+  localStorage.setItem("glow_schedules", JSON.stringify(schedules));
+  renderSchedules();
+}
+
 async function check(id){
  
 let d=dev(id);
