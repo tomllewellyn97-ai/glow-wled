@@ -1292,6 +1292,57 @@ input#colourWheel {
 </label>
 <div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
 
+<section id="schedules" class="hidden">
+  <h2>Schedules</h2>
+
+  <label>
+    Selected device
+    <select id="scheduleDevice"></select>
+  </label>
+
+  <div class="card">
+    <h3>Create a schedule</h3>
+
+    <label>
+      Schedule name
+      <input id="scheduleName" placeholder="Evening lights">
+    </label>
+
+    <label>
+      Action
+      <select id="scheduleAction">
+        <option value="on">Turn lights on</option>
+        <option value="off">Turn lights off</option>
+      </select>
+    </label>
+
+    <label>
+      Time
+      <input id="scheduleTime" type="time" value="18:00">
+    </label>
+
+    <label>
+      Days
+      <select id="scheduleDays">
+        <option value="daily">Every day</option>
+        <option value="weekdays">Weekdays</option>
+        <option value="weekends">Weekends</option>
+      </select>
+    </label>
+
+    <button class="primary" type="button"
+      onclick="addSchedule()">
+      ＋ Add Schedule
+    </button>
+  </div>
+
+  <div class="card">
+    <h3>Your schedules</h3>
+    <div id="scheduleList">No schedules created yet.</div>
+  </div>
+</section>
+
+
 <section id="devices" class="hidden">
   <div class="row">
     <h2>My Devices</h2>
