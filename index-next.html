@@ -717,7 +717,57 @@ input#colourWheel {
   max-height: 240px;
   overflow-y: auto;
   padding-right: 4px;
+
+#paletteGrid.effect-dropdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
+
+#paletteGrid.effect-dropdown-list .effect-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+#paletteGrid.effect-dropdown-list .effect-row .effect {
+  flex: 1;
+  min-width: 0;
+  width: auto;
+  margin: 0;
+  text-align: left;
+}
+
+#paletteGrid.effect-dropdown-list .effect-row .effect-favourite {
+  flex: 0 0 42px;
+  width: 42px;
+  min-width: 42px;
+  margin: 0;
+  padding: 6px 0;
+  text-align: center;
+  font-size: 23px;
+  line-height: 1;
+  color: #77809b;
+  background: #171b2d;
+  border: 1px solid #343852;
+  border-radius: 10px;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+#paletteGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"] {
+  color: #ffd84d;
+  background: linear-gradient(145deg, #493914, #292319);
+  border-color: #ffcf33;
+  text-shadow: 0 0 8px #ffcc33, 0 0 16px #ffcc3370;
+  box-shadow: 0 0 10px #ffcc3335, inset 0 0 8px #ffcc3315;
+}
+
 
 
 #effectGrid.effect-dropdown-list .effect-row {
