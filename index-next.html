@@ -1176,8 +1176,8 @@ input#colourWheel {
     <select id="dashboardSection" onchange="page(this.value)">
       <option value="controls">Colours</option>
       <option value="effects">Effects &amp; Palettes</option>
-     
-      <option value="presets">Saved Presets</option>
+     <option value="presets">Saved Presets</option>
+      <option value="schedules">Schedules</option>
     </select>
   </label>
 
@@ -1198,7 +1198,8 @@ input#colourWheel {
     <option value="controls">Colours</option>
     <option value="effects" selected>Effects &amp; Palettes</option>
     <option value="presets">Saved Presets</option>
-  </select>
+    <option value="schedules">Schedules</option>
+    </select>
 </label>
 
 <div class="card">
@@ -1283,6 +1284,8 @@ input#colourWheel {
     <option value="controls">Colours</option>
     <option value="effects">Effects &amp; Palettes</option>
     <option value="presets" selected>Saved Presets</option>
+    <option value="schedules">Schedules</option>
+    
   </select>
 </label>
 <div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
