@@ -2632,7 +2632,60 @@ async function applyPattern(){let d=dev($("pdev").value||selected);if(!d)return 
 function savePattern(){let name=$("pname").value.trim();if(!name)return alert("Enter a pattern name.");patterns.push({name,colours:[...colours],start:+$("pstart").value||0,len:+$("plen").value||30});db.set("patterns",patterns);renderPatterns()}
 function renderPatterns(){if(!$("colours"))return;renderColours();$("patternList").innerHTML=patterns.length?patterns.map((p,i)=>`<div class="row section"><span class="grow">${esc(p.name)}</span><button onclick="usePattern(${i})">Apply</button><button class="danger" onclick="patterns.splice(${i},1);db.set('patterns',patterns);renderPatterns()">×</button></div>`).join(""):'<div class="empty">No saved patterns yet.</div>'}
 function usePattern(i){let p=patterns[i];colours=[...p.colours];$("pstart").value=p.start;$("plen").value=p.len;$("pname").value=p.name;renderColours();applyPattern()}
-async function savePreset(){let d=dev($("prdev").value||selected);if(!d)return alert("Add a device first.");let slot=Math.max(1,Math.min(250,+$("prslot").value||1)),name=$("prname").value.trim()||"Glow preset";try{await api(d,"/json/state","POST",{psave:slot});presets.push({name,slot,device:d.name,url:d.url});db.set("presets",presets);renderPresets();alert("Preset command sent to WLED.")}catch(e){alert("Could not save preset. Check connection and WLED support.")}}
+
+async function savePreset(){
+  let d=dev($("prdev").value||selected);
+  if(!d)return alert("Add a device first.");
+
+  let name=$("prname").value.trim()||"Glow preset";
+
+  try{
+    // Read the presets already stored on this WLED device
+    let existing=await api(d,"/presets.json");
+
+    // Find the first genuinely unused slot from 1 to 250
+    let slot=0;
+    for(let i=1;i<=250;i++){
+      if(!existing || !Object.prototype.hasOwnProperty.call(existing,String(i))){
+        slot=i;
+        break;
+      }
+    }
+
+    if(!slot){
+      return alert("All 250 preset slots are occupied.");
+    }
+
+    // Save the current lighting state and its actual name
+    await api(d,"/json/state","POST",{
+      psave:slot,
+      n:name,
+      ib:true,
+      sb:true
+    });
+
+    $("prslot").value=slot;
+
+    // Update Glow WLED's local preset list
+    presets=presets.filter(p=>
+      !(p.slot===slot && p.url===d.url)
+    );
+
+    presets.push({
+      name,
+      slot,
+      device:d.name,
+      url:d.url
+    });
+
+    db.set("presets",presets);
+    renderPresets();
+
+    alert('Preset "'+name+'" saved to WLED in slot '+slot+'.');
+  }catch(e){
+    alert("Could not save preset. Check the connection and try again.");
+  }
+}
 function renderPresets(){if(!$("presetList"))return;$("presetList").innerHTML=presets.length?presets.map((p,i)=>`<div class="row section"><span class="grow"><b>${esc(p.name)}</b><div class="sub">${esc(p.device)} · slot ${p.slot}</div></span><button onclick="loadPreset(${i})">Load</button><button class="danger" onclick="presets.splice(${i},1);db.set('presets',presets);renderPresets()">×</button></div>`).join(""):'<div class="empty">No presets saved on this phone.</div>'}
 async function loadPreset(i){let p=presets[i],d=devices.find(x=>x.url===p.url)||dev();if(!d)return alert("Add the original device first.");try{await api(d,"/json/state","POST",{ps:p.slot});alert("Preset load command sent.")}catch(e){alert("Could not load preset.")}}
 renderColours();render();
