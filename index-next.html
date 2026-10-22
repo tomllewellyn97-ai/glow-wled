@@ -1472,11 +1472,17 @@ function page(p,fromHistory=false){
 if(p==="controls")renderControls();
 if(p==="effects")loadEffects();
 if(p==="patterns")renderPatterns();
+
 if(p==="presets"){
   renderPresets();
   updateNextPresetSlot();
 }
+if(p==="schedules"){
+  renderSelects();
+  renderSchedules();
+}
 if(p==="devices")renderManage();
+
 
 }
 
