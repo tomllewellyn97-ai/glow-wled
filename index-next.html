@@ -1412,11 +1412,16 @@ function page(p,fromHistory=false){
       button.classList.toggle("active",button.dataset.page===p);
     });
 
-  if(p==="controls")renderControls();
-  if(p==="effects")loadEffects();
-  if(p==="patterns")renderPatterns();
-  if(p==="presets")renderPresets();
-  if(p==="devices")renderManage();
+ 
+if(p==="controls")renderControls();
+if(p==="effects")loadEffects();
+if(p==="patterns")renderPatterns();
+if(p==="presets"){
+  renderPresets();
+  updateNextPresetSlot();
+}
+if(p==="devices")renderManage();
+
 }
 
 document.querySelectorAll("#nav button")
