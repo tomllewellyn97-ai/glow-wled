@@ -859,6 +859,27 @@ input#colourWheel {
   transform: scale(0.99);
 }
 
+/* Keep Effects and Palette lists compact and centred */
+#effectGrid.effect-dropdown-list,
+#paletteGrid.effect-dropdown-list {
+  width: 100%;
+  max-height: 240px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Keep favourite stars gold when selected */
+#effectGrid .effect-favourite[title="Remove from favourites"],
+#paletteGrid .effect-favourite[title="Remove from favourites"] {
+  color: #ffd84d;
+  background: linear-gradient(145deg, #493914, #292319);
+  border-color: #ffcf33;
+  text-shadow: 0 0 8px #ffcc33, 0 0 16px #ffcc3370;
+  box-shadow: 0 0 10px #ffcc3335, inset 0 0 8px #ffcc3315;
+}
+
 </style>
 </head>
 
