@@ -1693,6 +1693,55 @@ function deleteSchedule(id){
   renderSchedules();
 }
 
+let scheduleCheckMinute = "";
+
+async function checkSchedules(){
+  const now = new Date();
+  const minuteKey = [
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    now.getHours(),
+    now.getMinutes()
+  ].join("-");
+
+  if(minuteKey === scheduleCheckMinute) return;
+  scheduleCheckMinute = minuteKey;
+
+  const day = now.getDay();
+  const currentTime = [
+    String(now.getHours()).padStart(2, "0"),
+    String(now.getMinutes()).padStart(2, "0")
+  ].join(":");
+
+  for(const s of getSchedules()){
+    if(!s.enabled || s.time !== currentTime) continue;
+
+    const matchesDay =
+      s.days === "daily" ||
+      (s.days === "weekdays" && day >= 1 && day <= 5) ||
+      (s.days === "weekends" && (day === 0 || day === 6));
+
+    if(!matchesDay) continue;
+
+    const d = dev(s.deviceId);
+    if(!d) continue;
+
+    try {
+      const on = s.action === "on";
+      await api(d, "/json/state", "POST", {on});
+      d.on = on;
+      save();
+      renderDevices();
+      renderManage();
+    } catch(e) {
+      console.error("Scheduled WLED action failed:", e);
+    }
+  }
+}
+
+setInterval(checkSchedules, 10000);
+checkSchedules();
 async function check(id){
  
 let d=dev(id);
