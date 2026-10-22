@@ -1284,6 +1284,25 @@ function saveEffectFavourites(favourites){
   );
 }
 
+const PALETTE_FAVOURITES_KEY = "glow_palette_favourites";
+
+function getPaletteFavourites(){
+  try {
+    return JSON.parse(
+      localStorage.getItem(PALETTE_FAVOURITES_KEY) || "[]"
+    );
+  } catch(e) {
+    return [];
+  }
+}
+
+function savePaletteFavourites(favourites){
+  localStorage.setItem(
+    PALETTE_FAVOURITES_KEY,
+    JSON.stringify(favourites)
+  );
+}
+
 
 function page(p,fromHistory=false){
   const target=$(p);
