@@ -768,6 +768,47 @@ input#colourWheel {
   box-shadow: 0 0 10px #ffcc3335, inset 0 0 8px #ffcc3315;
 }
 
+/* Premium Glow Home screen */
+.home-hero {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.10), transparent 58%),
+    linear-gradient(145deg, #121a29, #0b101a);
+  border: 1px solid #30334b;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+}
+
+.home-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 14px;
+}
+
+.home-logo svg {
+  filter: drop-shadow(0 0 8px rgba(53,231,255,0.24));
+}
+
+.home-hero h2 {
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  margin: 0 0 8px;
+}
+
+.home-hero > .sub {
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.home-hero button {
+  transition: filter 0.18s ease, transform 0.18s ease;
+}
+
+.home-hero button:active {
+  filter: brightness(1.12);
+  transform: scale(0.99);
+}
+
 </style>
 </head>
 
@@ -824,8 +865,30 @@ input#colourWheel {
 </div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav" class="hidden"></nav>
 <section id="home">
-  <div class="card" style="text-align:center;padding:30px 20px">
-    <div style="font-size:48px;margin-bottom:12px">✦</div>
+  
+<div class="card home-hero" style="text-align:center;padding:34px 20px 26px">
+
+    
+<div class="home-logo" aria-hidden="true">
+  <svg viewBox="0 0 64 64" width="54" height="54" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="homeGlow" x1="8" y1="8" x2="56" y2="56">
+        <stop offset="0%" stop-color="#35e7ff"/>
+        <stop offset="100%" stop-color="#a855f7"/>
+      </linearGradient>
+    </defs>
+    <path d="M7 29 32 8 57 29" stroke="url(#homeGlow)"
+      stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M15 25V54H49V25" stroke="url(#homeGlow)"
+      stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M32 25C25 25 23 31 27 36L29 39V43H35V39L37 36C41 31 39 25 32 25Z"
+      stroke="#f4f7ff" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M29 47H35" stroke="#35e7ff" stroke-width="2.5"
+      stroke-linecap="round"/>
+  </svg>
+</div>
+
     <h2>Welcome to Glow</h2>
     <p class="sub">Your lights. Your control. Your style.</p>
 
