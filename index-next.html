@@ -1977,13 +1977,25 @@ async function deleteSchedule(id){
     const verified = await readWledTimers(d);
     const clearedTimer = verified[slot];
 
-    if(
-      !clearedTimer ||
-      Number(clearedTimer.en) !== 0 ||
-      Number(clearedTimer.hour) !== 255
-    ){
-      throw new Error("The WLED timer could not be verified as cleared.");
-    }
+    
+if(
+  !clearedTimer ||
+  Number(clearedTimer.en) !== 0 ||
+  Number(clearedTimer.hour) !== 255
+){
+  console.error("WLED timer clear verification details:", {
+    slot,
+    expected: {
+      en: 0,
+      hour: 255
+    },
+    actual: clearedTimer,
+    allTimers: verified
+  });
+
+  throw new Error("The WLED timer could not be verified as cleared.");
+}
+
 
     const remainingSchedules = getSchedules().filter(
       s => s.id !== id
