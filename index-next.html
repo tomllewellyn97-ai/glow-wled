@@ -1688,62 +1688,71 @@ async function addSchedule(){
       dow: dayMasks[days] ?? 127
     };
 
-  await api(d, "/json/cfg", "POST", { timers: { ins: timers } });
-
-const schedules = getSchedules();
-
-schedules.push({
-  id: Date.now().toString(),
-  deviceId,
-  name,
-  time,
-  days,
-  action,
-  enabled: true,
-  wledSlot: slot,
-  presetId
-});
-
-localStorage.setItem("glow_schedules", JSON.stringify(schedules));
-$("scheduleName").value = "";
-renderSchedules();
-
-try {
-  const verified = await readWledTimers(d);
-  const savedTimer = verified[slot];
-
-  if (
-    !savedTimer ||
-    Number(savedTimer.en) !== 1 ||
-    Number(savedTimer.hour) !== hour ||
-    Number(savedTimer.min) !== minute ||
-    Number(savedTimer.macro) !== presetId
-  ) {
-    console.error("Timer verification mismatch:", {
-      expected: { hour, minute, presetId, slot },
-      actual: savedTimer
+    await api(d, "/json/cfg", "POST", {
+      timers: { ins: timers }
     });
 
+    const schedules = getSchedules();
+
+    schedules.push({
+      id: Date.now().toString(),
+      deviceId,
+      name,
+      time,
+      days,
+      action,
+      enabled: true,
+      wledSlot: slot,
+      presetId
+    });
+
+    localStorage.setItem("glow_schedules", JSON.stringify(schedules));
+    $("scheduleName").value = "";
+    renderSchedules();
+
+    try{
+      const verified = await readWledTimers(d);
+      const savedTimer = verified[slot];
+
+      if(
+        !savedTimer ||
+        Number(savedTimer.en) !== 1 ||
+        Number(savedTimer.hour) !== hour ||
+        Number(savedTimer.min) !== minute ||
+        Number(savedTimer.macro) !== presetId
+      ){
+        console.error("Timer verification mismatch:", {
+          expected: {hour, minute, presetId, slot},
+          actual: savedTimer
+        });
+
+        alert(
+          "The schedule appears in Glow, but WLED could not confirm it. " +
+          "Please check Time & Macros in WLED."
+        );
+        return;
+      }
+
+      alert("Schedule saved to WLED successfully.");
+
+    }catch(e){
+      console.error("Could not verify WLED schedule:", e);
+
+      alert(
+        "The schedule appears in Glow, but WLED could not confirm it. " +
+        "Please check Time & Macros in WLED."
+      );
+    }
+
+  }catch(e){
+    console.error("Could not save WLED schedule:", e);
+
     alert(
-      "The schedule appears in Glow, but WLED could not confirm it. " +
-      "Please check Time & Macros in WLED."
+      "The schedule could not be saved to WLED. " +
+      "Check the connection and Time & Macros settings."
     );
-    return;
   }
-
-  alert("Schedule saved to WLED successfully.");
-
-} catch (e) {
-  console.error("Could not verify WLED schedule:", e);
-
-  alert(
-    "The schedule appears in Glow, but WLED could not confirm it. " +
-    "Please check Time & Macros in WLED."
-  );
 }
-
-}
-
 function renderSchedules(){
   const list = $("scheduleList");
   if(!list) return;
