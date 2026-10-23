@@ -1962,14 +1962,10 @@ async function deleteSchedule(id){
       return;
     }
 
-    timers[slot] = {
-      ...timer,
-      en: 0,
-      hour: 255,
-      min: 0,
-      macro: 0,
-      dow: 127
-    };
+   timers[slot] = {
+  ...timer,
+  en: 0
+};
 
     await writeWledTimers(d, timers);
     await new Promise(resolve => setTimeout(resolve, 500));
