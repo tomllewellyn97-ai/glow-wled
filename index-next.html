@@ -1688,8 +1688,26 @@ async function addSchedule(){
       dow: dayMasks[days] ?? 127
     };
 
-    const verified = await writeWledTimers(d, timers);
+  await api(d, "/json/cfg", "POST", { timers: { ins: timers } });
 
+const schedules = getSchedules();
+schedules.push({
+  id: Date.now().toString(),
+  deviceId,
+  name,
+  time,
+  days,
+  action,
+  enabled: true,
+  wledSlot: slot,
+  presetId
+});
+
+localStorage.setItem("glow_schedules", JSON.stringify(schedules));
+$("scheduleName").value = "";
+renderSchedules();
+
+const verified = await readWledTimers(d);
    const savedTimer = verified[slot];
 
 if(
