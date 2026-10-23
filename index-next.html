@@ -791,19 +791,25 @@ input#colourWheel {
 /* Gold favourite stars */
 #effectGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"],
 #paletteGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"] {
-  color: #ffd84d !important;
-  background: linear-gradient(145deg, #493914, #292319);
-  border-color: #ffcf33;
-  text-shadow: 0 0 8px #ffcc33, 0 0 16px #ffcc3370;
-  box-shadow: 0 0 10px #ffcc3335, inset 0 0 8px #ffcc3315;
+  color: #ffe066 !important;
+  background: linear-gradient(145deg, #33280d, #171522);
+  border-color: #ffd447;
+  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00, 0 0 20px #ffbf0080;
+  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025, inset 0 0 8px #ffbf0020;
 }
-
 /* Match Effects and Palette dropdown rows */
 #effectGrid.effect-dropdown-list,
 #paletteGrid.effect-dropdown-list {
   gap: 6px;
 }
-
+/* Centre Effects and Palettes dropdown panels */
+#effectDropdown,
+#paletteDropdown {
+  width: 100%;
+  max-width: 460px;
+  margin: 10px auto 0;
+  box-sizing: border-box;
+}
 </style>
 </head>
 <body>
