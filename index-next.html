@@ -1692,7 +1692,15 @@ function deleteSchedule(id){
   localStorage.setItem("glow_schedules", JSON.stringify(schedules));
   renderSchedules();
 }
+async function readWledTimers(d){
+  const cfg = await api(d, "/json/cfg");
 
+  if(!cfg || !cfg.timers || !Array.isArray(cfg.timers.ins)){
+    throw new Error("WLED timer settings could not be read.");
+  }
+
+  return cfg.timers.ins;
+}
 let scheduleCheckMinute = "";
 
 async function checkSchedules(){
