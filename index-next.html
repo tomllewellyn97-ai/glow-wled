@@ -1690,16 +1690,22 @@ async function addSchedule(){
 
     const verified = await writeWledTimers(d, timers);
 
-    if(
-      !verified[slot] ||
-      Number(verified[slot].en) !== 1 ||
-      Number(verified[slot].hour) !== hour ||
-      Number(verified[slot].min) !== minute ||
-      Number(verified[slot].macro) !== presetId
-    ){
-      throw new Error("WLED did not confirm the timer settings.");
-    }
+   const savedTimer = verified[slot];
 
+if(
+  !savedTimer ||
+  Number(savedTimer.en) !== 1 ||
+  Number(savedTimer.hour) !== hour ||
+  Number(savedTimer.min) !== minute ||
+  Number(savedTimer.macro) !== presetId
+){
+  console.error("Timer verification mismatch:", {
+    expected: {hour, minute, presetId, slot},
+    actual: savedTimer
+  });
+
+  throw new Error("WLED did not confirm the timer settings.");
+}
     const schedules = getSchedules();
 
     schedules.push({
