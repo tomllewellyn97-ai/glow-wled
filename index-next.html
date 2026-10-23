@@ -2072,12 +2072,23 @@ function findFreeWledTimer(timers){
   return -1;
 }
 
+
 async function writeWledTimers(d, timers){
-  await api(d, "/json/cfg", "POST", {
+  const response = await api(d, "/json/cfg", "POST", {
     timers: {
       ins: timers
     }
   });
+
+  console.log("WLED timer write response:", response);
+
+  const verified = await readWledTimers(d);
+
+  console.log("WLED timers after write:", verified);
+
+  return verified;
+}
+
 
   return await readWledTimers(d);
 }
