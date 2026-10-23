@@ -693,6 +693,7 @@ input#colourWheel {
 }
 
 
+
 /* GLOW compact effects dropdown */
 #effectDropdown {
   margin-top: 10px;
@@ -702,7 +703,6 @@ input#colourWheel {
   background: #0c1020;
 }
 
-
 #paletteDropdown {
   margin-top: 10px;
   padding: 12px;
@@ -710,7 +710,6 @@ input#colourWheel {
   border-radius: 14px;
   background: #0c1020;
 }
-
 
 #effectDropdown.hidden {
   display: none !important;
@@ -722,15 +721,18 @@ input#colourWheel {
   margin-bottom: 10px;
 }
 
-#effectGrid {
+/* Compact Effects list */
+#effectGrid,
+#effectGrid.effect-dropdown-list {
   display: flex;
   flex-direction: column;
   gap: 6px;
   max-height: 240px;
   overflow-y: auto;
   padding-right: 4px;
-  }
+}
 
+/* Compact Palettes list */
 #paletteGrid.effect-dropdown-list {
   display: flex;
   flex-direction: column;
@@ -740,6 +742,8 @@ input#colourWheel {
   padding-right: 4px;
 }
 
+/* Effects and Palettes rows */
+#effectGrid.effect-dropdown-list .effect-row,
 #paletteGrid.effect-dropdown-list .effect-row {
   display: flex;
   flex-direction: row;
@@ -748,14 +752,21 @@ input#colourWheel {
   width: 100%;
 }
 
+/* Effect and palette buttons */
+#effectGrid.effect-dropdown-list .effect-row .effect,
 #paletteGrid.effect-dropdown-list .effect-row .effect {
   flex: 1;
   min-width: 0;
   width: auto;
   margin: 0;
+  padding: 10px 12px;
+  box-sizing: border-box;
   text-align: left;
+  border-radius: 10px;
 }
 
+/* Default favourite star */
+#effectGrid.effect-dropdown-list .effect-row .effect-favourite,
 #paletteGrid.effect-dropdown-list .effect-row .effect-favourite {
   flex: 0 0 42px;
   width: 42px;
@@ -773,110 +784,22 @@ input#colourWheel {
   box-shadow: none;
 }
 
-#paletteGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"] {
-  color: #ffd84d;
-  background: linear-gradient(145deg, #493914, #292319);
-  border-color: #ffcf33;
-  text-shadow: 0 0 8px #ffcc33, 0 0 16px #ffcc3370;
-  box-shadow: 0 0 10px #ffcc3335, inset 0 0 8px #ffcc3315;
-}
-
-#effectGrid.effect-dropdown-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  max-height: 240px;
-  overflow-y: auto;
-  padding-right: 4px;
-}
-
-#effectGrid.effect-dropdown-list .effect-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
-#effectGrid.effect-dropdown-list .effect-row .effect {
-  flex: 1;
-  min-width: 0;
-  width: auto;
-  margin: 0;
-  text-align: left;
-}
-
-
-#effectGrid.effect-dropdown-list .effect-row .effect-favourite {
-  flex: 0 0 42px;
-  width: 42px;
-  min-width: 42px;
-  margin: 0;
-  padding: 6px 0;
-  text-align: center;
-  font-size: 23px;
-  line-height: 1;
-  color: #77809b;
-  background: #171b2d;
-  border: 1px solid #343852;
-  border-radius: 10px;
-  text-shadow: none;
-  box-shadow: none;
-}
-
-#effectGrid.effect-dropdown-list .effect-row .effect-favourite:hover {
+/* Favourite star hover */
+#effectGrid.effect-dropdown-list .effect-row .effect-favourite:hover,
+#paletteGrid.effect-dropdown-list .effect-row .effect-favourite:hover {
   color: #ffe6a0;
   border-color: #ffd54a;
   background: #29243a;
 }
 
-#effectGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"] {
-  color: #ffd84d;
+/* Gold favourite stars */
+#effectGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"],
+#paletteGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"] {
+  color: #ffd84d !important;
   background: linear-gradient(145deg, #493914, #292319);
   border-color: #ffcf33;
   text-shadow: 0 0 8px #ffcc33, 0 0 16px #ffcc3370;
   box-shadow: 0 0 10px #ffcc3335, inset 0 0 8px #ffcc3315;
-}
-
-/* Premium Glow Home screen */
-.home-hero {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(168,85,247,0.10), transparent 58%),
-    linear-gradient(145deg, #121a29, #0b101a);
-  border: 1px solid #30334b;
-  box-shadow: 0 8px 28px rgba(0,0,0,0.22);
-}
-
-.home-logo {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto 14px;
-}
-
-.home-logo svg {
-  filter: drop-shadow(0 0 8px rgba(53,231,255,0.24));
-}
-
-.home-hero h2 {
-  font-size: 25px;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  margin: 0 0 8px;
-}
-
-.home-hero > .sub {
-  margin: 0 0 20px;
-  line-height: 1.5;
-}
-
-.home-hero button {
-  transition: filter 0.18s ease, transform 0.18s ease;
-}
-
-.home-hero button:active {
-  filter: brightness(1.12);
-  transform: scale(0.99);
 }
 
 /* Match Effects and Palette dropdown rows */
@@ -884,66 +807,6 @@ input#colourWheel {
 #paletteGrid.effect-dropdown-list {
   gap: 6px;
 }
-
-#effectGrid.effect-dropdown-list .effect-row .effect,
-#paletteGrid.effect-dropdown-list .effect-row .effect {
-  box-sizing: border-box;
-  padding: 10px 12px;
-  border-radius: 10px;
-}
-
-</style>
-</head>
-
-<body><div class="app">
-<header><div class="brand"><div class="logo" role="button" tabindex="0"
-  title="Back to Glow home"
-  onclick="page('home')"
-  onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();page('home')}">
-
-<svg viewBox="0 0 48 48" width="44" height="44"
-     aria-hidden="true" style="overflow:visible">
-  <defs>
-    <linearGradient id="houseNeon" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ff65f5"/>
-      <stop offset="48%" stop-color="#a855ff"/>
-      <stop offset="100%" stop-color="#00eaff"/>
-    </linearGradient>
-    <filter id="houseGlow" x="-80%" y="-80%" width="260%" height="260%">
-      <feGaussianBlur stdDeviation="3.2" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-    <filter id="bulbGlow" x="-100%" y="-100%" width="300%" height="300%">
-      <feGaussianBlur stdDeviation="1.4" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-
-  <path d="M7 21.5 24 7 41 21.5 V39 Q41 42 38 42 H10 Q7 42 7 39 Z"
-        fill="#10152b" stroke="url(#houseNeon)"
-        stroke-width="4.5" stroke-linejoin="round"
-        filter="url(#houseGlow)"/>
-
-  <path d="M24 17
-           C18.8 17 16 21 17.5 25.5
-           C18.2 27.5 20 29 20.5 31
-           H27.5 C28 29 29.8 27.5 30.5 25.5
-           C32 21 29.2 17 24 17 Z"
-        fill="#d8ffff" filter="url(#bulbGlow)"/>
-
-  <path d="M21 33 H27 M21.8 36 H26.2"
-        stroke="#00eaff" stroke-width="2.5"
-        stroke-linecap="round"/>
-  <path d="M22.5 39 H25.5"
-        stroke="#ff65f5" stroke-width="2"
-        stroke-linecap="round"/>
-</svg>
 
 </div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav" class="hidden"></nav>
