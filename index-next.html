@@ -1976,8 +1976,7 @@ async function deleteSchedule(id){
     
 if(
   !clearedTimer ||
-  Number(clearedTimer.en) !== 0 ||
-  Number(clearedTimer.hour) !== 255
+  Number(clearedTimer.en) !== 0
 ){
   console.error("WLED timer clear verification details:", {
     slot,
