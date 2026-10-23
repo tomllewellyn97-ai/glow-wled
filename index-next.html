@@ -1616,6 +1616,7 @@ function getSchedules(){
 }
 
 
+
 async function addSchedule(){
   const deviceId = $("scheduleDevice").value;
   const name = $("scheduleName").value.trim();
@@ -1642,6 +1643,16 @@ async function addSchedule(){
 
   if(!d){
     alert("The selected WLED device could not be found.");
+    return;
+  }
+
+  const schedules = getSchedules();
+
+  if(schedules.length >= 8){
+    alert(
+      "You have reached the maximum of 8 schedules. " +
+      "Delete an existing schedule before adding another."
+    );
     return;
   }
 
@@ -1692,8 +1703,6 @@ async function addSchedule(){
       timers: { ins: timers }
     });
 
-    const schedules = getSchedules();
-
     schedules.push({
       id: Date.now().toString(),
       deviceId,
@@ -1712,8 +1721,9 @@ async function addSchedule(){
 
     try{
       await new Promise(resolve => setTimeout(resolve, 500));
-const verified = await readWledTimers(d);
-const savedTimer = verified[slot];
+
+      const verified = await readWledTimers(d);
+      const savedTimer = verified[slot];
 
       if(
         !savedTimer ||
@@ -1754,6 +1764,7 @@ const savedTimer = verified[slot];
     );
   }
 }
+
 
 function renderSchedules(){
   const list = $("scheduleList");
