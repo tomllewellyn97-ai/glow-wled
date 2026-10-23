@@ -1917,16 +1917,98 @@ async function toggleSchedule(id){
   }
 }
 
-function deleteSchedule(id){
-  const schedules = getSchedules().filter(s => s.id !== id);
 
-  localStorage.setItem(
-    "glow_schedules",
-    JSON.stringify(schedules)
-  );
+async function deleteSchedule(id){
+  const schedules = getSchedules();
+  const schedule = schedules.find(s => s.id === id);
 
-  renderSchedules();
+  if(!schedule) return;
+
+  const d = dev(schedule.deviceId);
+
+  if(!d){
+    alert("The WLED device could not be found. The schedule has not been deleted.");
+    return;
+  }
+
+  if(!Number.isInteger(Number(schedule.wledSlot))){
+    alert("This schedule has no saved WLED timer slot. Nothing has been deleted.");
+    return;
+  }
+
+  if(!confirm("Delete this schedule and remove its timer from WLED?")){
+    return;
+  }
+
+  const slot = Number(schedule.wledSlot);
+
+  try{
+    const timers = await readWledTimers(d);
+    const timer = timers[slot];
+
+    const [hour, minute] = schedule.time.split(":").map(Number);
+    const expectedPreset = Number(schedule.presetId);
+
+    if(
+      !timer ||
+      Number(timer.hour) !== hour ||
+      Number(timer.min) !== minute ||
+      Number(timer.macro) !== expectedPreset
+    ){
+      alert(
+        "The WLED timer no longer matches this schedule. " +
+        "Nothing has been deleted. Please check WLED Time & Macros."
+      );
+      return;
+    }
+
+    timers[slot] = {
+      ...timer,
+      en: 0,
+      hour: 255,
+      min: 0,
+      macro: 0,
+      dow: 127
+    };
+
+    await writeWledTimers(d, timers);
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const verified = await readWledTimers(d);
+    const clearedTimer = verified[slot];
+
+    if(
+      !clearedTimer ||
+      Number(clearedTimer.en) !== 0 ||
+      Number(clearedTimer.hour) !== 255
+    ){
+      throw new Error("The WLED timer could not be verified as cleared.");
+    }
+
+    const remainingSchedules = getSchedules().filter(
+      s => s.id !== id
+    );
+
+    localStorage.setItem(
+      "glow_schedules",
+      JSON.stringify(remainingSchedules)
+    );
+
+    renderSchedules();
+
+    alert("Schedule deleted and its WLED timer cleared.");
+
+  }catch(e){
+    console.error("Could not delete WLED schedule:", e);
+
+    alert(
+      "The WLED timer could not be cleared. " +
+      "The schedule has been kept in Glow. " +
+      "Please check the connection and try again."
+    );
+  }
 }
+
 
 async function testWledTimers(){
   const d = dev($("scheduleDevice").value);
