@@ -761,41 +761,42 @@ input#colourWheel {
   border-radius: 10px;
 }
 
-/* Default favourite star */
-#effectGrid.effect-dropdown-list .effect-row .effect-favourite,
-#paletteGrid.effect-dropdown-list .effect-row .effect-favourite {
+/* Favourite stars — dark buttons */
+#effectGrid .effect-favourite,
+#paletteGrid .effect-favourite {
   flex: 0 0 42px;
   width: 42px;
   min-width: 42px;
   margin: 0;
   padding: 6px 0;
+  box-sizing: border-box;
   text-align: center;
   font-size: 23px;
   line-height: 1;
-  color: #77809b;
-  background: #171b2d;
-  border: 1px solid #343852;
+  color: #858ba3 !important;
+  background: #171b2d !important;
+  border: 1px solid #343852 !important;
   border-radius: 10px;
   text-shadow: none;
   box-shadow: none;
 }
 
 /* Favourite star hover */
-#effectGrid.effect-dropdown-list .effect-row .effect-favourite:hover,
-#paletteGrid.effect-dropdown-list .effect-row .effect-favourite:hover {
-  color: #ffe6a0;
-  border-color: #ffd54a;
-  background: #29243a;
+#effectGrid .effect-favourite:hover,
+#paletteGrid .effect-favourite:hover {
+  color: #ffe6a0 !important;
+  border-color: #ffd54a !important;
+  background: #29243a !important;
 }
 
-/* Gold favourite stars */
-#effectGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"],
-#paletteGrid.effect-dropdown-list .effect-row .effect-favourite[title="Remove from favourites"] {
+/* Selected favourites — gold glow */
+#effectGrid .effect-favourite[title="Remove from favourites"],
+#paletteGrid .effect-favourite[title="Remove from favourites"] {
   color: #ffe066 !important;
-  background: linear-gradient(145deg, #33280d, #171522);
-  border-color: #ffd447;
-  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00, 0 0 20px #ffbf0080;
-  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025, inset 0 0 8px #ffbf0020;
+  background: linear-gradient(145deg, #33280d, #171522) !important;
+  border-color: #ffd447 !important;
+  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00, 0 0 20px #ffbf0080 !important;
+  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025, inset 0 0 8px #ffbf0020 !important;
 }
 /* Match Effects and Palette dropdown rows */
 #effectGrid.effect-dropdown-list,
