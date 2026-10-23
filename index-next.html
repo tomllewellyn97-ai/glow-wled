@@ -1615,7 +1615,8 @@ function getSchedules(){
   }
 }
 
-function addSchedule(){
+
+async function addSchedule(){
   const deviceId = $("scheduleDevice").value;
   const name = $("scheduleName").value.trim();
   const time = $("scheduleTime").value;
@@ -1637,22 +1638,98 @@ function addSchedule(){
     return;
   }
 
-  const schedules = getSchedules();
+  const d = dev(deviceId);
 
-  schedules.push({
-    id: Date.now().toString(),
-    deviceId,
-    name,
-    time,
-    days,
-    action,
-    enabled: true
-  });
+  if(!d){
+    alert("The selected WLED device could not be found.");
+    return;
+  }
 
-  localStorage.setItem("glow_schedules", JSON.stringify(schedules));
+  const [hour, minute] = time.split(":").map(Number);
+  const presetId = action === "on" ? 1 : 2;
 
-  $("scheduleName").value = "";
-  renderSchedules();
+  const dayMasks = {
+    daily: 127,
+    weekdays: 62,
+    weekends: 65
+  };
+
+  try{
+    const cfg = await api(d, "/json/cfg");
+
+    if(!cfg?.timers || !Array.isArray(cfg.timers.ins)){
+      throw new Error("WLED timer settings could not be read.");
+    }
+
+    const timers = cfg.timers.ins;
+    const slot = findFreeWledTimer(timers);
+
+    if(slot < 0){
+      alert("WLED has no free timer slots. Remove an unused timer in WLED first.");
+      return;
+    }
+
+    while(timers.length < 8){
+      timers.push({
+        en: 0,
+        hour: 255,
+        min: 0,
+        macro: 0,
+        dow: 127
+      });
+    }
+
+    timers[slot] = {
+      ...timers[slot],
+      en: 1,
+      hour,
+      min: minute,
+      macro: presetId,
+      dow: dayMasks[days] ?? 127
+    };
+
+    const verified = await writeWledTimers(d, timers);
+
+    if(
+      !verified[slot] ||
+      Number(verified[slot].en) !== 1 ||
+      Number(verified[slot].hour) !== hour ||
+      Number(verified[slot].min) !== minute ||
+      Number(verified[slot].macro) !== presetId
+    ){
+      throw new Error("WLED did not confirm the timer settings.");
+    }
+
+    const schedules = getSchedules();
+
+    schedules.push({
+      id: Date.now().toString(),
+      deviceId,
+      name,
+      time,
+      days,
+      action,
+      enabled: true,
+      wledSlot: slot,
+      presetId
+    });
+
+    localStorage.setItem(
+      "glow_schedules",
+      JSON.stringify(schedules)
+    );
+
+    $("scheduleName").value = "";
+    renderSchedules();
+
+    alert("Schedule saved to WLED successfully.");
+  }catch(e){
+    console.error("Could not save WLED schedule:", e);
+    alert(
+      "The WLED schedule could not be confirmed. " +
+      "Check Time & Macros in WLED before trying again."
+    );
+  }
 }
 
 function renderSchedules(){
@@ -1670,6 +1747,7 @@ function renderSchedules(){
     const device = devices.find(d => d.id === s.deviceId);
     const deviceName = device ? device.name : "Device unavailable";
     const actionText = s.action === "on" ? "Turn on" : "Turn off";
+
     const daysText = {
       daily: "Every day",
       weekdays: "Weekdays",
@@ -1720,6 +1798,7 @@ async function testWledTimers(){
     console.error(e);
   }
 }
+
 async function readWledTimers(d){
   const cfg = await api(d, "/json/cfg");
 
@@ -1760,6 +1839,7 @@ let scheduleCheckMinute = "";
 
 async function checkSchedules(){
   const now = new Date();
+
   const minuteKey = [
     now.getFullYear(),
     now.getMonth(),
@@ -1772,6 +1852,7 @@ async function checkSchedules(){
   scheduleCheckMinute = minuteKey;
 
   const day = now.getDay();
+
   const currentTime = [
     String(now.getHours()).padStart(2, "0"),
     String(now.getMinutes()).padStart(2, "0")
@@ -1802,86 +1883,88 @@ async function checkSchedules(){
     }
   }
 }
+
 setInterval(checkSchedules, 10000);
 checkSchedules();
-async function check(id){
- 
-let d=dev(id);
-  if(!d)return;
 
-  const dot=$("test-dot-"+id);
-  const result=$("test-result-"+id);
+async function check(id){
+  let d = dev(id);
+  if(!d) return;
+
+  const dot = $("test-dot-" + id);
+  const result = $("test-result-" + id);
 
   if(dot){
-    dot.style.background="#facc15";
-    dot.style.boxShadow="0 0 7px #facc15";
-    dot.title="Testing connection";
-    dot.setAttribute("aria-label","Testing connection");
+    dot.style.background = "#facc15";
+    dot.style.boxShadow = "0 0 7px #facc15";
+    dot.title = "Testing connection";
+    dot.setAttribute("aria-label", "Testing connection");
   }
 
   if(result){
-    result.textContent="Testing...";
-    result.style.color="#facc15";
+    result.textContent = "Testing...";
+    result.style.color = "#facc15";
   }
 
   try{
-    let x=await api(d,"/json/info");
+    let x = await api(d, "/json/info");
 
-    $("topStatus").textContent="● Connected";
+    $("topStatus").textContent = "● Connected";
 
-    let el=$("st-"+id);
+    let el = $("st-" + id);
     if(el){
-      el.textContent="Online"+(x.name?" · "+x.name:"");
-      el.className="online";
+      el.textContent = "Online" + (x.name ? " · " + x.name : "");
+      el.className = "online";
     }
 
     if(dot){
-      dot.style.background="#22c55e";
-      dot.style.boxShadow="0 0 7px #22c55e";
-      dot.title="Connection successful";
-      dot.setAttribute("aria-label","Connection successful");
+      dot.style.background = "#22c55e";
+      dot.style.boxShadow = "0 0 7px #22c55e";
+      dot.title = "Connection successful";
+      dot.setAttribute("aria-label", "Connection successful");
     }
 
     if(result){
-      result.textContent="Online";
-      result.style.color="#4ade80";
+      result.textContent = "Online";
+      result.style.color = "#4ade80";
     }
 
   }catch(e){
-    $("topStatus").textContent="● Offline";
+    $("topStatus").textContent = "● Offline";
 
-    let el=$("st-"+id);
+    let el = $("st-" + id);
     if(el){
-      el.textContent="Connection failed";
-      el.className="offline";
+      el.textContent = "Connection failed";
+      el.className = "offline";
     }
 
     if(dot){
-      dot.style.background="#ef4444";
-      dot.style.boxShadow="0 0 7px #ef4444";
-      dot.title="Connection failed";
-      dot.setAttribute("aria-label","Connection failed");
+      dot.style.background = "#ef4444";
+      dot.style.boxShadow = "0 0 7px #ef4444";
+      dot.title = "Connection failed";
+      dot.setAttribute("aria-label", "Connection failed");
     }
 
-      if(result){
-      result.textContent="Offline";
-      result.style.color="#f87171";
+    if(result){
+      result.textContent = "Offline";
+      result.style.color = "#f87171";
     }
   }
 }
 
 async function toggle(id){
-  let d=dev(id);
-  if(!d)return;
+  let d = dev(id);
+  if(!d) return;
 
   try{
-    let on=!d.on;
-    await api(d,"/json/state","POST",{on});
-d.on=on;
-save();
-renderDevices();
-renderManage();
-    if($("controls")&&!$("controls").classList.contains("hidden")){
+    let on = !d.on;
+    await api(d, "/json/state", "POST", {on});
+    d.on = on;
+    save();
+    renderDevices();
+    renderManage();
+
+    if($("controls") && !$("controls").classList.contains("hidden")){
       renderControls();
     }
   }catch(e){
@@ -1889,9 +1972,8 @@ renderManage();
   }
 }
 
-
 async function powerToggle(){
-  if(devices.some(d=>d.on)){
+  if(devices.some(d => d.on)){
     await allOff();
   }else{
     await allOn();
@@ -1901,10 +1983,11 @@ async function powerToggle(){
 async function allOff(){
   for(let d of devices){
     try{
-      await api(d,"/json/state","POST",{on:false});
-      d.on=false;
+      await api(d, "/json/state", "POST", {on:false});
+      d.on = false;
     }catch(e){}
   }
+
   save();
   renderDevices();
   updatePowerButton();
@@ -1913,26 +1996,61 @@ async function allOff(){
 async function allOn(){
   for(let d of devices){
     try{
-      await api(d,"/json/state","POST",{on:true});
-      d.on=true;
+      await api(d, "/json/state", "POST", {on:true});
+      d.on = true;
     }catch(e){}
   }
+
   save();
   renderDevices();
   updatePowerButton();
 }
 
 function updatePowerButton(){
-  const b=document.getElementById("powerButton");
-  if(!b)return;
-  const on=devices.some(d=>d.on);
-  b.textContent=on?"■ All Off":"● All On";
-  b.className=on?"danger":"primary";
+  const b = document.getElementById("powerButton");
+  if(!b) return;
+
+  const on = devices.some(d => d.on);
+  b.textContent = on ? "■ All Off" : "● All On";
+  b.className = on ? "danger" : "primary";
 }
 
-async function syncAll(){let d=dev();if(!d)return alert("Add a device first.");try{let s=await api(d,"/json/state");for(let x of devices){if(x.id===d.id)continue;try{let seg=s.seg?.[0],b={on:s.on,bri:s.bri};if(seg)b.seg={col:seg.col,fx:seg.fx,pal:seg.pal,sx:seg.sx,ix:seg.ix};await api(x,"/json/state","POST",b);x.on=s.on}catch(e){}}save();renderDevices();alert("Sync attempted. Check your other lights.")}catch(e){alert("Could not read the selected light.")}}
+async function syncAll(){
+  let d = dev();
+  if(!d) return alert("Add a device first.");
 
+  try{
+    let s = await api(d, "/json/state");
 
+    for(let x of devices){
+      if(x.id === d.id) continue;
+
+      try{
+        let seg = s.seg?.[0];
+        let b = {on:s.on, bri:s.bri};
+
+        if(seg){
+          b.seg = {
+            col:seg.col,
+            fx:seg.fx,
+            pal:seg.pal,
+            sx:seg.sx,
+            ix:seg.ix
+          };
+        }
+
+        await api(x, "/json/state", "POST", b);
+        x.on = s.on;
+      }catch(e){}
+    }
+
+    save();
+    renderDevices();
+    alert("Sync attempted. Check your other lights.");
+  }catch(e){
+    alert("Could not read the selected light.");
+  }
+}
 
 
 function renderManage(){
