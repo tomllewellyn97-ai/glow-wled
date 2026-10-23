@@ -1711,8 +1711,9 @@ async function addSchedule(){
     renderSchedules();
 
     try{
-      const verified = await readWledTimers(d);
-      const savedTimer = verified[slot];
+      await new Promise(resolve => setTimeout(resolve, 500));
+const verified = await readWledTimers(d);
+const savedTimer = verified[slot];
 
       if(
         !savedTimer ||
