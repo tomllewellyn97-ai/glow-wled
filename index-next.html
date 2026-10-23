@@ -1691,6 +1691,7 @@ async function addSchedule(){
   await api(d, "/json/cfg", "POST", { timers: { ins: timers } });
 
 const schedules = getSchedules();
+
 schedules.push({
   id: Date.now().toString(),
   deviceId,
@@ -1707,83 +1708,37 @@ localStorage.setItem("glow_schedules", JSON.stringify(schedules));
 $("scheduleName").value = "";
 renderSchedules();
 
-const verified = await readWledTimers(d);
-   const savedTimer = verified[slot];
+try {
+  const verified = await readWledTimers(d);
+  const savedTimer = verified[slot];
 
-if(
-  !savedTimer ||
-  Number(savedTimer.en) !== 1 ||
-  Number(savedTimer.hour) !== hour ||
-  Number(savedTimer.min) !== minute ||
-  Number(savedTimer.macro) !== presetId
-){
-  console.error("Timer verification mismatch:", {
-    expected: {hour, minute, presetId, slot},
-    actual: savedTimer
-  });
-
-  throw new Error("WLED did not confirm the timer settings.");
-}
-    const schedules = getSchedules();
-
-    schedules.push({
-      id: Date.now().toString(),
-      deviceId,
-      name,
-      time,
-      days,
-      action,
-      enabled: true,
-      wledSlot: slot,
-      presetId
+  if (
+    !savedTimer ||
+    Number(savedTimer.en) !== 1 ||
+    Number(savedTimer.hour) !== hour ||
+    Number(savedTimer.min) !== minute ||
+    Number(savedTimer.macro) !== presetId
+  ) {
+    console.error("Timer verification mismatch:", {
+      expected: { hour, minute, presetId, slot },
+      actual: savedTimer
     });
 
-    localStorage.setItem(
-      "glow_schedules",
-      JSON.stringify(schedules)
+    alert(
+      "The schedule appears in Glow, but WLED could not confirm it. " +
+      "Please check Time & Macros in WLED."
     );
-
-    $("scheduleName").value = "";
-    renderSchedules();
-
-    alert("Schedule saved to WLED successfully.");
- 
-}catch(e){
-  console.error("Could not confirm WLED schedule:", e);
-
-  const schedules = getSchedules();
-  const alreadySaved = schedules.some(s =>
-    s.deviceId === deviceId &&
-    s.time === time &&
-    s.action === action &&
-    s.days === days
-  );
-
-  if(!alreadySaved){
-    schedules.push({
-      id: Date.now().toString(),
-      deviceId,
-      name,
-      time,
-      days,
-      action,
-      enabled: true,
-      presetId: action === "on" ? 1 : 2,
-      wledSlot: typeof slot === "number" ? slot : null
-    });
-
-    localStorage.setItem(
-      "glow_schedules",
-      JSON.stringify(schedules)
-    );
+    return;
   }
 
-  $("scheduleName").value = "";
-  renderSchedules();
+  alert("Schedule saved to WLED successfully.");
+
+} catch (e) {
+  console.error("Could not verify WLED schedule:", e);
 
   alert(
-    "The timer was not fully verified, but the schedule has been added to Glow. " +
-    "Please check Time & Macros in WLED to confirm it is enabled."
+    "The schedule appears in Glow, but WLED could not confirm it. " +
+    "Please check Time & Macros in WLED."
   );
 }
 
@@ -1855,7 +1810,6 @@ async function testWledTimers(){
     console.error(e);
   }
 }
-
 async function readWledTimers(d){
   const cfg = await api(d, "/json/cfg");
 
