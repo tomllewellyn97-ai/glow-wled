@@ -1742,6 +1742,19 @@ function findFreeWledTimer(timers){
   return -1;
 }
 
+async function writeWledTimers(d, timers){
+  await api(d, "/json/cfg", "POST", {
+    timers: {
+      ins: timers
+    }
+  });
+
+  return await readWledTimers(d);
+}
+
+  return -1;
+}
+
 let scheduleCheckMinute = "";
 
 async function checkSchedules(){
