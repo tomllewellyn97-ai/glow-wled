@@ -1754,6 +1754,7 @@ const savedTimer = verified[slot];
     );
   }
 }
+
 function renderSchedules(){
   const list = $("scheduleList");
   if(!list) return;
@@ -1768,7 +1769,6 @@ function renderSchedules(){
   list.innerHTML = schedules.map(s => {
     const device = devices.find(d => d.id === s.deviceId);
     const deviceName = device ? device.name : "Device unavailable";
-    const actionText = s.action === "on" ? "Turn on" : "Turn off";
 
     const daysText = {
       daily: "Every day",
@@ -1776,24 +1776,155 @@ function renderSchedules(){
       weekends: "Weekends"
     }[s.days] || s.days;
 
+    const enabled = s.enabled !== false;
+
     return `
-      <div class="card">
-        <h3>${esc(s.name)}</h3>
-        <p>Device: ${esc(deviceName)}</p>
-        <p>${actionText} at ${esc(s.time)}</p>
-        <p>${esc(daysText)}</p>
-        <button type="button"
-          onclick="deleteSchedule('${s.id}')">
-          Delete
-        </button>
+      <div class="card" style="padding:14px 15px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="flex:1;min-width:0">
+            <h3 style="margin:0 0 5px;font-size:17px">
+              ${esc(s.name)}
+            </h3>
+
+            <p style="margin:0;color:var(--muted);font-size:13px">
+              ${esc(deviceName)} · ${esc(s.time)} · ${esc(daysText)}
+            </p>
+
+            <p style="margin:5px 0 0;color:var(--muted);font-size:12px">
+              ${s.action === "on" ? "Turn on" : "Turn off"}
+            </p>
+          </div>
+
+          <button type="button"
+            role="switch"
+            aria-checked="${enabled}"
+            aria-label="Toggle ${esc(s.name)}"
+            onclick="toggleSchedule('${s.id}')"
+            style="
+              flex:0 0 46px;
+              width:46px;
+              height:26px;
+              padding:3px;
+              border:1px solid ${enabled ? "var(--cyan)" : "var(--border)"};
+              border-radius:20px;
+              background:${enabled ? "linear-gradient(90deg,#a855f7,#35e7ff)" : "#252b39"};
+              display:flex;
+              align-items:center;
+              justify-content:${enabled ? "flex-end" : "flex-start"};
+              cursor:pointer;
+            ">
+            <span style="
+              display:block;
+              width:18px;
+              height:18px;
+              border-radius:50%;
+              background:${enabled ? "#ffffff" : "#939eb6"};
+              box-shadow:${enabled ? "0 0 8px #35e7ff" : "none"};
+            "></span>
+          </button>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:8px">
+          <button type="button"
+            onclick="deleteSchedule('${s.id}')"
+            style="
+              padding:4px 8px;
+              font-size:12px;
+              color:var(--muted);
+              background:transparent;
+              border:0;
+            ">
+            Delete
+          </button>
+        </div>
       </div>
     `;
   }).join("");
 }
 
+async function toggleSchedule(id){
+  const schedules = getSchedules();
+  const schedule = schedules.find(s => s.id === id);
+
+  if(!schedule) return;
+
+  const d = dev(schedule.deviceId);
+
+  if(!d){
+    alert("The WLED device could not be found.");
+    return;
+  }
+
+  if(!Number.isInteger(Number(schedule.wledSlot))){
+    alert("This schedule has no saved WLED timer slot. Please recreate it.");
+    return;
+  }
+
+  const slot = Number(schedule.wledSlot);
+  const currentlyEnabled = schedule.enabled !== false;
+  const nextEnabled = !currentlyEnabled;
+
+  try{
+    const timers = await readWledTimers(d);
+    const timer = timers[slot];
+
+    const [hour, minute] = schedule.time.split(":").map(Number);
+    const expectedPreset = Number(schedule.presetId);
+
+    if(
+      !timer ||
+      Number(timer.hour) !== hour ||
+      Number(timer.min) !== minute ||
+      Number(timer.macro) !== expectedPreset
+    ){
+      alert(
+        "The WLED timer no longer matches this schedule. " +
+        "Nothing has been changed."
+      );
+      return;
+    }
+
+    timers[slot] = {
+      ...timer,
+      en: nextEnabled ? 1 : 0
+    };
+
+    await writeWledTimers(d, timers);
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    const verified = await readWledTimers(d);
+    const savedTimer = verified[slot];
+
+    if(
+      !savedTimer ||
+      Number(savedTimer.en) !== (nextEnabled ? 1 : 0)
+    ){
+      throw new Error("WLED timer change could not be verified.");
+    }
+
+    schedule.enabled = nextEnabled;
+
+    localStorage.setItem(
+      "glow_schedules",
+      JSON.stringify(schedules)
+    );
+
+    renderSchedules();
+
+  }catch(e){
+    console.error("Could not toggle WLED schedule:", e);
+    alert("Could not update the WLED timer. Please check the connection.");
+  }
+}
+
 function deleteSchedule(id){
   const schedules = getSchedules().filter(s => s.id !== id);
-  localStorage.setItem("glow_schedules", JSON.stringify(schedules));
+
+  localStorage.setItem(
+    "glow_schedules",
+    JSON.stringify(schedules)
+  );
+
   renderSchedules();
 }
 
@@ -1820,6 +1951,7 @@ async function testWledTimers(){
     console.error(e);
   }
 }
+
 async function readWledTimers(d){
   const cfg = await api(d, "/json/cfg");
 
