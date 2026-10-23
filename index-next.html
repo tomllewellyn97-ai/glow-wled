@@ -809,8 +809,20 @@ input#colourWheel {
 <body>
 <div class="app">
 <header>
-<div class="brand"><div class="logo">✦
-</div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
+<div class="brand">
+  <div class="logo" role="button" tabindex="0" onclick="page('home')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();page('home')}">
+    <svg viewBox="0 0 48 48" width="34" height="34" aria-label="Glow home" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoGlow" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#e879f9"/>
+          <stop offset="50%" stop-color="#a855f7"/>
+          <stop offset="100%" stop-color="#35e7ff"/>
+        </linearGradient>
+      </defs>
+      <path d="M7 22 L24 7 L41 22 V41 H28 V29 H20 V41 H7 Z" fill="none" stroke="url(#logoGlow)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M24 14 V25 M19 20 H29" stroke="url(#logoGlow)" stroke-width="2.5" stroke-linecap="round"/>
+    </svg>
+  </div><div><h1>GLOW</h1><div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div></div></div><span class="sub" id="topStatus">● Ready</span></header>
 <nav id="nav" class="hidden"></nav>
 <section id="home">
   
