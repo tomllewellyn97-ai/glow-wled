@@ -1302,6 +1302,10 @@ input#colourWheel {
 
   <div class="card">
     <h3>Create a schedule</h3>
+    <button type="button" onclick="testWledTimers()">
+  Test WLED Timer Connection
+</button>
+<p id="timerTestResult" class="sub"></p>
 
     <label>
       Schedule name
@@ -1691,6 +1695,30 @@ function deleteSchedule(id){
   const schedules = getSchedules().filter(s => s.id !== id);
   localStorage.setItem("glow_schedules", JSON.stringify(schedules));
   renderSchedules();
+}
+
+async function testWledTimers(){
+  const d = dev($("scheduleDevice").value);
+
+  if(!d){
+    alert("Please select a WLED device first.");
+    return;
+  }
+
+  const result = $("timerTestResult");
+  result.textContent = "Checking WLED timer settings…";
+
+  try{
+    const timers = await readWledTimers(d);
+
+    result.textContent =
+      "Connected successfully. WLED returned " +
+      timers.length + " timer entries.";
+  }catch(e){
+    result.textContent =
+      "Could not read WLED timer settings. Check the connection.";
+    console.error(e);
+  }
 }
 async function readWledTimers(d){
   const cfg = await api(d, "/json/cfg");
