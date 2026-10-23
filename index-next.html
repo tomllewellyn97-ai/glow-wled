@@ -1729,13 +1729,46 @@ if(
     renderSchedules();
 
     alert("Schedule saved to WLED successfully.");
-  }catch(e){
-    console.error("Could not save WLED schedule:", e);
-    alert(
-      "The WLED schedule could not be confirmed. " +
-      "Check Time & Macros in WLED before trying again."
+ 
+}catch(e){
+  console.error("Could not confirm WLED schedule:", e);
+
+  const schedules = getSchedules();
+  const alreadySaved = schedules.some(s =>
+    s.deviceId === deviceId &&
+    s.time === time &&
+    s.action === action &&
+    s.days === days
+  );
+
+  if(!alreadySaved){
+    schedules.push({
+      id: Date.now().toString(),
+      deviceId,
+      name,
+      time,
+      days,
+      action,
+      enabled: true,
+      presetId: action === "on" ? 1 : 2,
+      wledSlot: typeof slot === "number" ? slot : null
+    });
+
+    localStorage.setItem(
+      "glow_schedules",
+      JSON.stringify(schedules)
     );
   }
+
+  $("scheduleName").value = "";
+  renderSchedules();
+
+  alert(
+    "The timer was not fully verified, but the schedule has been added to Glow. " +
+    "Please check Time & Macros in WLED to confirm it is enabled."
+  );
+}
+
 }
 
 function renderSchedules(){
