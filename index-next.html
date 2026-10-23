@@ -1734,7 +1734,11 @@ function findFreeWledTimer(timers){
   for(let i = 0; i < 8; i++){
     const timer = timers[i];
 
-    if(!timer || !timer.macro){
+    if(
+      !timer ||
+      Number(timer.en) === 0 ||
+      Number(timer.hour) === 255
+    ){
       return i;
     }
   }
@@ -1750,9 +1754,6 @@ async function writeWledTimers(d, timers){
   });
 
   return await readWledTimers(d);
-}
-
-  return -1;
 }
 
 let scheduleCheckMinute = "";
