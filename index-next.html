@@ -1701,6 +1701,19 @@ async function readWledTimers(d){
 
   return cfg.timers.ins;
 }
+
+function findFreeWledTimer(timers){
+  for(let i = 0; i < 8; i++){
+    const timer = timers[i];
+
+    if(!timer || !timer.macro){
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 let scheduleCheckMinute = "";
 
 async function checkSchedules(){
@@ -1747,7 +1760,6 @@ async function checkSchedules(){
     }
   }
 }
-
 setInterval(checkSchedules, 10000);
 checkSchedules();
 async function check(id){
