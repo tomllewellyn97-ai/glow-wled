@@ -872,33 +872,37 @@ input#colourWheel {
   border-radius: 14px;
 }
 
-/* Effect rows: name left, star right */
-#effectGrid .effect-row {
-  display: flex !important;
-  align-items: center;
-  gap: 14px !important;
-  width: 100%;
+
+/* More space between selectable rows */
+#effectGrid,
+#paletteGrid {
+  gap: 12px !important;
 }
 
-#effectGrid .effect-row .effect {
-  flex: 1 1 auto !important;
-  min-width: 0;
-  text-align: left !important;
-}
-
-/* Palette rows: centre the palette names */
+/* Effects and palettes: full-width centred names */
+#effectGrid .effect-row,
 #paletteGrid .effect-row {
   display: flex !important;
   align-items: center;
-  justify-content: center !important;
-  gap: 14px !important;
+  gap: 12px !important;
   width: 100%;
 }
 
+/* Names fill the available space */
+#effectGrid .effect-row .effect,
 #paletteGrid .effect-row .effect {
-  flex: 0 1 260px !important;
+  flex: 1 1 auto !important;
+  min-width: 0;
   text-align: center !important;
+  box-sizing: border-box;
 }
+
+/* Keep favourite stars a consistent size */
+#effectGrid .effect-favourite,
+#paletteGrid .effect-favourite {
+  flex: 0 0 42px;
+}
+
 </style>
 </head>
 <body>
