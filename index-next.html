@@ -1667,7 +1667,24 @@ function renderDevices(){
 }
 
 
-function renderSelects(){["cdev","edev","pdev","prdev","scheduleDevice"].forEach(id=>{let old=$(id).value||selected;$(id).innerHTML=devices.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")||'<option value="">Add a device first</option>';$(id).value=devices.some(d=>d.id===old)?old:(devices[0]?.id||"")});if(!dev())selected=devices[0]?.id||""}
+function renderSelects(){
+  ["cdev","edev","pdev","prdev","scheduleDevice"].forEach(id=>{
+    const dropdown=$(id);
+    if(!dropdown)return;
+
+    const old=selected||dropdown.value;
+
+    dropdown.innerHTML=devices.map(d=>
+      `<option value="${d.id}">${esc(d.name)}</option>`
+    ).join("")||'<option value="">Add a device first</option>';
+
+    dropdown.value=devices.some(d=>d.id===old)
+      ?old
+      :(devices[0]?.id||"");
+  });
+
+  if(!dev())selected=devices[0]?.id||"";
+}
 
 function getSchedules(){
   try {
