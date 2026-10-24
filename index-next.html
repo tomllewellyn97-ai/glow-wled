@@ -2202,6 +2202,14 @@ function createDefaultZones(ledCount){
   }];
 }
 
+function testDefaultZones(){
+  const zones = createDefaultZones(54);
+
+  console.log("Glow Zones test:", zones);
+
+  return zones;
+}
+ 
 async function writeWledTimers(d, timers){
   const response = await api(d, "/json/cfg", "POST", {
     timers: {
