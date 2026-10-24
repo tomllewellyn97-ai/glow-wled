@@ -2139,7 +2139,10 @@ async function testWledTimers(){
 
   try{
     const timers = await readWledTimers(d);
-    const ledCount = await readWledLedCount(d);
+const ledCount = await readWledLedCount(d);
+
+d.ledCount = ledCount;
+save();
 
     result.textContent =
       "Connected successfully. " +
