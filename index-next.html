@@ -1522,7 +1522,13 @@ function page(p,fromHistory=false){
     .forEach(section=>section.classList.add("hidden"));
 
   target.classList.remove("hidden");
-
+  // Keep dashboard dropdowns in sync with the current screen.
+  document.querySelectorAll('select[onchange="page(this.value)"]')
+    .forEach(dropdown => {
+      if ([...dropdown.options].some(option => option.value === p)) {
+        dropdown.value = p;
+      }
+    });
   document.querySelectorAll("#nav button")
     .forEach(button=>{
       button.classList.toggle("active",button.dataset.page===p);
