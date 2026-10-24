@@ -3429,7 +3429,10 @@ function renderPresets(){
           <b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${esc(p.name)}</b>
           <div class="sub">${esc(p.device)} · slot ${p.slot}</div>
         </span>
-        <button style="flex-shrink:0" onclick="loadPreset(${i})">Load</button>
+<button aria-label="Load preset" title="Load preset"
+  style="flex-shrink:0;width:40px;padding:8px"
+  onclick="loadPreset(${i})">▶</button>
+
         <button class="danger" style="flex-shrink:0" onclick="presets.splice(${i},1);db.set('presets',presets);renderPresets()">×</button>
       </div>
     `).join("")
