@@ -2134,17 +2134,19 @@ async function testWledTimers(){
   }
 
   const result = $("timerTestResult");
-  result.textContent = "Checking WLED timer settings…";
+  result.textContent = "Checking WLED connection and LED count…";
 
   try{
     const timers = await readWledTimers(d);
+    const ledCount = await readWledLedCount(d);
 
-   result.textContent =
-  "Connected successfully. WLED returned " +
-  timers.length + " timer entries.";
+    result.textContent =
+      "Connected successfully. " +
+      "WLED returned " + timers.length + " timer entries. " +
+      "Detected " + ledCount + " LEDs.";
   }catch(e){
     result.textContent =
-      "Could not read WLED timer settings. Check the connection.";
+      "Could not read WLED timer settings or LED count. Check the connection.";
     console.error(e);
   }
 }
