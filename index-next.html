@@ -2921,7 +2921,7 @@ function renderControls(){
 
 
   initControlColourWheel();
-
+renderGlowZones(d.id);
   api(d,"/json/state").then(s=>{
     if($("bright")){
       $("bright").value=s.bri||128;
