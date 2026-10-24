@@ -760,34 +760,31 @@ input#colourWheel {
   text-align: left;
   border-radius: 10px;
 }
-/* Favourite stars — dark buttons */
+/* Favourite star buttons */
 #effectGrid .effect-favourite,
 #paletteGrid .effect-favourite {
-  flex: 0 0 42px;
+  background: #171b2d !important;
+  color: #858ba3 !important;
+  border: 1px solid #343852 !important;
+  border-radius: 10px;
   width: 42px;
   min-width: 42px;
-  margin: 0;
   padding: 6px 0;
-  box-sizing: border-box;
   text-align: center;
   font-size: 23px;
   line-height: 1;
-  color: #858ba3 !important;
-  background: #171b2d !important;
-  border: 1px solid #343852 !important;
-  border-radius: 10px;
-  text-shadow: none;
-  box-shadow: none;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
-/* Selected favourites — gold glow */
+/* Gold glow for selected favourites */
 #effectGrid .effect-favourite[title="Remove from favourites"],
 #paletteGrid .effect-favourite[title="Remove from favourites"] {
-  color: #ffe066 !important;
   background: linear-gradient(145deg, #33280d, #171522) !important;
+  color: #ffe066 !important;
   border-color: #ffd447 !important;
-  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00, 0 0 20px #ffbf0080 !important;
-  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025, inset 0 0 8px #ffbf0020 !important;
+  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00 !important;
+  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025 !important;
 }
 /* Match Effects and Palette dropdown rows */
 #effectGrid.effect-dropdown-list,
@@ -802,32 +799,7 @@ input#colourWheel {
   margin: 10px auto 0;
   box-sizing: border-box;
 }
-/* Favourite star buttons */
-#effectGrid .effect-favourite,
-#paletteGrid .effect-favourite {
-  background: #171b2d !important;
-  color: #858ba3 !important;
-  border: 1px solid #343852 !important;
-  border-radius: 10px;
-  width: 42px;
-  min-width: 42px;
-  padding: 6px 0;
-  text-align: center;
-  font-size: 23px;
-  line-height: 1;
-  box-shadow: none;
-  text-shadow: none;
-}
 
-/* Gold glow for selected favourites */
-#effectGrid .effect-favourite[title="Remove from favourites"],
-#paletteGrid .effect-favourite[title="Remove from favourites"] {
-  background: linear-gradient(145deg, #33280d, #171522) !important;
-  color: #ffe066 !important;
-  border-color: #ffd447 !important;
-  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00 !important;
-  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025 !important;
-}
 </style>
 </head>
 <body>
