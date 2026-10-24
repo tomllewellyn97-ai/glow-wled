@@ -2209,6 +2209,35 @@ function testDefaultZones(){
 
   return zones;
 }
+
+function validateZones(zones, ledCount){
+  if(!Array.isArray(zones) || zones.length === 0){
+    throw new Error("Create at least one zone.");
+  }
+
+  const sorted = [...zones].sort((a,b)=>a.start-b.start);
+
+  for(const zone of sorted){
+    if(
+      !Number.isInteger(zone.start) ||
+      !Number.isInteger(zone.count) ||
+      zone.start < 0 ||
+      zone.count <= 0 ||
+      zone.start + zone.count > ledCount
+    ){
+      throw new Error("A zone has invalid LED boundaries.");
+    }
+  }
+
+  for(let i=1;i<sorted.length;i++){
+    if(sorted[i].start < sorted[i-1].start + sorted[i-1].count){
+      throw new Error("Zones must not overlap.");
+    }
+  }
+
+  return true;
+}  
+
  
 async function writeWledTimers(d, timers){
   const response = await api(d, "/json/cfg", "POST", {
