@@ -2237,7 +2237,13 @@ function validateZones(zones, ledCount){
 
   return true;
 }  
+function createZone(id, name, start, count, ledCount){
+  const zone = {id, name, start, count};
 
+  validateZones([zone], ledCount);
+
+  return zone;
+}
  
 async function writeWledTimers(d, timers){
   const response = await api(d, "/json/cfg", "POST", {
