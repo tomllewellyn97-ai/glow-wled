@@ -3430,8 +3430,18 @@ function renderPresets(){
           <div class="sub">${esc(p.device)} · slot ${p.slot}</div>
         </span>
 <button aria-label="Load preset" title="Load preset"
-  style="flex-shrink:0;width:40px;padding:8px"
-  onclick="loadPreset(${i})">▶</button>
+  style="flex-shrink:0;width:40px;padding:8px;
+  color:#35e7ff;background:rgba(53,231,255,0.08);
+  border:1px solid #35e7ff;
+  box-shadow:0 0 7px rgba(53,231,255,0.22)"
+  onclick="loadPreset(${i})">
+  <svg width="16" height="16" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round"
+    style="display:block;margin:auto">
+    <path d="M7 4.5v15l12-7.5z"/>
+  </svg>
+</button>
 
         <button class="danger" style="flex-shrink:0" onclick="presets.splice(${i},1);db.set('presets',presets);renderPresets()">×</button>
       </div>
