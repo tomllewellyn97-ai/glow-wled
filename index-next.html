@@ -1339,6 +1339,12 @@ input#colourWheel {
 <section id="schedules" class="hidden">
   <h2>Schedules</h2>
 
+ <label>
+    Selected device
+    <select id="scheduleDevice"></select>
+  </label>
+
+  
   <label>
     Dashboard section
     <select onchange="page(this.value)">
@@ -1349,10 +1355,6 @@ input#colourWheel {
     </select>
   </label>
 
-  <label>
-    Selected device
-    <select id="scheduleDevice"></select>
-  </label>
 
   <div class="card">
     <h3>Create a schedule</h3>
