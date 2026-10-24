@@ -3447,7 +3447,9 @@ function renderPresets(){
 
   $("presetList").innerHTML=presets.length
     ?presets.map((p,i)=>`
-      <div class="row section" style="display:flex;align-items:center;gap:8px;margin:0 0 14px 0">
+      
+<div class="row section" style="display:flex;align-items:center;gap:8px;margin:0 0 14px 0;padding:14px;background:linear-gradient(145deg,#121a29,#0b101a);border:1px solid #252e42;border-radius:16px">
+
         <span class="grow" style="min-width:0;flex:1;overflow:hidden">
           <b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px">${esc(p.name)}</b>
           <div class="sub">${esc(p.device)} · slot ${p.slot}</div>
