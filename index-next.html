@@ -871,6 +871,34 @@ input#colourWheel {
   border: 1px solid #252e42;
   border-radius: 14px;
 }
+
+/* Effect rows: name left, star right */
+#effectGrid .effect-row {
+  display: flex !important;
+  align-items: center;
+  gap: 14px !important;
+  width: 100%;
+}
+
+#effectGrid .effect-row .effect {
+  flex: 1 1 auto !important;
+  min-width: 0;
+  text-align: left !important;
+}
+
+/* Palette rows: centre the palette names */
+#paletteGrid .effect-row {
+  display: flex !important;
+  align-items: center;
+  justify-content: center !important;
+  gap: 14px !important;
+  width: 100%;
+}
+
+#paletteGrid .effect-row .effect {
+  flex: 0 1 260px !important;
+  text-align: center !important;
+}
 </style>
 </head>
 <body>
