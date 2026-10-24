@@ -2159,6 +2159,18 @@ async function readWledTimers(d){
   return cfg.timers.ins;
 }
 
+async function readWledLedCount(d){
+  const info = await api(d, "/json/info");
+
+  const count = Number(info?.leds?.count);
+
+  if(!Number.isInteger(count) || count <= 0){
+    throw new Error("WLED LED count could not be detected.");
+  }
+
+  return count;
+}
+  
 function findFreeWledTimer(timers){
   for(let i = 0; i < 8; i++){
     const timer = timers[i];
