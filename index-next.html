@@ -1463,6 +1463,7 @@ input#colourWheel {
 const $=id=>document.getElementById(id),db={get(k,d){try{return JSON.parse(localStorage.getItem("glow_"+k))??d}catch(e){return d}},set(k,v){localStorage.setItem("glow_"+k,JSON.stringify(v))}};
 
 let devices=db.get("devices",[]),selected=devices[0]?.id||"",filter="All",editing="",effects=[],palettes=[],colours=["#ff4b70","#a16aff","#37dfeb"],patterns=db.get("patterns",[]),presets=db.get("presets",[]);
+let deviceZones = db.get("deviceZones", {});
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}function dev(id=selected){return devices.find(d=>d.id===id)}function base(d){return d.url.replace(/\/+$/,"")}function norm(s){s=s.trim();return /^https?:\/\//i.test(s)?s:"http://"+s}
 async function api(d,path,method="GET",body){let o={method,cache:"no-store",headers:{}};if(body!==undefined){o.headers["Content-Type"]="application/json";o.body=JSON.stringify(body)}let r=await fetch(base(d)+path,o);if(!r.ok)throw Error("HTTP "+r.status);let t=await r.text();try{return JSON.parse(t)}catch(e){return t}}
 function save(){db.set("devices",devices)}
