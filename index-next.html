@@ -852,6 +852,25 @@ input#colourWheel {
   flex: 0 1 260px;
   text-align: center;
 }
+
+/* Restore dropdown scrolling and panel backgrounds */
+#effectGrid,
+#paletteGrid {
+  max-height: 240px !important;
+  overflow-y: auto !important;
+  box-sizing: border-box;
+}
+
+#effectDropdown,
+#paletteDropdown {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  background: linear-gradient(145deg, #101827, #090e19);
+  border: 1px solid #252e42;
+  border-radius: 14px;
+}
 </style>
 </head>
 <body>
