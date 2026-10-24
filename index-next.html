@@ -2189,7 +2189,18 @@ function findFreeWledTimer(timers){
   return -1;
 }
 
+function createDefaultZones(ledCount){
+  if(!Number.isInteger(ledCount) || ledCount <= 0){
+    throw new Error("A valid LED count is required.");
+  }
 
+  return [{
+    id:"zone-1",
+    name:"Zone 1",
+    start:0,
+    count:ledCount
+  }];
+}
 
 async function writeWledTimers(d, timers){
   const response = await api(d, "/json/cfg", "POST", {
