@@ -2139,8 +2139,9 @@ async function testWledTimers(){
   try{
     const timers = await readWledTimers(d);
 
-    result.textContent =
-  "Connected successfully;
+   result.textContent =
+  "Connected successfully. WLED returned " +
+  timers.length + " timer entries.";
   }catch(e){
     result.textContent =
       "Could not read WLED timer settings. Check the connection.";
