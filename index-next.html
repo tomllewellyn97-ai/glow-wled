@@ -2014,10 +2014,28 @@ async function deleteSchedule(id){
 
   if(!schedule) return;
 
-  const d = dev(schedule.deviceId);
+    const d = dev(schedule.deviceId);
 
   if(!d){
-    alert("The WLED device could not be found. The schedule has not been deleted.");
+    if(!confirm(
+      "This schedule is linked to a device that is no longer saved in Glow. " +
+      "Remove it from this phone only? " +
+      "Any timer stored on the physical WLED lamp will not be changed."
+    )){
+      return;
+    }
+
+    const remainingSchedules = getSchedules().filter(
+      s => s.id !== id
+    );
+
+    localStorage.setItem(
+      "glow_schedules",
+      JSON.stringify(remainingSchedules)
+    );
+
+    renderSchedules();
+    alert("Old schedule removed from this phone. The WLED lamp was not changed.");
     return;
   }
 
