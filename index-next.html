@@ -801,6 +801,32 @@ input#colourWheel {
 }
 
 </style>
+  <style>
+#effectGrid .effect-favourite,
+#paletteGrid .effect-favourite {
+  background: #171b2d !important;
+  color: #858ba3 !important;
+  border: 1px solid #343852 !important;
+  border-radius: 10px;
+  width: 42px;
+  min-width: 42px;
+  padding: 6px 0;
+  text-align: center;
+  font-size: 23px;
+  line-height: 1;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+#effectGrid .effect-favourite[title="Remove from favourites"],
+#paletteGrid .effect-favourite[title="Remove from favourites"] {
+  background: linear-gradient(145deg, #33280d, #171522) !important;
+  color: #ffe066 !important;
+  border-color: #ffd447 !important;
+  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00 !important;
+  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025 !important;
+}
+</style>
 </head>
 <body>
 <div class="app">
