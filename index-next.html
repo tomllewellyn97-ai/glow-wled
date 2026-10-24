@@ -791,15 +791,20 @@ input#colourWheel {
 #paletteGrid.effect-dropdown-list {
   gap: 6px;
 }
-/* Centre Effects and Palettes dropdown panels */
+/* Effects and Palettes dropdown panels */
 #effectDropdown,
 #paletteDropdown {
   width: 100%;
   max-width: 460px;
+  max-height: 240px;
   margin: 10px auto 0;
+  padding: 10px;
   box-sizing: border-box;
+  background: linear-gradient(145deg, #101827, #090e19);
+  border: 1px solid #252e42;
+  border-radius: 14px;
+  overflow-y: auto;
 }
-
 </style>
   <style>
 #effectGrid .effect-favourite,
@@ -825,6 +830,27 @@ input#colourWheel {
   border-color: #ffd447 !important;
   text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00 !important;
   box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025 !important;
+}
+
+/* Space effect names and favourite stars */
+#effectGrid .effect-row {
+  justify-content: space-between;
+  gap: 14px;
+}
+
+#effectGrid .effect-row .effect {
+  flex: 1;
+  text-align: left;
+}
+
+/* Centre palette buttons */
+#paletteGrid .effect-row {
+  justify-content: center;
+}
+
+#paletteGrid .effect-row .effect {
+  flex: 0 1 260px;
+  text-align: center;
 }
 </style>
 </head>
