@@ -1534,15 +1534,20 @@ input#colourWheel {
   <input id="gzColour" type="color" value="#35e7ff">
 </label>
 
-<label>
-  Zone effect
-  <select id="gzEffect"></select>
-</label>
 
-<label>
-  Zone palette
-  <select id="gzPalette"></select>
-</label>
+<div class="glow-zone-choice">
+  <h3>Zone effect</h3>
+  <div id="gzEffectGrid"></div>
+</div>
+
+<div class="glow-zone-choice">
+  <h3>Zone palette</h3>
+  <div id="gzPaletteGrid"></div>
+</div>
+
+<input type="hidden" id="gzEffect" value="0">
+<input type="hidden" id="gzPalette" value="0">
+
 
     <label>
       Starting LED
