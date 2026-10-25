@@ -1529,6 +1529,11 @@ input#colourWheel {
         placeholder="Living Room">
     </label>
 
+<label>
+  Zone colour
+  <input id="gzColour" type="color" value="#35e7ff">
+</label>
+
     <label>
       Starting LED
       <input id="gzStart" type="number" min="0" value="0">
@@ -2469,6 +2474,7 @@ function editGlowZone(deviceId, index){
   $("gzName").value = zone.name;
   $("gzStart").value = zone.start;
   $("gzCount").value = zone.count;
+  $("gzColour").value = zone.colour || "#35e7ff";
   $("gzStart").max = ledCount - 1;
   $("gzCount").max = ledCount;
   $("gzEditorStatus").textContent = "";
@@ -2499,7 +2505,8 @@ function saveGlowZoneEditor(){
   const start = Number($("gzStart").value);
   const count = Number($("gzCount").value);
 
-  zones[index] = {...zones[index], name, start, count};
+ const colour = $("gzColour").value;
+zones[index] = {...zones[index], name, start, count, colour};
 
   try{
     saveGlowZones(deviceId, zones);
