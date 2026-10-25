@@ -2794,15 +2794,35 @@ function saveGlowZones(deviceId, zones){
 
 
 
+
 async function applyGlowZones(deviceId){
   const d = dev(deviceId);
   if(!d) throw new Error("Device not found.");
 
   const ledCount = d.ledCount || 54;
-  const zones = deviceZones[deviceId] ||
-    createDefaultZones(ledCount);
+  const zones = [
+    ...(deviceZones[deviceId] || createDefaultZones(ledCount))
+  ].sort((a,b) => a.start - b.start);
 
   validateZones(zones, ledCount);
+
+  // Require the zones to cover the whole strip without gaps.
+  let nextLed = 0;
+
+  for(const zone of zones){
+    if(zone.start !== nextLed){
+      throw new Error(
+        `Zones must cover every LED. Check the gap before LED ${zone.start}.`
+      );
+    }
+    nextLed = zone.start + zone.count;
+  }
+
+  if(nextLed !== ledCount){
+    throw new Error(
+      `Zones currently cover ${nextLed} LEDs, but the strip has ${ledCount}.`
+    );
+  }
 
   const state = await api(d, "/json/state");
 
@@ -2810,16 +2830,61 @@ async function applyGlowZones(deviceId){
     throw new Error("Could not read WLED segments.");
   }
 
-  const segments = [...state.seg].sort(
-    (a,b) => a.start - b.start
+ const maxSegments = state.info?.leds?.maxseg;
+  const maxCount = Number.isInteger(maxSegments)
+    ? maxSegments
+    : 16;
+
+  if(zones.length > maxCount){
+    throw new Error(
+      `WLED supports up to ${maxCount} segments on this device.`
+    );
+  }
+
+  const segments = zones.map((zone, id) => {
+    const hex = (zone.colour || "#ffffff")
+      .replace("#", "");
+
+    const rgb = [
+      parseInt(hex.slice(0,2), 16),
+      parseInt(hex.slice(2,4), 16),
+      parseInt(hex.slice(4,6), 16)
+    ];
+
+    return {
+      id,
+      start: zone.start,
+      stop: zone.start + zone.count,
+      fx: Number.isInteger(zone.effect) ? zone.effect : 0,
+      pal: Number.isInteger(zone.palette) ? zone.palette : 0,
+      col: [rgb]
+    };
+  });
+
+  // Remove any old segments no longer used by the saved zones.
+  const highestExistingId = Math.max(
+    ...state.seg.map(seg => Number(seg.id) || 0)
   );
 
-  console.log("Glow Zones:", zones);
-  console.log("Current WLED segments:", segments);
-  console.log("LED count:", ledCount);
+  for(let id = zones.length; id <= highestExistingId; id++){
+    segments.push({id, stop: 0});
+  }
+
+  await api(d, "/json/state", "POST", {
+    seg: segments
+  });
+
+  const updated = await api(d, "/json/state");
+
+  if(!Array.isArray(updated.seg)){
+    throw new Error("Could not verify the updated WLED segments.");
+  }
 
   $("gzEditorStatus").textContent =
-    "Zones validated. WLED has not been changed yet.";
+    `Applied ${zones.length} zone${zones.length === 1 ? "" : "s"} to WLED.`;
+
+  console.log("Applied Glow Zones:", zones);
+  console.log("WLED segments after update:", updated.seg);
 }
 
 function updateGlowZone(deviceId, index, field, value){
