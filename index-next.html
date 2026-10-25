@@ -688,6 +688,31 @@ input#colourWheel {
   box-shadow: none !important;
 }
 
+/* Glow WLED Colours screen neon wheel border */
+.wheel-wrap:has(#controlColourCanvas) {
+  width: 240px !important;
+  height: 240px !important;
+  padding: 4px !important;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    #35e7ff 0%,
+    #6275ff 50%,
+    #6d28d9 100%
+  ) !important;
+  box-shadow:
+    0 0 10px #35e7ff55,
+    0 0 18px #6d28d955;
+}
+
+.wheel-wrap:has(#controlColourCanvas) #controlColourCanvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+}
+
 
 
 /* GLOW compact effects dropdown */
