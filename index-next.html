@@ -2468,11 +2468,21 @@ function renderGlowZones(deviceId){
 
 let editingGlowZone = null;
 
-function editGlowZone(deviceId, index){
+async function editGlowZone(deviceId, index){
   const d = dev(deviceId);
   if(!d) return;
 
   const ledCount = d.ledCount || 54;
+    try{
+    if(!effects.length || !palettes.length){
+      effects = await api(d, "/json/effects");
+      palettes = await api(d, "/json/palettes");
+    }
+  }catch(e){
+    $("gzEditorStatus").textContent =
+      "Could not load effects and palettes. Check the WLED connection.";
+    return;
+  }
   const zones = deviceZones[deviceId] || createDefaultZones(ledCount);
   const zone = zones[index];
 
