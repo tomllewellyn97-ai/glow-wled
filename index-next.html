@@ -1762,15 +1762,35 @@ input#colourWheel {
 </label>
 
 
+
 <div class="glow-zone-choice">
   <h3>Zone effect</h3>
-  <div id="gzEffectGrid"></div>
+
+  <button type="button" id="gzEffectToggle"
+    onclick="toggleGlowZoneDropdown('gzEffectDropdown','gzEffectToggle','Choose an effect')"
+    style="width:100%;text-align:left">
+    Choose an effect ▾
+  </button>
+
+  <div id="gzEffectDropdown" class="hidden">
+    <div id="gzEffectGrid"></div>
+  </div>
 </div>
 
 <div class="glow-zone-choice">
   <h3>Zone palette</h3>
-  <div id="gzPaletteGrid"></div>
+
+  <button type="button" id="gzPaletteToggle"
+    onclick="toggleGlowZoneDropdown('gzPaletteDropdown','gzPaletteToggle','Choose a palette')"
+    style="width:100%;text-align:left">
+    Choose a palette ▾
+  </button>
+
+  <div id="gzPaletteDropdown" class="hidden">
+    <div id="gzPaletteGrid"></div>
+  </div>
 </div>
+
 
 <input type="hidden" id="gzEffect" value="0">
 <input type="hidden" id="gzPalette" value="0">
@@ -3984,6 +4004,21 @@ function togglePaletteDropdown(){
   if(opening){
     renderPalettes();
   }
+}
+
+function toggleGlowZoneDropdown(dropdownId, buttonId, label){
+  const dropdown = $(dropdownId);
+  const button = $(buttonId);
+
+  if(!dropdown || !button) return;
+
+  const opening = dropdown.classList.contains("hidden");
+
+  dropdown.classList.toggle("hidden", !opening);
+
+  button.textContent = opening
+    ? label + " ▴"
+    : label + " ▾";
 }
 
 
