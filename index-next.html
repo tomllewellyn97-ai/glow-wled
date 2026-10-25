@@ -4325,20 +4325,37 @@ function colourFromControlWheel(event){
   const x=(event.clientX-rect.left)*canvas.width/rect.width;
   const y=(event.clientY-rect.top)*canvas.height/rect.height;
   const centre=canvas.width/2;
-  const radius=canvas.width/2;
+  const radius=canvas.width/2-3;
 
-  if(Math.sqrt((x-centre)**2+(y-centre)**2)>radius)return;
+  const dx=x-centre;
+  const dy=y-centre;
+  const distance=Math.sqrt(dx*dx+dy*dy);
 
-  const px=Math.max(0,Math.min(canvas.width-1,Math.round(x)));
-  const py=Math.max(0,Math.min(canvas.height-1,Math.round(y)));
+  // Keep selection inside the visible colour wheel.
+  if(distance>radius+0.5)return;
 
-  const pixel=canvas.getContext("2d").getImageData(px,py,1,1).data;
+  // Clamp edge clicks to a valid pixel inside the circle.
+  const safeDistance=Math.min(distance,radius-1);
+  const scale=distance>0?safeDistance/distance:0;
+  const px=Math.max(0,Math.min(canvas.width-1,
+    Math.round(centre+dx*scale)));
+  const py=Math.max(0,Math.min(canvas.height-1,
+    Math.round(centre+dy*scale)));
+
+  const pixel=canvas.getContext("2d")
+    .getImageData(px,py,1,1).data;
+
+  // Never send a transparent or black edge pixel to the lamp.
+  if(pixel[3]<128)return;
 
   const hex="#"+[pixel[0],pixel[1],pixel[2]]
     .map(v=>v.toString(16).padStart(2,"0")).join("");
 
+  if(hex==="#000000")return;
+
   setControlWheelColour(hex);
 }
+
 
 
 function initControlColourWheel(){
