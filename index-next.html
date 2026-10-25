@@ -690,7 +690,8 @@ input#colourWheel {
 
 /* Glow WLED Colours screen neon wheel border */
 
-/* Colours screen wheel: clean neon outline */
+
+/* Colours screen: visible neon border */
 .control-wheel-wrap {
   position: relative !important;
   width: 248px !important;
@@ -698,24 +699,34 @@ input#colourWheel {
   max-width: 100%;
   padding: 4px !important;
   box-sizing: border-box !important;
+  border: 4px solid #35e7ff !important;
   border-radius: 50% !important;
   background: transparent !important;
-  box-shadow: none !important;
+  box-shadow: 0 0 10px #35e7ff, 0 0 18px #6d28d9 !important;
 }
 
 .control-wheel-wrap::before {
   content: "";
   position: absolute;
-  inset: 0;
-  padding: 4px;
+  inset: -4px;
+  border: 4px solid transparent;
   border-radius: 50%;
-  background: linear-gradient(135deg, #35e7ff, #6275ff 50%, #6d28d9);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box,
-                linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  background: linear-gradient(135deg, #35e7ff, #6275ff 50%, #6d28d9) border-box;
   pointer-events: none;
   z-index: 2;
+}
+
+.control-wheel-wrap #controlColourCanvas {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 240px !important;
+  height: 240px !important;
+  max-width: 100%;
+  border: none !important;
+  border-radius: 50%;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .control-wheel-wrap #controlColourCanvas {
