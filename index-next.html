@@ -2740,12 +2740,8 @@ try{
   await applyGlowZones(deviceId);
 
   editingGlowZone = null;
-  page("glowZones");
-
-  if($("glowZonesStatus")){
-    $("glowZonesStatus").textContent =
-      "Zone saved and applied successfully.";
-  }
+  $("gzEditorStatus").textContent =
+    "Zones saved and validated. WLED has not been changed yet.";
 }catch(e){
   $("gzEditorStatus").textContent =
     "Zone saved locally, but WLED could not be updated: " + e.message;
