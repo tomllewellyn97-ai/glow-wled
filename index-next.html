@@ -2986,9 +2986,10 @@ try{
   // Apply the saved zones to the WLED device.
   await applyGlowZones(deviceId);
 
+ 
   editingGlowZone = null;
-  $("gzEditorStatus").textContent =
-    "Zones saved and validated. WLED has not been changed yet.";
+  page("glowZones");
+
 }catch(e){
   $("gzEditorStatus").textContent =
     "Zone saved locally, but WLED could not be updated: " + e.message;
