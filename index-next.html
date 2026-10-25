@@ -2518,6 +2518,118 @@ async function editGlowZone(deviceId, index){
   page("glowZoneEditor");
 }
 
+function renderGlowZoneEffects(deviceId){
+  const grid = $("gzEffectGrid");
+  if(!grid) return;
+
+  const selected = Number($("gzEffect").value || 0);
+  const favourites = getEffectFavourites();
+
+  const items = effects.map((name, index) => ({
+    name: String(name),
+    index
+  })).sort((a, b) =>
+    Number(favourites.includes(b.name)) - Number(favourites.includes(a.name)) ||
+    a.index - b.index
+  );
+
+  grid.innerHTML = items.map(item => {
+    const favourite = favourites.includes(item.name);
+    const active = item.index === selected;
+
+    return `
+      <div class="effect-row">
+        <button type="button"
+          class="effect ${active ? "active" : ""}"
+          data-zone-effect="${item.index}">
+          ${esc(item.name)}
+        </button>
+        <button type="button"
+          class="effect-favourite"
+          data-zone-effect-favourite="${item.index}"
+          title="${favourite ? "Remove from favourites" : "Add to favourites"}">
+          ${favourite ? "★" : "☆"}
+        </button>
+      </div>`;
+  }).join("");
+
+  grid.querySelectorAll("[data-zone-effect]").forEach(button => {
+    button.addEventListener("click", () => {
+      $("gzEffect").value = button.dataset.zoneEffect;
+      renderGlowZoneEffects(deviceId);
+    });
+  });
+
+  grid.querySelectorAll("[data-zone-effect-favourite]").forEach(button => {
+    button.addEventListener("click", () => {
+      const index = Number(button.dataset.zoneEffectFavourite);
+      const name = String(effects[index]);
+      const updated = getEffectFavourites().filter(item => item !== name);
+
+      if(!getEffectFavourites().includes(name)) updated.push(name);
+
+      saveEffectFavourites(updated);
+      renderGlowZoneEffects(deviceId);
+    });
+  });
+}
+
+function renderGlowZonePalettes(deviceId){
+  const grid = $("gzPaletteGrid");
+  if(!grid) return;
+
+  const selected = Number($("gzPalette").value || 0);
+  const favourites = getPaletteFavourites();
+
+  const items = palettes.map((name, index) => ({
+    name: String(name),
+    index
+  })).sort((a, b) =>
+    Number(favourites.includes(b.name)) - Number(favourites.includes(a.name)) ||
+    a.index - b.index
+  );
+
+  grid.innerHTML = items.map(item => {
+    const favourite = favourites.includes(item.name);
+    const active = item.index === selected;
+
+    return `
+      <div class="effect-row">
+        <button type="button"
+          class="effect ${active ? "active" : ""}"
+          data-zone-palette="${item.index}">
+          ${esc(item.name)}
+        </button>
+        <button type="button"
+          class="effect-favourite"
+          data-zone-palette-favourite="${item.index}"
+          title="${favourite ? "Remove from favourites" : "Add to favourites"}">
+          ${favourite ? "★" : "☆"}
+        </button>
+      </div>`;
+  }).join("");
+
+  grid.querySelectorAll("[data-zone-palette]").forEach(button => {
+    button.addEventListener("click", () => {
+      $("gzPalette").value = button.dataset.zonePalette;
+      renderGlowZonePalettes(deviceId);
+    });
+  });
+
+  grid.querySelectorAll("[data-zone-palette-favourite]").forEach(button => {
+    button.addEventListener("click", () => {
+      const index = Number(button.dataset.zonePaletteFavourite);
+      const name = String(palettes[index]);
+      const updated = getPaletteFavourites().filter(item => item !== name);
+
+      if(!getPaletteFavourites().includes(name)) updated.push(name);
+
+      savePaletteFavourites(updated);
+      renderGlowZonePalettes(deviceId);
+    });
+  });
+}
+
 function cancelGlowZoneEditor(){
   editingGlowZone = null;
   page("glowZones");
