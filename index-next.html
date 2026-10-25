@@ -1563,7 +1563,22 @@ input#colourWheel {
   <div class="row">
     <h2>Glow Zones</h2>
   </div>
-
+<label>
+  Selected device
+  <select id="gzDevice"
+    onchange="selected=this.value;renderGlowZones(this.value)">
+  </select>
+</label>
+  <label>
+  Dashboard section
+  <select onchange="page(this.value)">
+    <option value="controls">Colours</option>
+    <option value="effects">Effects &amp; Palettes</option>
+    <option value="presets">Saved Presets</option>
+    <option value="schedules">Schedules</option>
+    <option value="glowZones" selected>Glow Zones</option>
+  </select>
+</label>
   <div class="card">
     <p class="sub">
       Create custom LED zones and give each section its own colour and effect.
@@ -1582,7 +1597,6 @@ input#colourWheel {
       Apply Glow Zones
     </button>
 
-    <div id="glowZonesStatus" class="status"></div>
     <div id="glowZonesStatus" class="status"></div>
   </div>
 </section>
