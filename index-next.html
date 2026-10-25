@@ -3601,12 +3601,15 @@ function renderControls(){
     <div class="wheel-details" style="width:100%;max-width:320px">
       <label>Selected colour</label>
       <div style="display:flex;align-items:center;gap:12px;margin-top:8px">
-        <span id="controlSelectedColourSwatch"
-          style="display:block;width:42px;height:42px;flex-shrink:0;
-          border-radius:10px;background:#ff4b70;
-          border:1px solid #ffffff66;
-          box-shadow:0 0 10px #ff4b7066">
-        </span>
+       
+<span id="controlSelectedColourSwatch"
+  style="display:block;width:48px;height:48px;flex-shrink:0;
+  border-radius:14px;background:#ff4b70;
+  border:2px solid #ffffff55;
+  box-shadow:0 0 14px #ff4b7080, inset 0 0 8px #ffffff22;
+  transition:background 0.2s ease, box-shadow 0.2s ease">
+</span>
+
         <input id="controlWheelHex" type="text" value="#ff4b70"
           maxlength="7"
           oninput="setControlHexColour(this.value)"
