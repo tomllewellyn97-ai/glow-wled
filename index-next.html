@@ -4226,8 +4226,9 @@ function drawControlColourWheel(){
       const dy=y-centre;
       const distance=Math.sqrt(dx*dx+dy*dy);
       const index=(y*size+x)*4;
+const edgeAlpha=Math.max(0,Math.min(1,radius+0.5-distance));
 
-      if(distance<=radius){
+if(distance<=radius+0.5){
         const hue=(Math.atan2(dy,dx)*180/Math.PI+360)%360;
         const saturation=Math.min(1,distance/(radius*0.78));
         const chroma=saturation;
@@ -4246,7 +4247,7 @@ function drawControlColourWheel(){
         image.data[index]=Math.round((r+m)*255);
         image.data[index+1]=Math.round((g+m)*255);
         image.data[index+2]=Math.round((b+m)*255);
-        image.data[index+3]=255;
+        image.data[index+3]=Math.round(edgeAlpha*255);
       }else{
         image.data[index+3]=0;
       }
