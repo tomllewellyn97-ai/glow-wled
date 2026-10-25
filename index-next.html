@@ -2764,6 +2764,7 @@ function saveGlowZones(deviceId, zones){
 }
 
 
+
 async function applyGlowZones(deviceId){
   const d = dev(deviceId);
   if(!d) throw new Error("Device not found.");
@@ -2776,15 +2777,20 @@ async function applyGlowZones(deviceId){
 
   const state = await api(d, "/json/state");
 
-  console.log("WLED segment configuration:", state.seg);
-
   if(!Array.isArray(state.seg) || !state.seg.length){
     throw new Error("Could not read WLED segments.");
   }
 
-  throw new Error(
-    "Diagnostic complete. No changes were sent to WLED. Check the browser console."
+  const segments = [...state.seg].sort(
+    (a,b) => a.start - b.start
   );
+
+  console.log("Glow Zones:", zones);
+  console.log("Current WLED segments:", segments);
+  console.log("LED count:", ledCount);
+
+  $("gzEditorStatus").textContent =
+    "Zones validated. WLED has not been changed yet.";
 }
 
 function updateGlowZone(deviceId, index, field, value){
