@@ -2752,7 +2752,9 @@ function updateGlowZoneColourVisibility(){
     .trim()
     .toLowerCase();
 
-  label.hidden = effectName !== "solid";
+  label.style.display =
+    effectName === "solid" ? "" : "none";
+} = effectName !== "solid";
 }
 function renderGlowZonePalettes(deviceId){
   const grid = $("gzPaletteGrid");
