@@ -1001,7 +1001,57 @@ input#colourWheel {
   border-radius: 18px;
   box-shadow: 0 0 18px #35e7ff08;
 }
+/* Glow Zones — refined neon finish */
+.glow-zone-card {
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
 
+.glow-zone-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 18px;
+  right: 18px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #a855f7,
+    #35e7ff,
+    transparent
+  );
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .glow-zone-card:hover {
+    border-color: #35e7ff70;
+    box-shadow:
+      0 0 18px #35e7ff12,
+      0 0 28px #a855f710;
+    transform: translateY(-2px);
+  }
+
+  .glow-zone-settings:hover {
+    border-color: #35e7ff;
+    background: #35e7ff14;
+    color: #35e7ff;
+  }
+}
+
+.glow-zone-settings {
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
 .glow-zone-top {
   display: flex;
   align-items: center;
