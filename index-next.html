@@ -1673,7 +1673,7 @@ input#colourWheel {
         placeholder="Living Room">
     </label>
 
-<label>
+<label id="gzColourLabel">
   Zone colour
   <input id="gzColour" type="color" value="#35e7ff">
 </label>
@@ -2678,11 +2678,12 @@ async function editGlowZone(deviceId, index){
   $("gzCount").max = ledCount;
   $("gzEditorStatus").textContent = "";
 
-  // Draw separate choice cards without changing the WLED lamp.
-  renderGlowZoneEffects(deviceId);
-  renderGlowZonePalettes(deviceId);
+// Draw separate choice cards without changing the WLED lamp.
+renderGlowZoneEffects(deviceId);
+renderGlowZonePalettes(deviceId);
+updateGlowZoneColourVisibility();
 
-  page("glowZoneEditor");
+page("glowZoneEditor");
 }
 
 function renderGlowZoneEffects(deviceId){
@@ -2722,8 +2723,9 @@ function renderGlowZoneEffects(deviceId){
 
   grid.querySelectorAll("[data-zone-effect]").forEach(button => {
     button.addEventListener("click", () => {
-      $("gzEffect").value = button.dataset.zoneEffect;
-      renderGlowZoneEffects(deviceId);
+     $("gzEffect").value = button.dataset.zoneEffect;
+updateGlowZoneColourVisibility();
+renderGlowZoneEffects(deviceId);
     });
   });
 
@@ -2741,7 +2743,14 @@ function renderGlowZoneEffects(deviceId){
     });
   });
 }
+function updateGlowZoneColourVisibility(){
+  const label = $("gzColourLabel");
+  const effect = Number($("gzEffect").value || 0);
+  if(!label) return;
 
+  const effectName = String(effects[effect] || "").trim().toLowerCase();
+  label.hidden = effectName !== "solid";
+}
 function renderGlowZonePalettes(deviceId){
   const grid = $("gzPaletteGrid");
   if(!grid) return;
