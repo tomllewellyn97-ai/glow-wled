@@ -4082,20 +4082,31 @@ function drawColourWheel(){
 function colourFromWheel(event){
   const canvas=$("colourCanvas");
   const rect=canvas.getBoundingClientRect();
+
   const scaleX=canvas.width/rect.width;
   const scaleY=canvas.height/rect.height;
+
   const x=(event.clientX-rect.left)*scaleX-canvas.width/2;
   const y=(event.clientY-rect.top)*scaleY-canvas.height/2;
-  const radius=canvas.width/2-3;
+
+  const radius=canvas.width/2;
+
   if(Math.sqrt(x*x+y*y)>radius)return;
-  const pixel=$("colourCanvas").getContext("2d").getImageData(
-    Math.round(x+canvas.width/2),
-    Math.round(y+canvas.height/2),1,1
+
+  const pixel=canvas.getContext("2d").getImageData(
+    Math.max(0,Math.min(canvas.width-1,
+      Math.round(x+canvas.width/2))),
+    Math.max(0,Math.min(canvas.height-1,
+      Math.round(y+canvas.height/2))),
+    1,1
   ).data;
+
   const hex="#"+[pixel[0],pixel[1],pixel[2]]
     .map(v=>v.toString(16).padStart(2,"0")).join("");
+
   setWheelColour(hex);
 }
+
 
 function initColourWheel(){
   const canvas=$("colourCanvas");
@@ -4250,6 +4261,7 @@ function setControlHexColour(value){
   }
 }
 
+
 function colourFromControlWheel(event){
   const canvas=$("controlColourCanvas");
   if(!canvas)return;
@@ -4258,19 +4270,21 @@ function colourFromControlWheel(event){
   const x=(event.clientX-rect.left)*canvas.width/rect.width;
   const y=(event.clientY-rect.top)*canvas.height/rect.height;
   const centre=canvas.width/2;
-  const radius=canvas.width/2-3;
+  const radius=canvas.width/2;
 
   if(Math.sqrt((x-centre)**2+(y-centre)**2)>radius)return;
 
-  const pixel=canvas.getContext("2d").getImageData(
-    Math.round(x),Math.round(y),1,1
-  ).data;
+  const px=Math.max(0,Math.min(canvas.width-1,Math.round(x)));
+  const py=Math.max(0,Math.min(canvas.height-1,Math.round(y)));
+
+  const pixel=canvas.getContext("2d").getImageData(px,py,1,1).data;
 
   const hex="#"+[pixel[0],pixel[1],pixel[2]]
     .map(v=>v.toString(16).padStart(2,"0")).join("");
 
   setControlWheelColour(hex);
 }
+
 
 function initControlColourWheel(){
   const canvas=$("controlColourCanvas");
