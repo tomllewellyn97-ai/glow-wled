@@ -1815,7 +1815,11 @@ if(p==="schedules"){
   renderSchedules();
 }
 if(p==="devices")renderManage();
-if(p==="glowZones")renderGlowZones(selected);
+if(p==="glowZones"){
+  renderSelects();
+  $("gzDevice").value=selected;
+  renderGlowZones(selected);
+}
 
 }
 
