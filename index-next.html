@@ -1620,17 +1620,25 @@ input#colourWheel {
       <input id="gzCount" type="number" min="1" value="54">
     </label>
 
-    <div class="row wrap" style="margin-top:16px">
-      <button type="button" class="primary"
-        onclick="saveGlowZoneEditor()">
-        Save Zone
-      </button>
+  
+<div class="row wrap" style="margin-top:16px">
+  <button type="button" class="primary"
+    onclick="saveGlowZoneEditor()">
+    Save Zone
+  </button>
 
-      <button type="button"
-        onclick="cancelGlowZoneEditor()">
-        Cancel
-      </button>
-    </div>
+  <button type="button"
+    onclick="removeEditingGlowZone()"
+    style="border-color:#ef4444;color:#f87171">
+    Remove Zone
+  </button>
+
+  <button type="button"
+    onclick="cancelGlowZoneEditor()">
+    Cancel
+  </button>
+</div>
+
 
     <div id="gzEditorStatus" class="status"></div>
   </div>
@@ -2691,6 +2699,31 @@ function renderGlowZonePalettes(deviceId){
       renderGlowZonePalettes(deviceId);
     });
   });
+}
+
+function removeEditingGlowZone(){
+  if(!editingGlowZone) return;
+
+  const {deviceId, index} = editingGlowZone;
+  const zones = deviceZones[deviceId] || [];
+
+  if(zones.length <= 1){
+    $("gzEditorStatus").textContent =
+      "You must keep at least one zone.";
+    return;
+  }
+
+  if(!confirm("Remove this zone?")){
+    return;
+  }
+
+  try{
+    removeGlowZone(deviceId, index);
+    editingGlowZone = null;
+    page("glowZones");
+  }catch(e){
+    $("gzEditorStatus").textContent = e.message;
+  }
 }
 
 function cancelGlowZoneEditor(){
