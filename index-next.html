@@ -2622,7 +2622,8 @@ function renderGlowZoneEffects(deviceId){
   });
 
   grid.querySelectorAll("[data-zone-effect-favourite]").forEach(button => {
-    button.addEventListener("click", () => {
+   button.addEventListener("click", event => {
+  event.stopPropagation();
       const index = Number(button.dataset.zoneEffectFavourite);
       const name = String(effects[index]);
       const updated = getEffectFavourites().filter(item => item !== name);
@@ -2678,7 +2679,8 @@ function renderGlowZonePalettes(deviceId){
   });
 
   grid.querySelectorAll("[data-zone-palette-favourite]").forEach(button => {
-    button.addEventListener("click", () => {
+    button.addEventListener("click", event => {
+  event.stopPropagation();
       const index = Number(button.dataset.zonePaletteFavourite);
       const name = String(palettes[index]);
       const updated = getPaletteFavourites().filter(item => item !== name);
