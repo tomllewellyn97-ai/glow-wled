@@ -931,6 +931,67 @@ input#colourWheel {
   flex: 0 0 42px;
 }
 
+/* Glow Zones — effect and palette choices */
+#gzEffectGrid .effect-row,
+#gzPaletteGrid .effect-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#gzEffectGrid .effect,
+#gzPaletteGrid .effect {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  text-align: left;
+  border-radius: 10px;
+}
+
+#gzEffectGrid .effect-favourite,
+#gzPaletteGrid .effect-favourite {
+  flex: 0 0 42px;
+  width: 42px;
+  min-width: 42px;
+  padding: 6px 0;
+  border: 1px solid #343852 !important;
+  border-radius: 10px;
+  background: #171b2d !important;
+  color: #858ba3 !important;
+  font-size: 23px;
+  line-height: 1;
+  text-align: center;
+  box-shadow: none !important;
+}
+
+#gzEffectGrid .effect-favourite[title="Remove from favourites"],
+#gzPaletteGrid .effect-favourite[title="Remove from favourites"] {
+  background: linear-gradient(145deg, #33280d, #171522) !important;
+  color: #ffe066 !important;
+  border-color: #ffd447 !important;
+  text-shadow: 0 0 5px #ffdc55, 0 0 12px #ffbf00 !important;
+  box-shadow: 0 0 8px #ffbf0045, 0 0 16px #ffbf0025 !important;
+}
+
+#gzEffectGrid,
+#gzPaletteGrid {
+  max-height: 240px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.glow-zone-choice {
+  margin-top: 20px;
+}
+
+.glow-zone-choice h3 {
+  margin-bottom: 12px;
+}
+
 /* Glow Zones — premium neon cards */
 .glow-zone-card {
   margin: 12px 0;
