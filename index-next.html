@@ -931,6 +931,93 @@ input#colourWheel {
   flex: 0 0 42px;
 }
 
+/* Glow Zones — premium neon cards */
+.glow-zone-card {
+  margin: 12px 0;
+  padding: 17px;
+  background: linear-gradient(145deg, #121a29, #090e19);
+  border: 1px solid #29364c;
+  border-radius: 18px;
+  box-shadow: 0 0 18px #35e7ff08;
+}
+
+.glow-zone-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.glow-zone-icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  background: #142536;
+  border: 1px solid #35e7ff35;
+  font-size: 22px;
+}
+
+.glow-zone-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.glow-zone-info h3 {
+  margin: 0 0 5px;
+  font-size: 17px;
+  font-weight: 750;
+  color: var(--text);
+}
+
+.glow-zone-info p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.glow-zone-settings {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  padding: 0;
+  border: 1px solid #a855f755;
+  border-radius: 12px;
+  background: #a855f714;
+  color: #c49aff;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.glow-zone-settings:active {
+  transform: scale(.96);
+}
+
+.glow-zone-track {
+  height: 5px;
+  margin-top: 17px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #202b3c;
+}
+
+.glow-zone-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #a855f7, #35e7ff);
+  box-shadow: 0 0 10px #35e7ff80;
+}
+
+.glow-zone-footer {
+  margin-top: 10px;
+  color: var(--cyan);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 1.3px;
+}
+
 </style>
 </head>
 <body>
@@ -2278,6 +2365,7 @@ function createZone(id, name, start, count, ledCount){
   return zone;
 }
  
+
 function renderGlowZones(deviceId){
   const list = $("glowZonesList");
   if(!list) return;
@@ -2288,34 +2376,41 @@ function renderGlowZones(deviceId){
   const ledCount = d.ledCount || 54;
   const zones = deviceZones[deviceId] || createDefaultZones(ledCount);
 
-  list.innerHTML = zones.map((zone, index) => `
-    <div class="card" style="margin:10px 0">
-      <label>
-        Zone name
-        <input value="${esc(zone.name)}"
-          onchange="updateGlowZone('${deviceId}',${index},'name',this.value)">
-      </label>
+  list.innerHTML = zones.map((zone, index) => {
+    const end = zone.start + zone.count - 1;
+    const fullStrip = zone.start === 0 && zone.count === ledCount;
 
-      <label>
-        Starting LED (0–${ledCount - 1})
-        <input type="number" min="0" max="${ledCount - 1}"
-          value="${zone.start}"
-          onchange="updateGlowZone('${deviceId}',${index},'start',this.value)">
-      </label>
+    return `
+      <div class="card glow-zone-card">
+        <div class="glow-zone-top">
+          <div class="glow-zone-icon">💡</div>
 
-      <label>
-        Number of LEDs
-        <input type="number" min="1" max="${ledCount}"
-          value="${zone.count}"
-          onchange="updateGlowZone('${deviceId}',${index},'count',this.value)">
-      </label>
+          <div class="glow-zone-info">
+            <h3>${esc(zone.name)}</h3>
+            <p>LEDs ${zone.start}–${end} · ${zone.count} LEDs</p>
+          </div>
 
-      <button type="button" class="danger"
-        onclick="removeGlowZone('${deviceId}',${index})">
-        Remove Zone
-      </button>
-    </div>
-  `).join("");
+          <button type="button"
+            class="glow-zone-settings"
+            aria-label="Settings for ${esc(zone.name)}"
+            title="Zone settings"
+            onclick="editGlowZone('${deviceId}',${index})">
+            ⚙
+          </button>
+        </div>
+
+        <div class="glow-zone-track">
+          <div class="glow-zone-fill"
+            style="width:${Math.min(100, zone.count / ledCount * 100)}%">
+          </div>
+        </div>
+
+        <div class="glow-zone-footer">
+          <span>${fullStrip ? "FULL STRIP" : "CUSTOM ZONE"}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 function saveGlowZones(deviceId, zones){
