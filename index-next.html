@@ -1517,6 +1517,44 @@ input#colourWheel {
   </div>
 </section>
 
+<section id="glowZoneEditor" class="hidden">
+  <div class="row">
+    <h2 id="glowZoneEditorTitle">Edit Zone</h2>
+  </div>
+
+  <div class="card">
+    <label>
+      Zone name
+      <input id="gzName" type="text" maxlength="40"
+        placeholder="Living Room">
+    </label>
+
+    <label>
+      Starting LED
+      <input id="gzStart" type="number" min="0" value="0">
+    </label>
+
+    <label>
+      Number of LEDs
+      <input id="gzCount" type="number" min="1" value="54">
+    </label>
+
+    <div class="row wrap" style="margin-top:16px">
+      <button type="button" class="primary"
+        onclick="saveGlowZoneEditor()">
+        Save Zone
+      </button>
+
+      <button type="button"
+        onclick="cancelGlowZoneEditor()">
+        Cancel
+      </button>
+    </div>
+
+    <div id="gzEditorStatus" class="status"></div>
+  </div>
+</section>
+
 
 
 <section id="devices" class="hidden">
