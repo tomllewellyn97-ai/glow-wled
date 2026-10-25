@@ -2537,9 +2537,29 @@ function renderGlowZones(deviceId){
         </div>
       </div>
     `;
-  }).join("");
+   }).join("") + `
+    <div class="card" style="margin-top:18px">
+      <button type="button" class="primary"
+        style="width:100%"
+        onclick="applyGlowZonesFromList('${deviceId}')">
+        Apply Glow Zones
+      </button>
+      <div id="glowZonesStatus" class="status"></div>
+    </div>
+  `;
 }
+async function applyGlowZonesFromList(deviceId){
+  const status = $("glowZonesStatus");
+  if(status) status.textContent = "Applying zones to WLED...";
 
+  try{
+    await applyGlowZones(deviceId);
+    if(status) status.textContent = "Glow Zones applied successfully.";
+  }catch(e){
+    if(status) status.textContent = "Could not apply zones: " + e.message;
+    console.error("Apply Glow Zones failed:", e);
+  }
+}
 let editingGlowZone = null;
 
 
