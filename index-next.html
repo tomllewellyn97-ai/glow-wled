@@ -2936,24 +2936,11 @@ function renderControls(){
       <div class="status" id="controlStatus"></div>
     </div>
 
-    <div class="card">
-      <h3>Glow Zones</h3>
-      <p class="sub">Configure independent sections of your LED strip.</p>
-
-      <div id="glowZonesList"></div>
-
-      <div class="row wrap" style="margin-top:12px">
-        <button type="button" onclick="addGlowZone('${d.id}')">
-          + Add Zone
-        </button>
-      </div>
-
-      <div class="status" id="glowZonesStatus"></div>
-    </div>`;
+   
 
 
   initControlColourWheel();
-renderGlowZones(d.id);
+
   api(d,"/json/state").then(s=>{
     if($("bright")){
       $("bright").value=s.bri||128;
