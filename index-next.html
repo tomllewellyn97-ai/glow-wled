@@ -2473,12 +2473,14 @@ function renderGlowZones(deviceId){
 
 let editingGlowZone = null;
 
+
 async function editGlowZone(deviceId, index){
   const d = dev(deviceId);
   if(!d) return;
 
   const ledCount = d.ledCount || 54;
-    try{
+
+  try{
     if(!effects.length || !palettes.length){
       effects = await api(d, "/json/effects");
       palettes = await api(d, "/json/palettes");
@@ -2488,9 +2490,9 @@ async function editGlowZone(deviceId, index){
       "Could not load effects and palettes. Check the WLED connection.";
     return;
   }
+
   const zones = deviceZones[deviceId] || createDefaultZones(ledCount);
   const zone = zones[index];
-
   if(!zone) return;
 
   editingGlowZone = {deviceId, index};
@@ -2500,21 +2502,18 @@ async function editGlowZone(deviceId, index){
   $("gzStart").value = zone.start;
   $("gzCount").value = zone.count;
   $("gzColour").value = zone.colour || "#35e7ff";
-  
-  $("gzEffect").innerHTML = effects.map((effect, i) =>
-    `<option value="${i}">${esc(effect)}</option>`
-  ).join("");
 
-  $("gzPalette").innerHTML = palettes.map((palette, i) =>
-    `<option value="${i}">${esc(palette)}</option>`
-  ).join("");
-
+  // Keep the selected choices in hidden fields.
   $("gzEffect").value = String(zone.effect ?? 0);
   $("gzPalette").value = String(zone.palette ?? 0);
 
   $("gzStart").max = ledCount - 1;
   $("gzCount").max = ledCount;
   $("gzEditorStatus").textContent = "";
+
+  // Draw separate choice cards without changing the WLED lamp.
+  renderGlowZoneEffects(deviceId);
+  renderGlowZonePalettes(deviceId);
 
   page("glowZoneEditor");
 }
