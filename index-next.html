@@ -983,7 +983,17 @@ input#colourWheel {
   overflow-y: auto;
   box-sizing: border-box;
 }
-
+/* Glow Zones — restore dark scrollable lists */
+#gzEffectGrid,
+#gzPaletteGrid {
+  max-height: 240px !important;
+  overflow-y: auto !important;
+  padding: 10px;
+  box-sizing: border-box;
+  background: linear-gradient(145deg, #101827, #090e19);
+  border: 1px solid #252e42;
+  border-radius: 14px;
+}
 .glow-zone-choice {
   margin-top: 20px;
 }
