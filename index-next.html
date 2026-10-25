@@ -689,28 +689,52 @@ input#colourWheel {
 }
 
 /* Glow WLED Colours screen neon wheel border */
+
+/* Neon outline around the Colours screen wheel */
 .wheel-wrap:has(#controlColourCanvas) {
-  width: 240px !important;
-  height: 240px !important;
-  padding: 4px !important;
-  box-sizing: border-box;
+  position: relative;
+  width: 248px !important;
+  height: 248px !important;
+  max-width: 100%;
+  padding: 0 !important;
   border-radius: 50%;
+  background: transparent !important;
+  box-shadow: none !important;
+  isolation: isolate;
+}
+
+.wheel-wrap:has(#controlColourCanvas)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 4px;
   background: linear-gradient(
     135deg,
     #35e7ff 0%,
     #6275ff 50%,
     #6d28d9 100%
-  ) !important;
-  box-shadow:
-    0 0 10px #35e7ff55,
-    0 0 18px #6d28d955;
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .wheel-wrap:has(#controlColourCanvas) #controlColourCanvas {
+  position: relative;
+  z-index: 1;
   display: block;
-  width: 100% !important;
-  height: 100% !important;
+  width: 240px !important;
+  height: 240px !important;
   max-width: 100%;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 50%;
+  box-shadow: none !important;
 }
 
 
