@@ -2754,6 +2754,33 @@ function saveGlowZones(deviceId, zones){
   db.set("deviceZones", deviceZones);
 }
 
+async function applyGlowZones(deviceId){
+  const d = dev(deviceId);
+  if(!d) throw new Error("Device not found.");
+
+  const ledCount = d.ledCount || 54;
+  const zones = deviceZones[deviceId] ||
+    createDefaultZones(ledCount);
+
+  validateZones(zones, ledCount);
+
+  const segments = zones.map((zone, id) => ({
+    id,
+    start: zone.start,
+    stop: zone.start + zone.count,
+    col: [[
+      parseInt((zone.colour || "#35e7ff").slice(1,3),16),
+      parseInt((zone.colour || "#35e7ff").slice(3,5),16),
+      parseInt((zone.colour || "#35e7ff").slice(5,7),16)
+    ]],
+    fx: Number(zone.effect || 0),
+    pal: Number(zone.palette || 0)
+  }));
+
+  await api(d, "/json/state", "POST", {
+    seg: segments
+  });
+}
 function updateGlowZone(deviceId, index, field, value){
   const zones = [...(deviceZones[deviceId] || createDefaultZones(dev(deviceId)?.ledCount || 54))]
     .map(zone => ({...zone}));
