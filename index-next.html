@@ -1566,14 +1566,20 @@ input#colourWheel {
       Create custom LED zones and give each section its own colour and effect.
     </p>
 
-    <div id="glowZonesList"></div>
-
-    <button class="primary" type="button"
-      style="width:100%;margin-top:12px"
+       <button class="primary" type="button"
+      style="width:100%;margin:12px 0"
       onclick="addGlowZone(selected)">
       ＋ Add Zone
     </button>
 
+    <div id="glowZonesList"></div>
+    <button class="primary" type="button"
+      style="width:100%;margin-top:12px"
+      onclick="applyGlowZonesFromList(selected)">
+      Apply Glow Zones
+    </button>
+
+    <div id="glowZonesStatus" class="status"></div>
     <div id="glowZonesStatus" class="status"></div>
   </div>
 </section>
@@ -2537,16 +2543,7 @@ function renderGlowZones(deviceId){
         </div>
       </div>
     `;
-   }).join("") + `
-    <div class="card" style="margin-top:18px">
-      <button type="button" class="primary"
-        style="width:100%"
-        onclick="applyGlowZonesFromList('${deviceId}')">
-        Apply Glow Zones
-      </button>
-      <div id="glowZonesStatus" class="status"></div>
-    </div>
-  `;
+    }).join("");
 }
 async function applyGlowZonesFromList(deviceId){
   const status = $("glowZonesStatus");
