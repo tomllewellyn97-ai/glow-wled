@@ -690,54 +690,44 @@ input#colourWheel {
 
 /* Glow WLED Colours screen neon wheel border */
 
-/* Neon outline around the Colours screen wheel */
-.wheel-wrap:has(#controlColourCanvas) {
-  position: relative;
+/* Colours screen wheel: clean neon outline */
+.control-wheel-wrap {
+  position: relative !important;
   width: 248px !important;
   height: 248px !important;
   max-width: 100%;
-  padding: 0 !important;
-  border-radius: 50%;
+  padding: 4px !important;
+  box-sizing: border-box !important;
+  border-radius: 50% !important;
   background: transparent !important;
   box-shadow: none !important;
-  isolation: isolate;
 }
 
-.wheel-wrap:has(#controlColourCanvas)::before {
+.control-wheel-wrap::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 50%;
   padding: 4px;
-  background: linear-gradient(
-    135deg,
-    #35e7ff 0%,
-    #6275ff 50%,
-    #6d28d9 100%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #35e7ff, #6275ff 50%, #6d28d9);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
   z-index: 2;
 }
 
-.wheel-wrap:has(#controlColourCanvas) #controlColourCanvas {
-  position: relative;
-  z-index: 1;
+.control-wheel-wrap #controlColourCanvas {
   display: block;
   width: 240px !important;
   height: 240px !important;
   max-width: 100%;
-  background: transparent !important;
   border: none !important;
   border-radius: 50%;
+  background: transparent !important;
   box-shadow: none !important;
 }
-
-
 
 /* GLOW compact effects dropdown */
 #effectDropdown {
@@ -3645,7 +3635,7 @@ function renderControls(){
 
   <div class="wheel-layout" style="display:flex;flex-direction:column;align-items:center;gap:12px">
   
-<div class="wheel-wrap" style="width:100%;display:flex;justify-content:center;
+<div class="wheel-wrap control-wheel-wrap style="width:100%;display:flex;justify-content:center;
   padding:4px;box-sizing:border-box;border-radius:50%;
   background:linear-gradient(135deg,#35e7ff 0%,#6275ff 50%,#6d28d9 100%);
   box-shadow:0 0 12px #35e7ff45,0 0 18px #6d28d945">
