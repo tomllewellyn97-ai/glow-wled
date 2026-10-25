@@ -2745,10 +2745,13 @@ renderGlowZoneEffects(deviceId);
 }
 function updateGlowZoneColourVisibility(){
   const label = $("gzColourLabel");
-  const effect = Number($("gzEffect").value || 0);
   if(!label) return;
 
-  const effectName = String(effects[effect] || "").trim().toLowerCase();
+  const effectIndex = Number($("gzEffect").value || 0);
+  const effectName = String(effects[effectIndex] || "")
+    .trim()
+    .toLowerCase();
+
   label.hidden = effectName !== "solid";
 }
 function renderGlowZonePalettes(deviceId){
