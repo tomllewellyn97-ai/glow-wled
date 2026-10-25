@@ -1498,7 +1498,10 @@ input#colourWheel {
 <h3>Choose colours</h3>
 
 <div class="wheel-layout" style="display:flex;flex-direction:column;align-items:center;gap:16px">
-  <div class="wheel-wrap" style="width:100%;display:flex;justify-content:center">
+  <div class="wheel-wrap" style="width:100%;display:flex;justify-content:center;
+  padding:3px;box-sizing:border-box;border-radius:50%;
+  background:linear-gradient(135deg,#35e7ff 0%,#6275ff 50%,#6d28d9 100%);
+  box-shadow:0 0 12px #35e7ff30,0 0 18px #6d28d930">
     <canvas id="colourCanvas" width="240" height="240"
       role="slider" tabindex="0"
       aria-label="Rainbow colour wheel"
