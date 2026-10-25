@@ -2485,6 +2485,18 @@ function editGlowZone(deviceId, index){
   $("gzStart").value = zone.start;
   $("gzCount").value = zone.count;
   $("gzColour").value = zone.colour || "#35e7ff";
+  
+  $("gzEffect").innerHTML = effects.map((effect, i) =>
+    `<option value="${i}">${esc(effect)}</option>`
+  ).join("");
+
+  $("gzPalette").innerHTML = palettes.map((palette, i) =>
+    `<option value="${i}">${esc(palette)}</option>`
+  ).join("");
+
+  $("gzEffect").value = String(zone.effect ?? 0);
+  $("gzPalette").value = String(zone.palette ?? 0);
+
   $("gzStart").max = ledCount - 1;
   $("gzCount").max = ledCount;
   $("gzEditorStatus").textContent = "";
@@ -2515,8 +2527,21 @@ function saveGlowZoneEditor(){
   const start = Number($("gzStart").value);
   const count = Number($("gzCount").value);
 
- const colour = $("gzColour").value;
-zones[index] = {...zones[index], name, start, count, colour};
+
+  const colour = $("gzColour").value;
+  const effect = Number($("gzEffect").value);
+  const palette = Number($("gzPalette").value);
+
+  zones[index] = {
+    ...zones[index],
+    name,
+    start,
+    count,
+    colour,
+    effect,
+    palette
+  };
+
 
   try{
     saveGlowZones(deviceId, zones);
