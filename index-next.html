@@ -2819,15 +2819,19 @@ function updateGlowZone(deviceId, index, field, value){
   }
 }
 
+
 function addGlowZone(deviceId){
   const d = dev(deviceId);
   if(!d) return;
 
   const ledCount = d.ledCount || 54;
-  const zones = [...(deviceZones[deviceId] || createDefaultZones(ledCount))]
-    .map(zone => ({...zone}));
+  const zones = [
+    ...(deviceZones[deviceId] || createDefaultZones(ledCount))
+  ].map(zone => ({...zone}));
 
+  // Find the first unused LED.
   const occupied = new Set();
+
   zones.forEach(zone => {
     for(let led = zone.start; led < zone.start + zone.count; led++){
       occupied.add(led);
@@ -2835,30 +2839,47 @@ function addGlowZone(deviceId){
   });
 
   let start = 0;
-  while(start < ledCount && occupied.has(start)) start++;
+  while(start < ledCount && occupied.has(start)){
+    start++;
+  }
 
   if(start >= ledCount){
     if($("glowZonesStatus")){
-      $("glowZonesStatus").textContent = "No unused LEDs available for another zone.";
+      $("glowZonesStatus").textContent =
+        "No unused LEDs available for another zone.";
     }
     return;
   }
 
-  zones.push(createZone(
-    `zone-${Date.now()}`,
-    `Zone ${zones.length + 1}`,
-    start,
-    1,
-    ledCount
-  ));
+  // Fill the new zone with the remaining consecutive LEDs.
+  let count = 0;
+  while(start + count < ledCount && !occupied.has(start + count)){
+    count++;
+  }
 
   try{
+    zones.push(createZone(
+      `zone-${Date.now()}`,
+      `Zone ${zones.length + 1}`,
+      start,
+      count,
+      ledCount
+    ));
+
     saveGlowZones(deviceId, zones);
     renderGlowZones(deviceId);
+
+    if($("glowZonesStatus")){
+      $("glowZonesStatus").textContent =
+        `Zone created: LEDs ${start}–${start + count - 1} (${count} LEDs).`;
+    }
   }catch(e){
-    if($("glowZonesStatus")) $("glowZonesStatus").textContent = e.message;
+    if($("glowZonesStatus")){
+      $("glowZonesStatus").textContent = e.message;
+    }
   }
 }
+
 
 function removeGlowZone(deviceId, index){
   const d = dev(deviceId);
