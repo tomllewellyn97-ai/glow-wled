@@ -966,6 +966,31 @@ input#colourWheel {
 #glowMenu {
   z-index: 1000 !important;
 }
+
+
+/* Permanent Glow menu backdrop fix */
+html body #glowMenuBackdrop:not(.hidden) {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  display: block !important;
+  background: rgba(3, 5, 13, 0.5) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(12px) !important;
+  pointer-events: auto !important;
+}
+
+html body #glowMenuBackdrop.hidden {
+  display: none !important;
+}
+
+html body #glowMenu {
+  position: fixed !important;
+  top: 76px !important;
+  right: 16px !important;
+  z-index: 100000 !important;
+}
+
 </style>
   <style>
 #effectGrid .effect-favourite,
