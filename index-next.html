@@ -3623,7 +3623,7 @@ async function check(id){
 
   try{
     let x = await api(d, "/json/info");
-
+console.log("Glow WLED check: response received", x);
     $("topStatus").textContent = "● Connected";
 
     let el = $("st-" + id);
@@ -3645,6 +3645,7 @@ async function check(id){
     }
 
   }catch(e){
+    console.error("Glow WLED check failed:", e);
     $("topStatus").textContent = "● Offline";
 
     let el = $("st-" + id);
