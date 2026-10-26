@@ -933,6 +933,26 @@ input#colourWheel {
     box-shadow: 0 0 12px #35e7ff25;
   }
 }
+/* Glow menu backdrop */
+#glowMenuBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(3, 5, 13, 0.76);
+  -webkit-backdrop-filter: blur(9px);
+  backdrop-filter: blur(9px);
+  opacity: 1;
+}
+
+/* Keep the closed backdrop completely hidden */
+#glowMenuBackdrop.hidden {
+  display: none !important;
+}
+
+/* Keep the menu above the backdrop */
+#glowMenu {
+  z-index: 1000 !important;
+}
 </style>
   <style>
 #effectGrid .effect-favourite,
