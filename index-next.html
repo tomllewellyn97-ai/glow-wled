@@ -2036,6 +2036,36 @@ if(p==="glowZones"){
 
 }
 
+function toggleGlowMenu(){
+  const menu = document.getElementById("glowMenu");
+  const toggle = document.getElementById("menuToggle");
+
+  if(!menu || !toggle) return;
+
+  const isOpening = menu.classList.contains("hidden");
+
+  menu.classList.toggle("hidden", !isOpening);
+  toggle.setAttribute("aria-expanded", String(isOpening));
+  toggle.setAttribute(
+    "aria-label",
+    isOpening ? "Close navigation menu" : "Open navigation menu"
+  );
+}
+
+function glowMenuPage(target){
+  const menu = document.getElementById("glowMenu");
+  const toggle = document.getElementById("menuToggle");
+
+  if(menu) menu.classList.add("hidden");
+
+  if(toggle){
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Open navigation menu");
+  }
+
+  page(target);
+}
+  
 document.querySelectorAll("#nav button")
   .forEach(b=>b.onclick=()=>page(b.dataset.page));
 
