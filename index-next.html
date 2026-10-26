@@ -3839,6 +3839,7 @@ function renderManage(){
     : '<div class="empty">No saved devices.</div>';
 
   devices.forEach(d=>loadDeviceBrightness(d.id));
+devices.forEach(d=>check(d.id));
 }
   async function loadDeviceBrightness(id){
   const device=devices.find(d=>String(d.id)===String(id));
