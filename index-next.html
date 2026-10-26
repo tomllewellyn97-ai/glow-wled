@@ -3777,6 +3777,10 @@ async function syncAll(){
 }
 
 
+function deviceIcon(d){
+  return d.icon || "💡";
+}
+
 function renderManage(){
   const manage=$("manage");
   if(!manage)return;
