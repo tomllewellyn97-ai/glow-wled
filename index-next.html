@@ -3977,7 +3977,7 @@ function removeDevice(id){
   page("devices");
 }
 async function testForm(){try{$("formStatus").textContent="Testing…";let x=await api({url:norm($("dip").value)},"/json/info");$("formStatus").textContent="Connected successfully"+(x.name?" to "+x.name:"")+"."}catch(e){$("formStatus").textContent="Could not connect. Check IP, Wi-Fi and browser permissions."}}
-async function saveDevice(){let name=$("dname").value.trim(),ip=$("dip").value.trim();if(!name||!ip){$("formStatus").textContent="Enter a name and IP address.";return}let url;try{url=norm(ip);new URL(url)}catch(e){$("formStatus").textContent="Enter a valid IP address.";return}let id=editing||"d"+Date.now(),old=dev(id),d={id,name,url,room:$("droom").value,on:old?.on||false};devices=editing?devices.map(x=>x.id===id?d:x):[...devices,d];selected=id;save();clearForm();render();page("home");check(id)}
+async function saveDevice(){let name=$("dname").value.trim(),ip=$("dip").value.trim();if(!name||!ip){$("formStatus").textContent="Enter a name and IP address.";return}let url;try{url=norm(ip);new URL(url)}catch(e){$("formStatus").textContent="Enter a valid IP address.";return}let id=editing||"d"+Date.now(),old=dev(id),d={id,name,url,room:$("droom").value,icon:$("dicon").value||"💡",on:old?.on||false};devices=editing?devices.map(x=>x.id===id?d:x):[...devices,d];selected=id;save();clearForm();render();page("home");check(id)}
 
 function renderControls(){
   renderSelects();
