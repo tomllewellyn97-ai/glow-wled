@@ -4073,12 +4073,73 @@ function deviceIcon(d){
 
 
   const shape = paths[icon] || paths["💡"];
+  const iconColours = {
+    // Electric cyan — technology and core lighting
+    "💡": "#36e6ff",
+    "🌈": "#36e6ff",
+    "🖥️": "#36e6ff",
+    "📺": "#36e6ff",
+    "🎮": "#36e6ff",
+    "🎹": "#36e6ff",
+    "🔊": "#36e6ff",
+    "🔋": "#36e6ff",
+    "🔌": "#36e6ff",
+    "📡": "#36e6ff",
+    "🚀": "#36e6ff",
+    "🔒": "#36e6ff",
+    "🔑": "#36e6ff",
+
+    // Neon purple — ambient and mood lighting
+    "✨": "#b45cff",
+    "⭐": "#b45cff",
+    "🌙": "#b45cff",
+    "🌌": "#b45cff",
+    "🔮": "#b45cff",
+    "🌀": "#b45cff",
+    "💎": "#b45cff",
+    "🕹️": "#b45cff",
+
+    // Neon pink — decorative and entertainment
+    "❤️": "#ff65c3",
+    "🎉": "#ff65c3",
+    "🎵": "#ff65c3",
+    "🎬": "#ff65c3",
+    "🎸": "#ff65c3",
+    "🌺": "#ff65c3",
+    "🦋": "#ff65c3",
+
+    // Neon mint — nature and outdoor spaces
+    "🌿": "#66f2a3",
+    "🪴": "#66f2a3",
+    "🌲": "#66f2a3",
+    "🌻": "#66f2a3",
+    "🌊": "#66f2a3",
+    "🌍": "#66f2a3",
+    "🍄": "#66f2a3",
+    "🐾": "#66f2a3",
+    "🏕️": "#66f2a3",
+    "🏡": "#66f2a3",
+    "🏊": "#66f2a3",
+
+    // Neon amber — warm and cosy spaces
+    "🔥": "#ffbd59",
+    "☀️": "#ffbd59",
+    "🕯️": "#ffbd59",
+    "🏮": "#ffbd59",
+    "🛋️": "#ffbd59",
+    "🛏️": "#ffbd59",
+    "🍳": "#ffbd59",
+    "🧊": "#ffbd59",
+    "🌟": "#ffbd59"
+};
+
+const iconColour = iconColours[icon] || "#36e6ff";
 
   return `<svg viewBox="0 0 24 24" width="30" height="30"
     xmlns="http://www.w3.org/2000/svg"
-    fill="none" stroke="#35e7ff" stroke-width="1.6"
+    fill="none" stroke="${iconColour}" stroke-width="1.6"
     stroke-linecap="round" stroke-linejoin="round"
-    style="color:#35e7ff;filter:drop-shadow(0 0 3px #35e7ff) drop-shadow(0 0 6px #a855f7);flex-shrink:0"
+   style="color:${iconColour};filter:drop-shadow(0 0 3px ${iconColour}) drop-shadow(0 0 6px #b45cff);flex-shrink:0"
     aria-hidden="true">${shape}</svg>`;
 }
 
