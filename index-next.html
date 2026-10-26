@@ -1294,6 +1294,38 @@ input#colourWheel {
 
 </header>
 <nav id="nav" class="hidden"></nav>
+<div id="glowMenu" class="hidden" style="
+  position:absolute;
+  top:76px;
+  right:16px;
+  z-index:1000;
+  width:min(320px,calc(100vw - 32px));
+  padding:16px;
+  border:1px solid #51417b;
+  border-radius:18px;
+  background:linear-gradient(145deg,#121a29,#090d17);
+  box-shadow:0 0 28px #35e7ff18,0 12px 35px #0009;
+">
+  <div style="
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
+  ">
+    <strong style="color:#35e7ff;font-size:16px">GLOW MENU</strong>
+    <span id="menuStatus" class="sub">● Ready</span>
+  </div>
+
+  <div style="display:grid;gap:9px">
+    <button type="button" onclick="glowMenuPage('home')">⌂ &nbsp; Home</button>
+    <button type="button" onclick="glowMenuPage('devices')">▣ &nbsp; My Devices</button>
+    <button type="button" onclick="glowMenuPage('controls')">◉ &nbsp; Colours</button>
+    <button type="button" onclick="glowMenuPage('effects')">✳ &nbsp; Effects &amp; Palettes</button>
+    <button type="button" onclick="glowMenuPage('presets')">▤ &nbsp; Saved Presets</button>
+    <button type="button" onclick="glowMenuPage('schedules')">◷ &nbsp; Schedules</button>
+    <button type="button" onclick="glowMenuPage('glowZones')">✧ &nbsp; Glow Zones</button>
+  </div>
+</div>
 <section id="home">
   
 <div class="card home-hero" style="text-align:center;padding:34px 20px 26px">
