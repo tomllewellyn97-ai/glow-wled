@@ -1356,6 +1356,36 @@ header {
   letter-spacing: 1.3px;
 }
 
+#diconDropdown button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 11px 12px;
+  margin: 2px 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #f4f7ff;
+  text-align: left;
+  cursor: pointer;
+}
+
+#diconDropdown button:hover,
+#diconDropdown button:focus-visible {
+  background: #1a2038;
+  border-color: #35e7ff;
+  outline: none;
+}
+
+#diconDropdown::-webkit-scrollbar {
+  width: 7px;
+}
+
+#diconDropdown::-webkit-scrollbar-thumb {
+  background: linear-gradient(#35e7ff, #a855f7);
+  border-radius: 8px;
+}
+
 </style>
 
 
@@ -2114,17 +2144,35 @@ header {
     </label>
 
 <label>Device icon
-  <select id="dicon">
-    <option value="💡">💡 Light bulb</option>
-    <option value="🌈">🌈 LED strip</option>
-    <option value="✨">✨ Ambient lighting</option>
-    <option value="🛋️">🛋️ Living room</option>
-    <option value="🛏️">🛏️ Bedroom</option>
-    <option value="🍳">🍳 Kitchen</option>
-    <option value="🌿">🌿 Garden</option>
-    <option value="🎮">🎮 Gaming setup</option>
-    <option value="⭐">⭐ Custom lighting</option>
-  </select>
+  
+<div class="device-icon-picker" style="position:relative">
+  <button type="button" id="diconToggle"
+    onclick="toggleDeviceIconPicker()"
+    style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid #a855f7;border-radius:12px;background:#111120;color:#f4f7ff;cursor:pointer">
+    <span style="display:flex;align-items:center;gap:10px">
+      <span id="diconPreview">💡</span>
+      <span id="diconLabel">Light bulb</span>
+    </span>
+    <span id="diconArrow">▾</span>
+  </button>
+
+  <div id="diconDropdown" class="hidden"
+    style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:220px;overflow-y:auto;overscroll-behavior:contain;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
+
+    <button type="button" onclick="chooseDeviceIcon('💡','Light bulb')">💡 Light bulb</button>
+    <button type="button" onclick="chooseDeviceIcon('🌈','LED strip')">🌈 LED strip</button>
+    <button type="button" onclick="chooseDeviceIcon('✨','Ambient lighting')">✨ Ambient lighting</button>
+    <button type="button" onclick="chooseDeviceIcon('🛋️','Living room')">🛋️ Living room</button>
+    <button type="button" onclick="chooseDeviceIcon('🛏️','Bedroom')">🛏️ Bedroom</button>
+    <button type="button" onclick="chooseDeviceIcon('🍳','Kitchen')">🍳 Kitchen</button>
+    <button type="button" onclick="chooseDeviceIcon('🌿','Garden')">🌿 Garden</button>
+    <button type="button" onclick="chooseDeviceIcon('🎮','Gaming setup')">🎮 Gaming setup</button>
+    <button type="button" onclick="chooseDeviceIcon('⭐','Custom lighting')">⭐ Custom lighting</button>
+  </div>
+
+  <input type="hidden" id="dicon" value="💡">
+</div>
+
 </label>
 
   <div class="row wrap">
@@ -3791,6 +3839,23 @@ async function syncAll(){
 }
 
 
+function toggleDeviceIconPicker(){
+  const dropdown = $("diconDropdown");
+  if(!dropdown) return;
+
+  dropdown.classList.toggle("hidden");
+  $("diconArrow").textContent =
+    dropdown.classList.contains("hidden") ? "▾" : "▴";
+}
+
+function chooseDeviceIcon(icon, label){
+  $("dicon").value = icon;
+  $("diconLabel").textContent = label;
+ $("diconPreview").innerHTML = deviceIcon({icon: icon});
+  $("diconDropdown").classList.add("hidden");
+  $("diconArrow").textContent = "▾";
+}
+
 
 function deviceIcon(d){
   const icon = d.icon || "💡";
@@ -3975,6 +4040,22 @@ function edit(id){
   $("dip").value=d.url;
   $("droom").value=d.room||"Unassigned";
   $("dicon").value=d.icon||"💡";
+  const iconLabels = {
+  "💡":"Light bulb",
+  "🌈":"LED strip",
+  "✨":"Ambient lighting",
+  "🛋️":"Living room",
+  "🛏️":"Bedroom",
+  "🍳":"Kitchen",
+  "🌿":"Garden",
+  "🎮":"Gaming setup",
+  "⭐":"Custom lighting"
+};
+
+$("diconPreview").innerHTML = deviceIcon({icon: d.icon || "💡"});
+$("diconLabel").textContent = iconLabels[d.icon] || "Light bulb";
+$("diconDropdown").classList.add("hidden");
+$("diconArrow").textContent = "▾";
 
  let removeBtn=$("removeEditBtn");
 if(removeBtn)removeBtn.hidden=false;
