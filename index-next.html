@@ -3624,6 +3624,12 @@ async function check(id){
   try{
     let x = await api(d, "/json/info");
 console.log("Glow WLED check: response received", x);
+    console.log("Glow WLED check: status elements", {
+  topStatus: $("topStatus"),
+  deviceStatus: $("st-" + id),
+  testDot: $("test-dot-" + id),
+  testResult: $("test-result-" + id)
+});
    const topStatus = $("topStatus");
 if(topStatus) topStatus.textContent = "● Connected";
 
