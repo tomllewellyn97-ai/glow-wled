@@ -1401,6 +1401,25 @@ header {
   font-weight: 800 !important;
   letter-spacing: 0.3px;
 }
+
+
+#diconDropdown .dicon-option-icon {
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+}
+
+#diconDropdown .dicon-option-icon svg {
+  display: block;
+  width: 26px;
+  height: 26px;
+}
+
+#diconDropdown button {
+  gap: 12px;
+  min-height: 46px;
+}
+
 </style>
 
 
@@ -2159,15 +2178,51 @@ header {
   <div id="diconDropdown" class="hidden"
     style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:220px;overflow-y:auto;overscroll-behavior:contain;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
 
-    <button type="button" onclick="chooseDeviceIcon('💡','Light bulb')">💡 Light bulb</button>
-    <button type="button" onclick="chooseDeviceIcon('🌈','LED strip')">🌈 LED strip</button>
-    <button type="button" onclick="chooseDeviceIcon('✨','Ambient lighting')">✨ Ambient lighting</button>
-    <button type="button" onclick="chooseDeviceIcon('🛋️','Living room')">🛋️ Living room</button>
-    <button type="button" onclick="chooseDeviceIcon('🛏️','Bedroom')">🛏️ Bedroom</button>
-    <button type="button" onclick="chooseDeviceIcon('🍳','Kitchen')">🍳 Kitchen</button>
-    <button type="button" onclick="chooseDeviceIcon('🌿','Garden')">🌿 Garden</button>
-    <button type="button" onclick="chooseDeviceIcon('🎮','Gaming setup')">🎮 Gaming setup</button>
-    <button type="button" onclick="chooseDeviceIcon('⭐','Custom lighting')">⭐ Custom lighting</button>
+    <button type="button" onclick="chooseDeviceIcon('💡','Light bulb')">
+  <span class="dicon-option-icon" data-icon="💡"></span>
+  <span>Light bulb</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('🌈','LED strip')">
+  <span class="dicon-option-icon" data-icon="🌈"></span>
+  <span>LED strip</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('✨','Ambient lighting')">
+  <span class="dicon-option-icon" data-icon="✨"></span>
+  <span>Ambient lighting</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('🛋️','Living room')">
+  <span class="dicon-option-icon" data-icon="🛋️"></span>
+  <span>Living room</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('🛏️','Bedroom')">
+  <span class="dicon-option-icon" data-icon="🛏️"></span>
+  <span>Bedroom</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('🍳','Kitchen')">
+  <span class="dicon-option-icon" data-icon="🍳"></span>
+  <span>Kitchen</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('🌿','Garden')">
+  <span class="dicon-option-icon" data-icon="🌿"></span>
+  <span>Garden</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('🎮','Gaming setup')">
+  <span class="dicon-option-icon" data-icon="🎮"></span>
+  <span>Gaming setup</span>
+</button>
+
+<button type="button" onclick="chooseDeviceIcon('⭐','Custom lighting')">
+  <span class="dicon-option-icon" data-icon="⭐"></span>
+  <span>Custom lighting</span>
+</button>
+
   </div>
 
   <input type="hidden" id="dicon" value="💡">
@@ -3844,8 +3899,21 @@ function toggleDeviceIconPicker(){
   if(!dropdown) return;
 
   dropdown.classList.toggle("hidden");
+  if(!dropdown.classList.contains("hidden")){
+  renderDeviceIconOptions();
+}
   $("diconArrow").textContent =
     dropdown.classList.contains("hidden") ? "▾" : "▴";
+}
+
+function renderDeviceIconOptions(){
+  document.querySelectorAll("#diconDropdown .dicon-option-icon").forEach(el=>{
+    const icon = el.dataset.icon || "💡";
+    el.innerHTML = deviceIcon({icon});
+    el.style.display = "inline-flex";
+    el.style.alignItems = "center";
+    el.style.flexShrink = "0";
+  });
 }
 
 function chooseDeviceIcon(icon, label){
