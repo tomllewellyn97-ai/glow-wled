@@ -1273,7 +1273,25 @@ input#colourWheel {
     <div class="sub">YOUR LIGHTS. YOUR CONTROL. YOUR STYLE.</div>
   </div>
 </div>
-<span class="sub" id="topStatus">● Ready</span>
+
+<button type="button" id="menuToggle"
+  aria-label="Open navigation menu"
+  aria-expanded="false"
+  onclick="toggleGlowMenu()"
+  style="width:44px;height:44px;padding:0;
+  display:grid;place-items:center;
+  border:1px solid #51417b;
+  background:linear-gradient(145deg,#17172b,#0b1220);
+  color:#35e7ff;font-size:25px;
+  box-shadow:0 0 14px #35e7ff20">
+  <svg viewBox="0 0 24 24" width="24" height="24"
+    fill="none" stroke="currentColor"
+    stroke-width="1.8" stroke-linecap="round"
+    aria-hidden="true">
+    <path d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>
+</button>
+
 </header>
 <nav id="nav" class="hidden"></nav>
 <section id="home">
