@@ -1014,7 +1014,31 @@ header {
   right: 16px !important;
   z-index: 1002 !important;
 }
+/* Glow menu active-screen highlight */
+#glowMenu .glow-menu-item.active {
+  background: linear-gradient(
+    100deg,
+    rgba(168, 85, 247, 0.22),
+    rgba(53, 231, 255, 0.16)
+  ) !important;
+  border: 1px solid rgba(53, 231, 255, 0.65) !important;
+  color: #ffffff !important;
+  box-shadow:
+    inset 0 0 12px rgba(53, 231, 255, 0.06),
+    0 0 12px rgba(53, 231, 255, 0.12) !important;
+}
 
+#glowMenu .glow-menu-item.active::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #35e7ff;
+  box-shadow: 0 0 8px #35e7ff;
+  vertical-align: middle;
+}
 </style>
   <style>
 #effectGrid .effect-favourite,
@@ -1457,40 +1481,41 @@ header {
   </div>
 
  <div style="display:grid;gap:10px">
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('home')">
+<button type="button" class="glow-menu-item" data-page="home" onclick="glowMenuPage('home')">
     <span class="glow-menu-icon">⌂</span>
     <span>Home</span>
   </button>
 
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('devices')">
-    <span class="glow-menu-icon">▣</span>
-    <span>My Devices</span>
-  </button>
+  <button type="button" class="glow-menu-item" data-page="devices" onclick="glowMenuPage('devices')">
+  <span class="glow-menu-icon">▣</span>
+  <span>My Devices</span>
+</button>
 
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('controls')">
-    <span class="glow-menu-icon">◉</span>
-    <span>Colours</span>
-  </button>
+<button type="button" class="glow-menu-item" data-page="controls" onclick="glowMenuPage('controls')">
+  <span class="glow-menu-icon">◉</span>
+  <span>Colours</span>
+</button>
+   
+<button type="button" class="glow-menu-item" data-page="effects" onclick="glowMenuPage('effects')">
+  <span class="glow-menu-icon">✳</span>
+  <span>Effects &amp; Palettes</span>
+</button>
 
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('effects')">
-    <span class="glow-menu-icon">✳</span>
-    <span>Effects &amp; Palettes</span>
-  </button>
+<button type="button" class="glow-menu-item" data-page="presets" onclick="glowMenuPage('presets')">
+  <span class="glow-menu-icon">▤</span>
+  <span>Saved Presets</span>
+</button>
 
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('presets')">
-    <span class="glow-menu-icon">▤</span>
-    <span>Saved Presets</span>
-  </button>
+  <button type="button" class="glow-menu-item" data-page="schedules" onclick="glowMenuPage('schedules')">
+  <span class="glow-menu-icon">◷</span>
+  <span>Schedules</span>
+</button>
 
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('schedules')">
-    <span class="glow-menu-icon">◷</span>
-    <span>Schedules</span>
-  </button>
-
-  <button type="button" class="glow-menu-item" onclick="glowMenuPage('glowZones')">
-    <span class="glow-menu-icon">✧</span>
-    <span>Glow Zones</span>
-  </button>
+  <button type="button" class="glow-menu-item" data-page="glowZones" onclick="glowMenuPage('glowZones')">
+  <span class="glow-menu-icon">✧</span>
+  <span>Glow Zones</span>
+</button>
+   
 </div>
 </div>
 <section id="home">
@@ -2169,6 +2194,7 @@ function page(p,fromHistory=false){
     .forEach(section=>section.classList.add("hidden"));
 
   target.classList.remove("hidden");
+  updateGlowMenuActive(p);
   // Keep dashboard dropdowns in sync with the current screen.
   document.querySelectorAll('select[onchange="page(this.value)"]')
     .forEach(dropdown => {
@@ -2221,7 +2247,14 @@ function toggleGlowMenu(){
     isOpening ? "Close navigation menu" : "Open navigation menu"
   );
 }
+function updateGlowMenuActive(target){
+  document.querySelectorAll("#glowMenu .glow-menu-item").forEach(button=>{
+    const isActive = button.dataset.page === target;
 
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-current", isActive ? "page" : "false");
+  });
+}
 function glowMenuPage(target){
   const menu = document.getElementById("glowMenu");
   const toggle = document.getElementById("menuToggle");
@@ -2235,7 +2268,8 @@ if(backdrop) backdrop.classList.add("hidden");
     toggle.setAttribute("aria-label", "Open navigation menu");
   }
 
-  page(target);
+ page(target);
+updateGlowMenuActive(target);
 }
   
 document.querySelectorAll("#nav button")
