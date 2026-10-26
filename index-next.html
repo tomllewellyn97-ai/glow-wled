@@ -1403,7 +1403,15 @@ html body #glowMenu {
 
 </header>
 <nav id="nav" class="hidden"></nav>
-<div id="glowMenuBackdrop" class="hidden" onclick="toggleGlowMenu()"></div>
+
+<div id="glowMenuBackdrop" class="hidden"
+  onclick="toggleGlowMenu()"
+  style="position:fixed;inset:0;z-index:99999;
+  background:rgba(3,5,13,0.5);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);">
+</div>
+
 <div id="glowMenu" class="hidden" style="
   position:fixed;
   top:76px;
