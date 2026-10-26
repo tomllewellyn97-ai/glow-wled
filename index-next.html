@@ -3874,13 +3874,60 @@ function toggleDeviceIconPicker(){
 }
 
 function renderDeviceIconOptions(){
-  document.querySelectorAll("#diconDropdown .dicon-option-icon").forEach(el=>{
-    const icon = el.dataset.icon || "💡";
-    el.innerHTML = deviceIcon({icon});
-    el.style.display = "inline-flex";
-    el.style.alignItems = "center";
-    el.style.flexShrink = "0";
-  });
+  const grid = $("diconGrid");
+  if(!grid) return;
+
+  const icons = [
+    ["💡","Light bulb"],
+    ["🌈","LED strip"],
+    ["✨","Ambient lighting"],
+    ["🛋️","Living room"],
+    ["🛏️","Bedroom"],
+    ["🍳","Kitchen"],
+    ["🌿","Garden"],
+    ["🎮","Gaming setup"],
+    ["⭐","Custom lighting"]
+  ];
+
+  const search = ($("diconSearch")?.value || "").trim().toLowerCase();
+  const selected = $("dicon")?.value || "💡";
+
+  const filtered = icons.filter(([icon,label]) =>
+    label.toLowerCase().includes(search)
+  );
+
+  grid.innerHTML = filtered.map(([icon,label]) => `
+    <button
+      type="button"
+      title="${label}"
+      aria-label="${label}"
+      aria-pressed="${icon === selected}"
+      onclick="chooseDeviceIcon('${icon}','${label}')"
+      style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        min-width:0;
+        height:48px;
+        padding:8px;
+        margin:0;
+        border:1px solid ${icon === selected ? '#36e6ff' : '#29334d'};
+        border-radius:10px;
+        background:${icon === selected ? 'rgba(54,230,255,0.12)' : '#101426'};
+        box-shadow:${icon === selected ? '0 0 10px rgba(54,230,255,0.2)' : 'none'};
+        cursor:pointer;
+      ">
+      ${deviceIcon({icon})}
+    </button>
+  `).join("");
+
+  if(!filtered.length){
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;padding:12px;color:#9ba8c4;text-align:center">
+        No icons found
+      </div>
+    `;
+  }
 }
 
 function chooseDeviceIcon(icon, label){
