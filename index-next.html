@@ -3933,7 +3933,13 @@ function renderDeviceIconOptions(){
 function chooseDeviceIcon(icon, label){
   $("dicon").value = icon;
   $("diconLabel").textContent = label;
- $("diconPreview").innerHTML = deviceIcon({icon: icon});
+  $("diconPreview").innerHTML = deviceIcon({icon: icon});
+
+  const search = $("diconSearch");
+  if(search) search.value = "";
+
+  renderDeviceIconOptions();
+
   $("diconDropdown").classList.add("hidden");
   $("diconArrow").textContent = "▾";
 }
