@@ -2178,50 +2178,17 @@ header {
   <div id="diconDropdown" class="hidden"
     style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:220px;overflow-y:auto;overscroll-behavior:contain;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
 
-    <button type="button" onclick="chooseDeviceIcon('💡','Light bulb')">
-  <span class="dicon-option-icon" data-icon="💡"></span>
-  <span>Light bulb</span>
-</button>
+   <input
+  type="search"
+  id="diconSearch"
+  placeholder="Search icons..."
+  aria-label="Search device icons"
+  oninput="renderDeviceIconOptions()"
+  style="width:100%;box-sizing:border-box;margin-bottom:8px;padding:10px;border:1px solid #29334d;border-radius:9px;background:#070914;color:#f4f7ff">
 
-<button type="button" onclick="chooseDeviceIcon('🌈','LED strip')">
-  <span class="dicon-option-icon" data-icon="🌈"></span>
-  <span>LED strip</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('✨','Ambient lighting')">
-  <span class="dicon-option-icon" data-icon="✨"></span>
-  <span>Ambient lighting</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('🛋️','Living room')">
-  <span class="dicon-option-icon" data-icon="🛋️"></span>
-  <span>Living room</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('🛏️','Bedroom')">
-  <span class="dicon-option-icon" data-icon="🛏️"></span>
-  <span>Bedroom</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('🍳','Kitchen')">
-  <span class="dicon-option-icon" data-icon="🍳"></span>
-  <span>Kitchen</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('🌿','Garden')">
-  <span class="dicon-option-icon" data-icon="🌿"></span>
-  <span>Garden</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('🎮','Gaming setup')">
-  <span class="dicon-option-icon" data-icon="🎮"></span>
-  <span>Gaming setup</span>
-</button>
-
-<button type="button" onclick="chooseDeviceIcon('⭐','Custom lighting')">
-  <span class="dicon-option-icon" data-icon="⭐"></span>
-  <span>Custom lighting</span>
-</button>
+<div id="diconGrid"
+  style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px">
+</div>
 
   </div>
 
