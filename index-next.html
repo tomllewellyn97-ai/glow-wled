@@ -3879,7 +3879,7 @@ function renderDeviceIconOptions(){
 
  const icons = [
     ["🗄️", "Desk"],
-    ["📚", "Bookcase"],
+    ["🗃️", "Bookcase"],
     ["💡","Light bulb"],
     ["🌈","LED strip"],
     ["✨","Ambient lighting"],
@@ -4046,7 +4046,7 @@ function deviceIcon(d){
   
   const paths = {
    "🗄️": '<path d="M2 5 H22 V8 H2 Z M3 8 V21 H5 V19 H13 V21 H15 V8 M3 12 H15 M3 15.5 H15 M5 10 H8 M5 13.5 H8 M5 17 H8 M15 8 V21 M22 8 V21"/>',
-  "📚": '<path d="M4 2 H20 V22 H4 Z M4 8 H20 M4 14 H20 M4 19 H20 M6 3 V7 H9 V3 Z M11 4 V7 H14 V4 Z M6 9 V13 H9 V9 Z M11 9 V13 H14 V9 Z M16 9 V13 H18 V9 Z M6 15 V18 H9 V15 Z M11 15 V18 H14 V15 Z M16 15 V18 H18 V15 Z"/>',
+  "🗃️": '<path d="M4 2 H20 V22 H4 Z M4 8 H20 M4 14 H20 M4 19 H20 M6 3 V7 H9 V3 Z M11 4 V7 H14 V4 Z M6 9 V13 H9 V9 Z M11 9 V13 H14 V9 Z M16 9 V13 H18 V9 Z M6 15 V18 H9 V15 Z M11 15 V18 H14 V15 Z M16 15 V18 H18 V15 Z"/>',
     "💡": '<path d="M9 18h6M10 22h4M8.5 14.5C7 13.3 6 11.5 6 9.5a6 6 0 0 1 12 0c0 2-1 3.8-2.5 5-.8.7-1.2 1.5-1.3 2.5H9.8c-.1-1-.5-1.8-1.3-2.5Z"/>',
     "🌈": '<path d="M3 18a9 9 0 0 1 18 0M7 18a5 5 0 0 1 10 0M3 21h18"/>',
     "✨": '<path d="m12 2 2.3 7.7L22 12l-7.7 2.3L12 22l-2.3-7.7L2 12l7.7-2.3L12 2Z"/>',
@@ -4161,8 +4161,8 @@ function deviceIcon(d){
   const shape = paths[icon] || paths["💡"];
   const iconColours = {
     // Electric cyan — technology and core lighting
-    "🗄️": "#36e6ff",
-    "📚": "#b45cff",
+    "🗄️": "#ffbd59",
+    "🗃️": "#b45cff",
     "💡": "#36e6ff",
     "🌈": "#36e6ff",
     "🖥️": "#36e6ff",
