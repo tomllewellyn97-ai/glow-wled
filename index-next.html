@@ -1807,7 +1807,29 @@ header {
   
 <label>
   Selected device
-  <select id="edev" onchange="selected=this.value;loadEffects()"></select>
+
+  <div class="card" style="position:relative;padding:0;margin:6px 0">
+    <button type="button" id="edevToggle"
+      onclick="toggleEffectDeviceDropdown()"
+      style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid #a855f7;border-radius:12px;background:#111120;color:#f4f7ff;cursor:pointer">
+
+      <span style="display:flex;align-items:center;gap:10px;min-width:0">
+        <span id="edevIcon">💡</span>
+        <span id="edevName">Select device</span>
+      </span>
+
+      <span id="edevArrow">▾</span>
+    </button>
+
+    <div id="edevDropdown" class="hidden"
+      style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:35vh;overflow-y:auto;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
+      <div id="edevOptions"></div>
+    </div>
+  </div>
+
+  <select id="edev"
+    onchange="selected=this.value;loadEffects()"
+    class="hidden"></select>
 </label>
 
 
@@ -2474,7 +2496,76 @@ function renderSelects(){
       :(devices[0]?.id||"");
   });
 
-  if(!dev())selected=devices[0]?.id||"";
+ if(!dev())selected=devices[0]?.id||"";
+
+const effectDevice=devices.find(d=>String(d.id)===String($("edev")?.value||selected));
+if(effectDevice){
+  if($("edevIcon"))$("edevIcon").innerHTML=deviceIcon(effectDevice);
+  if($("edevName"))$("edevName").textContent=effectDevice.name;
+  renderEffectDeviceOptions();
+}
+}
+
+function toggleEffectDeviceDropdown(){
+  const dropdown=$("edevDropdown");
+  const arrow=$("edevArrow");
+  if(!dropdown)return;
+
+  const opening=dropdown.classList.contains("hidden");
+
+  if(opening){
+    renderEffectDeviceOptions();
+    dropdown.classList.remove("hidden");
+    if(arrow)arrow.textContent="▴";
+  }else{
+    dropdown.classList.add("hidden");
+    if(arrow)arrow.textContent="▾";
+  }
+}
+
+function renderEffectDeviceOptions(){
+  const options=$("edevOptions");
+  if(!options)return;
+
+  const current=$("edev")?.value||selected||"";
+
+  options.innerHTML=devices.length
+    ?devices.map(d=>`
+      <button type="button"
+        onclick="chooseEffectDevice('${d.id}')"
+        style="width:100%;display:flex;align-items:center;gap:12px;padding:10px;border:1px solid ${d.id===current?"#36e6ff":"transparent"};border-radius:9px;background:${d.id===current?"rgba(54,230,255,0.10)":"transparent"};color:#f4f7ff;text-align:left;cursor:pointer">
+        <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d">
+          ${deviceIcon(d)}
+        </span>
+        <span style="flex:1;min-width:0;overflow-wrap:anywhere">${esc(d.name)}</span>
+        <span style="color:${d.id===current?"#36e6ff":"#9ba8c4"}">${d.id===current?"✓":""}</span>
+      </button>
+    `).join("")
+    :'<div style="padding:12px;color:#9ba8c4;text-align:center">Add a device first</div>';
+}
+
+function chooseEffectDevice(id){
+  const dropdown=$("edev");
+  if(!dropdown)return;
+
+  dropdown.value=id;
+  selected=id;
+
+  const d=devices.find(device=>String(device.id)===String(id));
+  if(!d)return;
+
+  const icon=$("edevIcon");
+  const name=$("edevName");
+  const menu=$("edevDropdown");
+  const arrow=$("edevArrow");
+
+  if(icon)icon.innerHTML=deviceIcon(d);
+  if(name)name.textContent=d.name;
+  if(menu)menu.classList.add("hidden");
+  if(arrow)arrow.textContent="▾";
+
+  renderEffectDeviceOptions();
+  loadEffects();
 }
 
 function getSchedules(){
