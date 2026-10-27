@@ -2557,7 +2557,7 @@ function renderEffectDeviceOptions(){
     ?devices.map(d=>`
       <button type="button"
         onclick="chooseEffectDevice('${d.id}')"
-        style="width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:6px;border:1px solid ${d.id===current?"#36e6ff":"transparent"};border-radius:9px;background:${d.id===current?"rgba(54,230,255,0.14)":"rgba(180,92,255,0.07)"};color:#f4f7ff;text-align:left;cursor:pointer">
+        style="width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border:1px solid ${d.id===current?"#36e6ff":"transparent"};border-radius:9px;background:${d.id===current?"rgba(54,230,255,0.14)":"rgba(180,92,255,0.07)"};color:#f4f7ff;text-align:left;cursor:pointer">
         <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d">
           ${deviceIcon(d)}
         </span>
