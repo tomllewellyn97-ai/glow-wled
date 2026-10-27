@@ -1796,17 +1796,7 @@ header {
     <select id="cdev" onchange="selected=this.value;renderControls()"></select>
   </label>
 
- 
-<label>
-  Dashboard section
-  <select id="dashboardSection" onchange="page(this.value)">
-    <option value="controls">Colours</option>
-    <option value="effects">Effects &amp; Palettes</option>
-    <option value="presets">Saved Presets</option>
-    <option value="schedules">Schedules</option>
-    <option value="glowZones">Glow Zones</option>
-  </select>
-</label>
+
 
 
   <div id="controlBody"></div>
@@ -1820,16 +1810,7 @@ header {
   <select id="edev" onchange="selected=this.value;loadEffects()"></select>
 </label>
 
-<label>
-  Dashboard section
-  <select onchange="page(this.value)">
-    <option value="controls">Colours</option>
-    <option value="effects" selected>Effects &amp; Palettes</option>
-    <option value="presets">Saved Presets</option>
-    <option value="schedules">Schedules</option>
-    <option value="glowZones">Glow Zones</option>
-    </select>
-</label>
+
 
 <div class="card">
   <h3>Effects</h3>
@@ -1912,17 +1893,7 @@ header {
 
 </label>
 
-<label>
-  Dashboard section
-  <select onchange="page(this.value)">
-    <option value="controls">Colours</option>
-    <option value="effects">Effects &amp; Palettes</option>
-    <option value="presets" selected>Saved Presets</option>
-    <option value="schedules">Schedules</option>
-    <option value="glowZones">Glow Zones</option>
-    
-  </select>
-</label>
+
 <div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
 
 
@@ -1935,16 +1906,7 @@ header {
   </label>
 
   
-  <label>
-    Dashboard section
-    <select onchange="page(this.value)">
-      <option value="controls">Colours</option>
-      <option value="effects">Effects &amp; Palettes</option>
-      <option value="presets">Saved Presets</option>
-      <option value="schedules" selected>Schedules</option>
-      <option value="glowZones">Glow Zones</option>
-    </select>
-  </label>
+  
 
 
   <div class="card">
@@ -2006,16 +1968,7 @@ header {
     onchange="selected=this.value;renderGlowZones(this.value)">
   </select>
 </label>
-  <label>
-  Dashboard section
-  <select onchange="page(this.value)">
-    <option value="controls">Colours</option>
-    <option value="effects">Effects &amp; Palettes</option>
-    <option value="presets">Saved Presets</option>
-    <option value="schedules">Schedules</option>
-    <option value="glowZones" selected>Glow Zones</option>
-  </select>
-</label>
+  
   <div class="card">
     <p class="sub">
       Create custom LED zones and give each section its own colour and effect.
