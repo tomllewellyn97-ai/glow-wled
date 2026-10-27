@@ -2110,6 +2110,9 @@ header {
   <label style="display:block;margin-bottom:12px;line-height:2.2">
     Selected device
     <div class="device-picker" id="gzDevicePicker">
+      <select id="gzDevice" class="hidden"
+  onchange="selected=this.value;renderGlowZones(this.value)">
+</select>
 
     <button type="button" id="gzDeviceToggle"
       onclick="toggleDevicePicker('gzDevice')">
@@ -2127,7 +2130,7 @@ header {
     </div>
   </div>
 </label>
-</label>
+
   
   <div class="card">
     <p class="sub">
