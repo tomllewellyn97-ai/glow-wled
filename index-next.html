@@ -2018,11 +2018,27 @@ header {
 
 <section id="schedules" class="hidden">
   <h2>Schedules</h2>
+<label style="display:block;margin-bottom:12px;line-height:2.2">
+  Selected device
+  <div class="device-picker" id="scheduleDevicePicker">
+    <select id="scheduleDevice" class="hidden"></select>
 
- <label>
-    Selected device
-    <select id="scheduleDevice"></select>
-  </label>
+    <button type="button" id="scheduleDeviceToggle"
+      onclick="toggleDevicePicker('scheduleDevice')">
+      <span style="display:flex;align-items:center;gap:10px;min-width:0">
+        <span id="scheduleDeviceIcon"
+          style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d"></span>
+        <span id="scheduleDeviceName">Choose a device</span>
+      </span>
+      <span id="scheduleDeviceArrow">▾</span>
+    </button>
+
+    <div id="scheduleDeviceDropdown" class="device-dropdown hidden"
+      style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:35vh;overflow-y:auto;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
+      <div id="scheduleDeviceOptions"></div>
+    </div>
+  </div>
+</label>
 
   
   
@@ -2083,9 +2099,29 @@ header {
   </div>
 <label>
   Selected device
-  <select id="gzDevice"
-    onchange="selected=this.value;renderGlowZones(this.value)">
-  </select>
+ <label style="display:block;margin-bottom:12px;line-height:2.2">
+  Selected device
+  <div class="device-picker" id="gzDevicePicker">
+    <select id="gzDevice" class="hidden"
+      onchange="selected=this.value;renderGlowZones(this.value)">
+    </select>
+
+    <button type="button" id="gzDeviceToggle"
+      onclick="toggleDevicePicker('gzDevice')">
+      <span style="display:flex;align-items:center;gap:10px;min-width:0">
+        <span id="gzDeviceIcon"
+          style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d"></span>
+        <span id="gzDeviceName">Choose a device</span>
+      </span>
+      <span id="gzDeviceArrow">▾</span>
+    </button>
+
+    <div id="gzDeviceDropdown" class="device-dropdown hidden"
+      style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:35vh;overflow-y:auto;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
+      <div id="gzDeviceOptions"></div>
+    </div>
+  </div>
+</label>
 </label>
   
   <div class="card">
@@ -2731,30 +2767,27 @@ function chooseDeviceForPicker(id,deviceId){
   if(!d)return;
 
   const name=$(`${id}Name`);
+  const icon=$(`${id}Icon`);
   const dropdown=$(`${id}Dropdown`);
   const arrow=$(`${id}Arrow`);
 
   if(name)name.textContent=d.name;
+  if(icon)icon.innerHTML=deviceIcon(d);
   if(dropdown)dropdown.classList.add("hidden");
   if(arrow)arrow.textContent="▾";
 
   renderDevicePickerOptions(id);
 
-if(id==="cdev"){
-  if($("cdevName"))$("cdevName").textContent=d.name;
-  if($("cdevIcon"))$("cdevIcon").innerHTML=deviceIcon(d);
-  renderDevicePickerOptions("cdev");
-  renderControls();
-}
-}
-function getSchedules(){
-  try {
-    return JSON.parse(localStorage.getItem("glow_schedules") || "[]");
-  } catch {
-    return [];
+  if(id==="cdev"){
+    renderControls();
+  }else if(id==="prdev"){
+    updateNextPresetSlot();
+  }else if(id==="scheduleDevice"){
+    // The chosen device is stored in the selector.
+  }else if(id==="gzDevice"){
+    renderGlowZones(deviceId);
   }
 }
-
 
 
 async function addSchedule(){
