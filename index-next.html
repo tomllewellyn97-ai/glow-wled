@@ -1843,7 +1843,10 @@ header {
   <div class="device-picker" id="cdevPicker">
     <select id="cdev" class="hidden" onchange="selected=this.value;renderControls()"></select>
     <button type="button" id="cdevToggle" onclick="toggleDevicePicker('cdev')">
-      <span id="cdevName">Choose a device</span>
+     <span style="display:flex;align-items:center;gap:10px;min-width:0">
+  <span id="cdevIcon" style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d"></span>
+  <span id="cdevName">Choose a device</span>
+</span>
       <span id="cdevArrow">▾</span>
     </button>
     <div id="cdevDropdown" class="device-dropdown hidden">
@@ -2558,6 +2561,7 @@ const colourDevice=devices.find(d=>
 
 if(colourDevice){
   if($("cdevName"))$("cdevName").textContent=colourDevice.name;
+  if($("cdevIcon"))$("cdevIcon").innerHTML=deviceIcon(colourDevice);
   renderDevicePickerOptions("cdev");
 }
 const effectDevice=devices.find(d=>String(d.id)===String($("edev")?.value||selected));
@@ -2686,8 +2690,9 @@ function chooseDeviceForPicker(id,deviceId){
 
   renderDevicePickerOptions(id);
 
-  if(id==="cdev"){
+if(id==="cdev"){
   if($("cdevName"))$("cdevName").textContent=d.name;
+  if($("cdevIcon"))$("cdevIcon").innerHTML=deviceIcon(d);
   renderDevicePickerOptions("cdev");
   renderControls();
 }
