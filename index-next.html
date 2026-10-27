@@ -114,11 +114,22 @@ input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:
 
 .device {
   position: relative;
-  margin-bottom: 16px;
-  border-radius: 18px;
+  margin-bottom: 0;
+  border: 1px solid #55417d;
+  border-radius: 20px;
   overflow: hidden;
+  background: linear-gradient(
+    145deg,
+    #1c1b38 0%,
+    #12182d 55%,
+    #0b1222 100%
+  );
+  box-shadow:
+    0 0 0 1px #a855f71c,
+    0 6px 20px #00000045,
+    inset 0 1px 0 #ffffff0b;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 #deviceList {
   display: flex;
   flex-direction: column;
@@ -128,7 +139,7 @@ input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:
 #manage {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 24px;
   align-items: start;
 }
 
@@ -145,7 +156,20 @@ input[type=range]{width:100%;accent-color:var(--purple)}input[type=color]{width:
   }
 }
 
-.device:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--purple),var(--cyan))}.bulb{font-size:24px;background:#29203f;border-radius:12px;padding:8px}
+.device:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 4px;
+  border-radius: 0 6px 6px 0;
+  background: linear-gradient(180deg, var(--purple), var(--cyan));
+  box-shadow: 0 0 10px #a855f755, 0 0 12px #35e7ff30;
+  pointer-events: none;
+}
+  
+.bulb{font-size:24px;background:#29203f;border-radius:12px;padding:8px}
 .switch {
   border-radius: 30px;
   width: 76px;
