@@ -1990,13 +1990,28 @@ header {
   <h2>Presets</h2>
 
  
-<label>
+<label style="display:block;line-height:2.2">
   Selected device
-  
-<select id="prdev" onchange="selected=this.value;updateNextPresetSlot()"></select>
+  <div class="device-picker" id="prdevPicker">
+    <select id="prdev" class="hidden"
+      onchange="selected=this.value;updateNextPresetSlot()"></select>
 
+    <button type="button" id="prdevToggle"
+      onclick="toggleDevicePicker('prdev')">
+      <span style="display:flex;align-items:center;gap:10px;min-width:0">
+        <span id="prdevIcon"
+          style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d"></span>
+        <span id="prdevName">Choose a device</span>
+      </span>
+      <span id="prdevArrow">▾</span>
+    </button>
+
+    <div id="prdevDropdown" class="device-dropdown hidden"
+      style="position:absolute;z-index:1000;top:calc(100% + 6px);left:0;right:0;max-height:35vh;overflow-y:auto;background:#101426;border:1px solid #a855f7;border-radius:12px;padding:6px;box-shadow:0 0 14px #35e7ff33,0 8px 24px #0009">
+      <div id="prdevOptions"></div>
+    </div>
+  </div>
 </label>
-
 
 <div class="card"><h3>Save current look to WLED</h3><label>Preset name<input id="prname" placeholder="Movie night"></label><label>Slot (1–250)<input id="prslot" type="number" min="1" max="250" value="1"></label><button class="primary" onclick="savePreset()">Save to WLED</button></div><div class="card"><h3>Saved on this device</h3><div id="presetList"></div></div></section>
 
@@ -2563,39 +2578,50 @@ function renderDevices(){
 
 
 function renderSelects(){
- ["cdev","edev","pdev","prdev","scheduleDevice","gzDevice"].forEach(id=>{
+  ["cdev","edev","pdev","prdev","scheduleDevice","gzDevice"].forEach(id=>{
     const dropdown=$(id);
     if(!dropdown)return;
 
-    const old=selected||dropdown.value;
+    const old=dropdown.value||selected;
 
     dropdown.innerHTML=devices.map(d=>
       `<option value="${d.id}">${esc(d.name)}</option>`
     ).join("")||'<option value="">Add a device first</option>';
 
-    dropdown.value=devices.some(d=>d.id===old)
+    dropdown.value=devices.some(d=>String(d.id)===String(old))
       ?old
       :(devices[0]?.id||"");
   });
 
- if(!dev())selected=devices[0]?.id||"";
-const colourDevice=devices.find(d=>
-  String(d.id)===String($("cdev")?.value||selected)
-);
+  if(!dev())selected=devices[0]?.id||"";
 
-if(colourDevice){
-  if($("cdevName"))$("cdevName").textContent=colourDevice.name;
-  if($("cdevIcon"))$("cdevIcon").innerHTML=deviceIcon(colourDevice);
-  renderDevicePickerOptions("cdev");
-}
-const effectDevice=devices.find(d=>String(d.id)===String($("edev")?.value||selected));
-if(effectDevice){
-  if($("edevIcon"))$("edevIcon").innerHTML=deviceIcon(effectDevice);
-  if($("edevName"))$("edevName").textContent=effectDevice.name;
-  renderEffectDeviceOptions();
-}
-}
+  ["cdev","prdev","scheduleDevice","gzDevice"].forEach(id=>{
+    const dropdown=$(id);
+    if(!dropdown)return;
 
+    const d=devices.find(device=>
+      String(device.id)===String(dropdown.value)
+    );
+
+    const name=$(`${id}Name`);
+    const icon=$(`${id}Icon`);
+
+    if(name)name.textContent=d?d.name:"Choose a device";
+    if(icon)icon.innerHTML=d?deviceIcon(d):"";
+
+    renderDevicePickerOptions(id);
+  });
+
+  const effectDevice=devices.find(d=>
+    String(d.id)===String($("edev")?.value||selected)
+  );
+
+  if(effectDevice){
+    if($("edevIcon"))$("edevIcon").innerHTML=deviceIcon(effectDevice);
+    if($("edevName"))$("edevName").textContent=effectDevice.name;
+    renderEffectDeviceOptions();
+  }
+}
 function toggleEffectDeviceDropdown(){
   const dropdown=$("edevDropdown");
   const arrow=$("edevArrow");
