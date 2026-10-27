@@ -2106,14 +2106,10 @@ header {
   <div class="row">
     <h2>Glow Zones</h2>
   </div>
-<label>
-  Selected device
- <label style="display:block;margin-bottom:12px;line-height:2.2">
-  Selected device
-  <div class="device-picker" id="gzDevicePicker">
-    <select id="gzDevice" class="hidden"
-      onchange="selected=this.value;renderGlowZones(this.value)">
-    </select>
+
+  <label style="display:block;margin-bottom:12px;line-height:2.2">
+    Selected device
+    <div class="device-picker" id="gzDevicePicker">
 
     <button type="button" id="gzDeviceToggle"
       onclick="toggleDevicePicker('gzDevice')">
