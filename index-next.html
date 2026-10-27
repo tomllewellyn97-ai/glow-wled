@@ -1816,10 +1816,18 @@ header {
   <h2>Light controls</h2>
 
   <label>
-    Selected device
-    <select id="cdev" onchange="selected=this.value;renderControls()"></select>
-  </label>
-
+  Selected device
+  <div class="device-picker" id="cdevPicker">
+    <select id="cdev" class="hidden" onchange="selected=this.value;renderControls()"></select>
+    <button type="button" id="cdevToggle" onclick="toggleDevicePicker('cdev')">
+      <span id="cdevName">Choose a device</span>
+      <span id="cdevArrow">▾</span>
+    </button>
+    <div id="cdevDropdown" class="device-dropdown hidden">
+      <div id="cdevOptions"></div>
+    </div>
+  </div>
+</label>
 
 
 
@@ -2521,7 +2529,14 @@ function renderSelects(){
   });
 
  if(!dev())selected=devices[0]?.id||"";
+const colourDevice=devices.find(d=>
+  String(d.id)===String($("cdev")?.value||selected)
+);
 
+if(colourDevice){
+  if($("cdevName"))$("cdevName").textContent=colourDevice.name;
+  renderDevicePickerOptions("cdev");
+}
 const effectDevice=devices.find(d=>String(d.id)===String($("edev")?.value||selected));
 if(effectDevice){
   if($("edevIcon"))$("edevIcon").innerHTML=deviceIcon(effectDevice);
@@ -2591,7 +2606,69 @@ function chooseEffectDevice(id){
   renderEffectDeviceOptions();
   loadEffects();
 }
+function toggleDevicePicker(id){
+  const dropdown=$(`${id}Dropdown`);
+  const button=$(`${id}Toggle`);
+  const arrow=$(`${id}Arrow`);
 
+  if(!dropdown||!button)return;
+
+  const opening=dropdown.classList.contains("hidden");
+
+  dropdown.classList.toggle("hidden",!opening);
+
+  if(arrow)arrow.textContent=opening?"▴":"▾";
+
+  if(opening)renderDevicePickerOptions(id);
+}
+
+function renderDevicePickerOptions(id){
+  const options=$(`${id}Options`);
+  if(!options)return;
+
+  const current=$(id)?.value||selected;
+
+  options.innerHTML=devices.length
+    ?devices.map(d=>`
+      <button type="button"
+        onclick="chooseDeviceForPicker('${id}','${d.id}')"
+        style="width:100%;display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;border:1px solid ${String(d.id)===String(current)?"#36e6ff":"transparent"};border-radius:9px;background:${String(d.id)===String(current)?"rgba(54,230,255,0.14)":"rgba(180,92,255,0.07)"};color:#f4f7ff;text-align:left;cursor:pointer">
+        <span style="display:flex;align-items:center;justify-content:center;width:34px;height:34px;flex-shrink:0;border-radius:9px;background:#070914;border:1px solid #29334d">
+          ${deviceIcon(d)}
+        </span>
+        <span style="flex:1;min-width:0;overflow-wrap:anywhere">${esc(d.name)}</span>
+        <span style="color:${String(d.id)===String(current)?"#36e6ff":"#9ba8c4"}">${String(d.id)===String(current)?"✓":""}</span>
+      </button>
+    `).join("")
+    :'<div style="padding:12px;color:#9ba8c4;text-align:center">Add a device first</div>';
+}
+
+function chooseDeviceForPicker(id,deviceId){
+  const select=$(id);
+  if(!select)return;
+
+  select.value=String(deviceId);
+  selected=String(deviceId);
+
+  const d=devices.find(x=>String(x.id)===String(deviceId));
+  if(!d)return;
+
+  const name=$(`${id}Name`);
+  const dropdown=$(`${id}Dropdown`);
+  const arrow=$(`${id}Arrow`);
+
+  if(name)name.textContent=d.name;
+  if(dropdown)dropdown.classList.add("hidden");
+  if(arrow)arrow.textContent="▾";
+
+  renderDevicePickerOptions(id);
+
+  if(id==="cdev"){
+  if($("cdevName"))$("cdevName").textContent=d.name;
+  renderDevicePickerOptions("cdev");
+  renderControls();
+}
+}
 function getSchedules(){
   try {
     return JSON.parse(localStorage.getItem("glow_schedules") || "[]");
