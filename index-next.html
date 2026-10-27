@@ -1461,7 +1461,22 @@ header {
   text-align: left;
   cursor: pointer;
 }
+#cdevDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 10px;
+  border: 1px solid #29334d;
+  border-radius: 12px;
+  background: linear-gradient(145deg, #19192d, #0d1020);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+}
 
+#cdevPicker {
+  position: relative;
+}
 #cdevPicker > button:focus-visible {
   outline: 2px solid #36e6ff;
   outline-offset: 2px;
@@ -2664,7 +2679,7 @@ function renderDevicePickerOptions(id){
           ${deviceIcon(d)}
         </span>
         <span style="flex:1;min-width:0;overflow-wrap:anywhere">${esc(d.name)}</span>
-        <span style="color:${String(d.id)===String(current)?"#36e6ff":"#9ba8c4"}">${String(d.id)===String(current)?"✓":""}</span>
+     <span></span>
       </button>
     `).join("")
     :'<div style="padding:12px;color:#9ba8c4;text-align:center">Add a device first</div>';
