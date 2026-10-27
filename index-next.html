@@ -2562,7 +2562,7 @@ function renderEffectDeviceOptions(){
           ${deviceIcon(d)}
         </span>
         <span style="flex:1;min-width:0;overflow-wrap:anywhere">${esc(d.name)}</span>
-        <span style="color:${d.id===current?"#36e6ff":"#9ba8c4"}">${d.id===current?"✓":""}</span>
+   <span style="width:0;flex-shrink:0"></span>
       </button>
     `).join("")
     :'<div style="padding:12px;color:#9ba8c4;text-align:center">Add a device first</div>';
